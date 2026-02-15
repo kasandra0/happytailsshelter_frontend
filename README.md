@@ -3,3 +3,4 @@ Animal Shelter Foster Management app designed to minimize operations expenses by
 
 
 Members:
+Kasandra Wolf
