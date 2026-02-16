@@ -5,6 +5,7 @@ Animal Shelter Foster Management app designed to minimize operations expenses by
 Members: Claudia V Dominguez
 Members:
 Kasandra Wolf
+Jim Liriano
 JJ SchraderBachar
 
 
