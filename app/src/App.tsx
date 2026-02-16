@@ -8,8 +8,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Calendar } from "./components/ui/calendar/calendar";
+import React from "react";
+import { DatePickerDemo } from "./pages/DatePickerDemo";
 
 function App() {
+const [date, setDate] = React.useState<Date | undefined>(new Date())
+
   return (
     <>
       <div>
@@ -32,6 +37,17 @@ function App() {
             </SelectGroup>
           </SelectContent>
         </Select>
+        <br />
+
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          className="rounded-lg border"
+        />
+
+        <DatePickerDemo />
+        
       </div>
     </>
   );
