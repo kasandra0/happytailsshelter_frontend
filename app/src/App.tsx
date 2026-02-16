@@ -1,53 +1,46 @@
 import "./App.css";
-import { Button } from "./components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Calendar } from "./components/ui/calendar/calendar";
-import React from "react";
-import { DatePickerDemo } from "./pages/DatePickerDemo";
+import Dashboard from "./pages/Dashboard";
+import Demo from "./pages/Demo";
+import { AppSidebar } from "@/components/app-sidebar";
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 
 function App() {
-const [date, setDate] = React.useState<Date | undefined>(new Date())
 
   return (
     <>
-      <div>
+      <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator
+            orientation="vertical"
+            className="mr-2 data-[orientation=vertical]:h-4"
+          />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="#">Build Your Application</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4 items-center">
         <h1 className="text-primary text-3xl underline">Hello world!</h1>
 
-        <Button>default</Button>
-        <Button variant="outline">outline</Button>
-        <Button variant="secondary">secondary</Button>
-        <br />
-        <br />
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select a role" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="fosterparent">Foster Parent</SelectItem>
-              <SelectItem value="volunteer">Volunteer</SelectItem>
-              <SelectItem value="employee">Employee</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <br />
-
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          className="rounded-lg border"
-        />
-
-        <DatePickerDemo />
-        
+          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+      <div>
+        {/* <Demo /> */}
+        {/* <Dashboard /> */}
       </div>
     </>
   );
