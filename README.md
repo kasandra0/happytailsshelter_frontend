@@ -29,11 +29,11 @@ cd happytailsshelter_frontend
 ```bash
 cd app
 ```
-### 3️⃣ Navigate to the app folder
+### 3️⃣ Install dependencies
 ```bash
 npm install
 ```
-### 4️⃣ Navigate to the app folder
+### 4️⃣ Run the development server
 ```bash
 npm run dev
 ```
