@@ -1,27 +1,70 @@
-# happytailsshelter_frontend
+# 🐾 Happy Tails Shelter – Frontend
 
-Animal Shelter Foster Management app designed to minimize operations expenses by providing solutions on inventory management and cost reduction strategies.
+Happy Tails Shelter is an Animal Shelter Foster Management application designed to reduce operational expenses by improving inventory tracking and supporting cost-efficient decision making.
 
-Members:  
-Hisham Nabi
-Members: Claudia V Dominguez
-Members:
-Kasandra Wolf
-Jim Liriano
-JJ SchraderBachar
+---
+## 👥 Team Leads
+- David kea
+- Johan Gilces
 
+## 👥 Team Members
 
-# general project folder structure
-src/
-├── assets/
-├── components/
-│   ├── ui/          # Low-level Tailwind components (Button.jsx) - pure styled components, no business logic, only Tailwind class
-│   └── layout/      # Sidebar.jsx, Footer.jsx
-├── hooks/
-├── pages/
-│   ├── Home.jsx
-│   └── Profile.jsx
-├── services/        # API calls (Axios/Fetch instances)
-├── utils/
-├── App.jsx
-└── main.jsx
+- Hisham Nabi  
+- Claudia V. Dominguez  
+- Kasandra Wolf  
+- Jim Liriano  
+- JJ Schrader Bachar  
+
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Clone the repository
+
+```bash
+git clone <your-repo-url>
+cd happytailsshelter_frontend
+```
+### 2️⃣ Navigate to the app folder
+```bash
+cd app
+```
+### 3️⃣ Navigate to the app folder
+```bash
+npm install
+```
+### 4️⃣ Navigate to the app folder
+```bash
+npm run dev
+```
+Navigate to Local:   http://localhost:5173/
+
+## 📁 Project Structure
+
+    app/
+    └── src/
+        ├── assets/
+        │   └── Static files (images, icons, etc.)
+        ├── components/
+        │   ├── ui/
+        │   │   └── Reusable Tailwind UI components (presentation only)
+        │   └── layout/
+        │       └── Layout components (Sidebar, Footer, etc.)
+        ├── hooks/
+        │   └── Custom React hooks
+        ├── pages/
+        │   └── Application pages (Home, Profile, etc.)
+        ├── services/
+        │   └── API service layer (Axios / Fetch instances)
+        ├── utils/
+        │   └── Helper functions
+        ├── App.jsx
+        │   └── Root component
+        └── main.jsx
+            └── Application entry point
+## 🛠 Tech Stack
+
+-   React\
+-   Vite\
+-   Tailwind CSS\
+-   Axios
