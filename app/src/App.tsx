@@ -1,12 +1,79 @@
 import "./App.css";
-import Dashboard from "./pages/Dashboard";
-import Demo from "./pages/Demo";
-import { AppSidebar } from "@/components/app-sidebar";
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { Button } from "./components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Calendar } from "./components/ui/calendar/calendar";
+import React from "react";
+import { DatePickerDemo } from "./pages/DatePickerDemo";
+import type { ColumnDef } from "@tanstack/react-table";
+import { DataTable } from "./components/table/Table";
 
 function App() {
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
+
+  //Dev note: these types we will need to define on the components where we want to render the table, probably in its own file is good
+
+  type Animal = {
+    id: string;
+    animalName: string;
+    age: number;
+    gender: "Male" | "Female";
+    status: "Adopted" | "Available";
+  };
+
+  //dev note these need to match the type
+
+  const columns: ColumnDef<Animal>[] = [
+    { accessorKey: "id", header: "Animal ID" },
+    {
+      accessorKey: "animalName",
+      header: "Animal Name",
+    },
+    {
+      accessorKey: "age",
+      header: "Age",
+    },
+    {
+      accessorKey: "gender",
+      header: "Gender",
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+    },
+  ];
+
+  const data: Animal[] = [
+    { id: "1", animalName: "Lucky", age: 2, gender: "Male", status: "Adopted" },
+    {
+      id: "2",
+      animalName: "Spot",
+      age: 2,
+      gender: "Female",
+      status: "Adopted",
+    },
+    {
+      id: "3",
+      animalName: "Rover",
+      age: 4,
+      gender: "Male",
+      status: "Available",
+    },
+    { id: "4", animalName: "Rex", age: 3, gender: "Male", status: "Adopted" },
+    {
+      id: "5",
+      animalName: "Chuck",
+      age: 7,
+      gender: "Male",
+      status: "Available",
+    },
+  ];
 
   return (
     <>
@@ -34,13 +101,37 @@ function App() {
         <div className="flex flex-1 flex-col gap-4 p-4 items-center">
         <h1 className="text-primary text-3xl underline">Hello world!</h1>
 
-          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+        <Button>default</Button>
+        <Button variant="outline">outline</Button>
+        <Button variant="secondary">secondary</Button>
+        <br />
+        <br />
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select a role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="fosterparent">Foster Parent</SelectItem>
+              <SelectItem value="volunteer">Volunteer</SelectItem>
+              <SelectItem value="employee">Employee</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <br />
+
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          className="rounded-lg border"
+        />
+
+        <DatePickerDemo />
+
+        <div className="container mx-auto py-10">
+          <DataTable columns={columns} data={data} />
         </div>
-      </SidebarInset>
-    </SidebarProvider>
-      <div>
-        {/* <Demo /> */}
-        {/* <Dashboard /> */}
       </div>
     </>
   );
