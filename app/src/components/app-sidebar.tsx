@@ -1,7 +1,5 @@
 import * as React from "react"
 
-import { SearchForm } from "@/components/search-form"
-import { VersionSwitcher } from "@/components/version-switcher"
 import {
   Sidebar,
   SidebarContent,
@@ -17,145 +15,52 @@ import {
 
 // This is sample data.
 const data = {
-  versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
-      title: "Getting Started",
+      title: "Employee Tools",
       url: "#",
       items: [
         {
-          title: "Installation",
+          title: "Dashboard",
+          url: "#", 
+        },
+        {
+          title: "Animals",
           url: "#",
         },
         {
-          title: "Project Structure",
+          title: "Inventory",
           url: "#",
         },
+        {
+          title: "Intake Form",
+          url: "#",}
       ],
     },
     {
-      title: "Building Your Application",
+      title: "App Settings",
       url: "#",
       items: [
         {
-          title: "Routing",
+          title: "Theme Mode",
           url: "#",
         },
         {
           title: "Data Fetching",
           url: "#",
-          isActive: true,
-        },
-        {
-          title: "Rendering",
-          url: "#",
-        },
-        {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
-          url: "#",
         },
       ],
-    },
-    {
-      title: "API Reference",
-      url: "#",
-      items: [
-        {
-          title: "Components",
-          url: "#",
-        },
-        {
-          title: "File Conventions",
-          url: "#",
-        },
-        {
-          title: "Functions",
-          url: "#",
-        },
-        {
-          title: "next.config.js Options",
-          url: "#",
-        },
-        {
-          title: "CLI",
-          url: "#",
-        },
-        {
-          title: "Edge Runtime",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Architecture",
-      url: "#",
-      items: [
-        {
-          title: "Accessibility",
-          url: "#",
-        },
-        {
-          title: "Fast Refresh",
-          url: "#",
-        },
-        {
-          title: "Next.js Compiler",
-          url: "#",
-        },
-        {
-          title: "Supported Browsers",
-          url: "#",
-        },
-        {
-          title: "Turbopack",
-          url: "#",
-        },
-      ],
-    },
+    }
   ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar {...props}>
+    <Sidebar {...props} collapsible="offcanvas">
       <SidebarHeader>
-        <VersionSwitcher
-          versions={data.versions}
-          defaultVersion={data.versions[0]}
-        />
-        <SearchForm />
+        <div className="flex h-16 items-center px-6 border-b border-sidebar-border/50">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-paw-print h-8 w-8 text-primary mr-2" aria-hidden="true"><circle cx="11" cy="4" r="2"></circle><circle cx="18" cy="8" r="2"></circle><circle cx="20" cy="16" r="2"></circle><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"></path></svg><span className="font-heading font-bold text-xl tracking-tight text-primary">Happy Tails</span>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
@@ -166,7 +71,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenu>
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
+                    <SidebarMenuButton asChild>
                       <a href={item.url}>{item.title}</a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
