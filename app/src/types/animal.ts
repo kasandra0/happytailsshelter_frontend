@@ -1,16 +1,16 @@
 export type Animal = {
   animal_id: number;
-  microchip: string | null;
+  microchip: string;
   name: string;
-  date_of_birth: Date | null;
-  gender: string | null;
-  color: string | null;
-  breed: string | null;
+  date_of_birth?: Date;
+  gender?: string;
+  color?: string;
+  breed?: string;
   species: string;
-  weight: number | null;
-  status: string;
-  description: string | null;
-  photo_url: string | null;
-  created_at: Date | null;
-  updated_at: Date | null;
+  weight?: number;
+  status?: string;
+  description?: string;
+  photo_url?: string;
+  created_at?: Date;
+  updated_at?: Date;
 };
