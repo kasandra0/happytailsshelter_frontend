@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
-
-export function AnimalProfilePage() {
+import type { Animal } from "@/types/animal";
+interface AnimalProfilePageProps {
+    animal: Animal;
+}
+export function AnimalProfilePage({ animal }: AnimalProfilePageProps) {
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center items-center p-6">
       
