@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Demo from "./pages/ComponentDemos";
-import { LoginForm } from "./pages/LoginPage";
+import { LoginPage } from "./pages/LoginPage";
 import { Error404 } from "./pages/Error404";
 import { AnimalProfilePage } from "./pages/AnimalProfilepage";
 import AnimalListingPage from "./pages/AnimalListingPage";
 import { DashboardPage } from "./pages/DashboardPage";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   return (
@@ -12,10 +13,10 @@ function App() {
       <div className="flex flex-1 flex-row p-4">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<></>} /> {/* landing page */}
+            <Route path="/" element={<LandingPage />} /> {/* landing page */}
             <Route path="/staff/dashboard" element={<DashboardPage />} />
             {/* dashboard page */}
-            <Route path="/login" element={<LoginForm />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route
               path="/staff/animals"
               element={<AnimalListingPage />}
