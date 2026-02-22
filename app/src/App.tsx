@@ -16,7 +16,7 @@ function App() {
           <Route path="/login" element={<LoginForm />} />
           <Route
             path="/animals"
-            element={<AnimalListingPage isStaff={false} />}
+            element={<AnimalListingPage />}
           />{" "}
           {/* list of all animals in the shelter */}
           <Route path="/animals/:id" element={<Demo />} />{" "}
