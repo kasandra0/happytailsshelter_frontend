@@ -1,4 +1,5 @@
 import { DataTable } from "@/components/table/Table";
+import SidebarLayout from "@/layout/SidebarLayout";
 import { api } from "@/lib/api";
 import type { Animal } from "@/types/animal";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -42,9 +43,14 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
   }, []);
 
   return (
-    <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={animals} />
-    </div>
+    <SidebarLayout>
+      <div className="flex flex-1 flex-col gap-4 p-4">
+        <h2 className="text-2xl font-bold">Animal Listing</h2>
+        <div className="container mx-auto py-10">
+          <DataTable columns={columns} data={animals} />
+        </div>
+      </div>
+    </SidebarLayout>
   );
 };
 
