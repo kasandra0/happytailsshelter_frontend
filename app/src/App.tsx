@@ -8,6 +8,27 @@ import { DashboardPage } from "./pages/DashboardPage";
 
 function App() {
   return (
+    <BrowserRouter>
+      <div className="flex flex-1 flex-row p-4">
+        <Routes>
+          <Route path="/" element={<></>} />
+
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/login" element={<LoginForm />} />
+
+          <Route path="/animals" element={<AnimalListingPage isStaff={false} />} />
+          <Route path="/animals/:id" element={<Demo />} />
+          <Route path="/animals/new" element={<Demo />} />
+          <Route path="/animals/:id" element={<AnimalProfilePage animal={{} as any} />} />
+
+          <Route path="/inventory" element={<Demo />} />
+
+          <Route path="/components" element={<Demo />} />
+
+          <Route path="*" element={<Error404 />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
     <>
       <div className="flex flex-1 flex-row p-4">
         <BrowserRouter>
