@@ -37,7 +37,7 @@ const staffView = () => {
     {
       animal_id: 1,
       microchip: "100000000000001",
-      name: "Buddy",
+      name: "Daredevil",
       date_of_birth: new Date("2019-03-15"),
       gender: "M",
       color: "Golden",
@@ -67,7 +67,7 @@ const staffView = () => {
     {
       animal_id: 3,
       microchip: "100000000000003",
-      name: "Max",
+      name: "Bruno",
       date_of_birth: new Date("2018-11-05"),
       gender: "M",
       color: "Brindle",
