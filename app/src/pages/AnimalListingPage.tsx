@@ -28,19 +28,19 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
       header: "Status",
     },
   ];
-  const [animals, setAnimals] = useState<Animal[]>([]);
-  useEffect(() => {
-    const fetchAnimals = async () => {
-      try {
-        const data = await api.get<Animal[]>('animal');
-        setAnimals(data);
-      } catch (error) {
-        console.error('Error fetching animals:', error);
-      }
-    };
+const [animals, setAnimals] = useState<Animal[]>([]);
+useEffect(() => {
+  const fetchAnimals = async () => {
+    try {
+      const data = await api.get<Animal[]>('animal');
+      setAnimals(data);
+    } catch (error) {
+      console.error('Error fetching animals:', error);
+    }
+  };
 
-    fetchAnimals();
-  }, []);
+  fetchAnimals();
+}, []);
 
   return (
     <SidebarLayout>
