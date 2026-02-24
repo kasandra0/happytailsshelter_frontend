@@ -5,6 +5,7 @@ import { Error404 } from "./pages/Error404";
 import { AnimalProfilePage } from "./pages/AnimalProfilepage";
 import AnimalListingPage from "./pages/AnimalListingPage";
 import { DashboardPage } from "./pages/DashboardPage";
+import AdoptPage from "./pages/AdoptPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/animals/:id" element={<Demo />} />
             <Route path="/animals/new" element={<Demo />} />
             <Route path="/animals/:id" element={<AnimalProfilePage animal={{} as any} />} />
+            <Route path="/animals/:id/adopt" element={<AdoptPage />} />
 
             <Route path="/inventory" element={<Demo />} />
 
