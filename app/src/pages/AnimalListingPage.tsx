@@ -1,18 +1,14 @@
-import AnimalListingComponent from "@/components/animal-listing/animalListingComponent";
 import { DataTable } from "@/components/table/Table";
+import SidebarLayout from "@/layout/SidebarLayout";
+import { api } from "@/lib/api";
 import type { Animal } from "@/types/animal";
 import type { ColumnDef } from "@tanstack/react-table";
-import React, { type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 
 interface AnimalListingPageProps {
-  isStaff: boolean;
 }
 
-const AnimalListingPage: FC<AnimalListingPageProps> = ({ isStaff }) => {
-  return <>{isStaff ? staffView() : nonStaffView()}</>;
-};
-
-const staffView = () => {
+const AnimalListingPage: FC<AnimalListingPageProps> = () => {
   const columns: ColumnDef<Animal>[] = [
     { accessorKey: "id", header: "Animal ID" },
     {
@@ -32,6 +28,16 @@ const staffView = () => {
       header: "Status",
     },
   ];
+  const [animals, setAnimals] = useState<Animal[]>([]);
+  useEffect(() => {
+    const fetchAnimals = async () => {
+      try {
+        const data = await api.get<Animal[]>('animal');
+        setAnimals(data);
+      } catch (error) {
+        console.error('Error fetching animals:', error);
+      }
+    };
 
   const data: Animal[] = [
     {
@@ -131,12 +137,18 @@ const staffView = () => {
     </div>
   );
 };
+    fetchAnimals();
+  }, []);
 
-const nonStaffView = () => {
   return (
-    <>
-      <AnimalListingComponent />
-    </>
+    <SidebarLayout>
+      <div className="flex flex-1 flex-col gap-4 p-4">
+        <h2 className="text-2xl font-bold">Animal Listing</h2>
+        <div className="container mx-auto py-10">
+          <DataTable columns={columns} data={animals} />
+        </div>
+      </div>
+    </SidebarLayout>
   );
 };
 

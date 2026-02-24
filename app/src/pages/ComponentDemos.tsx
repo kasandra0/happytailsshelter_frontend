@@ -10,16 +10,13 @@ import {
 } from "@/components/ui/select";
 import React from "react";
 import { DatePickerDemo } from "./DatePickerDemo";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { DataTable } from "@/components/table/Table";
-import type { ColumnDef } from "@tanstack/react-table";
-import type { Animal } from "@/types/animal";
+import SidebarLayout from "@/layout/SidebarLayout";
 
 function Demo() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   return (
-    <>
+    <SidebarLayout>
       <div className="flex flex-1 flex-col gap-4 p-4 items-center">
         <Button>default</Button>
         <Button variant="outline">outline</Button>
@@ -48,7 +45,7 @@ function Demo() {
 
         <DatePickerDemo />
       </div>
-    </>
+    </SidebarLayout>
   );
 }
 

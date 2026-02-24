@@ -46,6 +46,7 @@ Navigate to Local:   http://localhost:5173/
         ├── assets/
         │   └── Static files (images, icons, etc.)
         ├── components/
+        |   ├── auth/
         │   ├── ui/
         │   │   └── Reusable Tailwind UI components (presentation only)
         │   └── layout/
@@ -54,8 +55,11 @@ Navigate to Local:   http://localhost:5173/
         │   └── Custom React hooks
         ├── pages/
         │   └── Application pages (Home, Profile, etc.)
+        ├── router/
+            └── index.tsx
         ├── services/
         │   └── API service layer (Axios / Fetch instances)
+        ├── types/
         ├── utils/
         │   └── Helper functions
         ├── App.jsx
