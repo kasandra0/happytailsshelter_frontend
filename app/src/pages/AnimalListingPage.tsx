@@ -32,7 +32,7 @@ const [animals, setAnimals] = useState<Animal[]>([]);
 useEffect(() => {
   const fetchAnimals = async () => {
     try {
-      const data = await api.get<Animal[]>('animal');
+      const data = await api.get<Animal[]>('animals');
       setAnimals(data);
     } catch (error) {
       console.error('Error fetching animals:', error);

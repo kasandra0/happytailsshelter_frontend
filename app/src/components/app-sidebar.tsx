@@ -22,11 +22,11 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "/staff/dashboard",
+          url: "/dashboard",
         },
         {
           title: "Animals",
-          url: "/staff/animals",
+          url: "/animals",
         },
         {
           title: "Inventory",

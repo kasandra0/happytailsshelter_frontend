@@ -14,7 +14,7 @@ function App() {
       <BrowserRouter>
         <div className="flex flex-1 flex-row p-4">
           <Routes>
-            <Route path="/" element={<></>} />
+            <Route path="/" element={<LandingPage />} /> 
 
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -33,25 +33,7 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
-      <div className="flex flex-1 flex-row p-4">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<></>} /> 
-            <Route path="/staff/dashboard" element={<DashboardPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route
-              path="/staff/animals"
-              element={<AnimalListingPage />}
-            />
-            <Route path="/staff/animals/:id" element={<Demo />} />
-            <Route path="/staff/animals/new" element={<Demo />} />
-            <Route path="/staff/inventory" element={<Demo />} />
-            <Route path="/components" element={<Demo />} />
-            <Route path="/*" element={<Error404 />} />
 
-          </Routes>
-        </BrowserRouter>
-      </div>
     </>
   );
 }
