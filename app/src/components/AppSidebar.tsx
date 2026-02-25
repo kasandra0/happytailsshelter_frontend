@@ -12,6 +12,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { NavLink } from "react-router-dom"
 
 // This is sample data.
 const data = {
@@ -22,33 +23,33 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "/dashboard",
+          url: "dashboard",
         },
         {
           title: "Animals",
-          url: "/animals",
+          url: "animals",
         },
         {
           title: "Inventory",
-          url: "#",
+          url: "inventory",
         },
         {
           title: "Intake Form",
-          url: "#",
+          url: "animals/new",
         },
       ],
     },
     {
-      title: "App Settings",
+      title: "Foster Parent Tools",
       url: "#",
       items: [
         {
-          title: "Theme Mode",
-          url: "#",
+          title: "My Animals",
+          url: "/fosterparent/myanimals",
         },
         {
-          title: "Data Fetching",
-          url: "#",
+          title: "My Profile",
+          url: "/fosterparent/profile",
         },
       ],
     }
@@ -74,7 +75,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <a href={item.url}>{item.title}</a>
+                      <NavLink to={item.url}>{item.title}</NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
