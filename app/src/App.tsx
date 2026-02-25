@@ -7,6 +7,7 @@ import AnimalListingPage from "./pages/AnimalListingPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import LandingPage from "./pages/LandingPage";
 import AdoptPage from "./pages/AdoptPage";
+import SignUpPage from "./pages/SignUpPage";
 
 function App() {
   return (
