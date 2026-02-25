@@ -5,19 +5,23 @@ import type { Animal } from "@/types/animal";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useEffect, useState, type FC } from "react";
 
-interface AnimalListingPageProps {
-}
+interface AnimalListingPageProps {}
 
 const AnimalListingPage: FC<AnimalListingPageProps> = () => {
   const columns: ColumnDef<Animal>[] = [
-    { accessorKey: "id", header: "Animal ID" },
+    { accessorKey: "animal_id", header: "Animal ID" },
     {
       accessorKey: "name",
       header: "Animal Name",
     },
     {
-      accessorKey: "age",
+      accessorKey: "date_of_birth",
       header: "Age",
+      cell: ({ row }) => {
+        const now = new Date();
+        const formattedDate = new Date(row.getValue("date_of_birth"));
+        return now.getUTCFullYear() - formattedDate.getUTCFullYear();
+      },
     },
     {
       accessorKey: "gender",
@@ -28,19 +32,20 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
       header: "Status",
     },
   ];
-const [animals, setAnimals] = useState<Animal[]>([]);
-useEffect(() => {
-  const fetchAnimals = async () => {
-    try {
-      const data = await api.get<Animal[]>('animals');
-      setAnimals(data);
-    } catch (error) {
-      console.error('Error fetching animals:', error);
-    }
-  };
+  const [animals, setAnimals] = useState<Animal[]>([]);
+  useEffect(() => {
+    const fetchAnimals = async () => {
+      try {
+        const data = await api.get<any>("animals");
+        setAnimals(data.data);
+        console.log("data", data);
+      } catch (error) {
+        console.error("Error fetching animals:", error);
+      }
+    };
 
-  fetchAnimals();
-}, []);
+    fetchAnimals();
+  }, []);
 
   return (
     <SidebarLayout>
