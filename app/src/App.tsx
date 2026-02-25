@@ -9,6 +9,9 @@ import LandingPage from "./pages/LandingPage";
 import AdoptPage from "./pages/AdoptPage";
 import useGlobalContext from "./hooks/useGlobalContext";
 import SidebarLayout from "./layout/SidebarLayout";
+import AnimalIntakePage from "./pages/AnimalIntakePage";
+import InventoryListingPage from "./pages/InventoryListingPage";
+import InventoryItemPage from "./pages/InventoryItemPage";
 
 function App() {
   // after authentication is connected - use setUser function to set user in the global context
@@ -29,10 +32,10 @@ function App() {
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="animals" element={<AnimalListingPage />} />
               <Route path="animals/:id" element={<Demo />} />
-              <Route path="animals/new" element={<Demo />} />
+              <Route path="animals/new" element={<AnimalIntakePage />} />
               <Route path="animals/:id" element={<AnimalProfilePage animal={{} as any} />} />
-              <Route path="inventory" element={<Demo />} />
-              <Route path="inventory/:id" element={<Demo />} />
+              <Route path="inventory" element={<InventoryListingPage />} />
+              <Route path="inventory/:id" element={<InventoryItemPage />} />
             </Route>
 
 
