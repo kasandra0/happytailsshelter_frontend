@@ -7,8 +7,12 @@ import AnimalListingPage from "./pages/AnimalListingPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import LandingPage from "./pages/LandingPage";
 import AdoptPage from "./pages/AdoptPage";
+import { createContext } from "react";
+import useGlobalContext from "./hooks/useGlobalContext";
 
 function App() {
+  // after authentication is connected - use setUser function to set user in the global context
+  const {setUser} = useGlobalContext();
   return (
     <>
       <BrowserRouter>
