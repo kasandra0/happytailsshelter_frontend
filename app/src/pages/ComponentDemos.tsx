@@ -16,7 +16,6 @@ function Demo() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   return (
-    <SidebarLayout userRole="staff">
       <div className="flex flex-1 flex-col gap-4 p-4 items-center">
         <h3>This page has not been implemented yet. This is Demo Page</h3>
         <Button>default</Button>
@@ -46,7 +45,6 @@ function Demo() {
 
         <DatePickerDemo />
       </div>
-    </SidebarLayout>
   );
 }
 
