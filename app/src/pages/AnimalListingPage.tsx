@@ -1,7 +1,7 @@
 import { DataTable } from "@/components/table/Table";
 import SidebarLayout from "@/layout/SidebarLayout";
 import { api } from "@/lib/api";
-import type { Animal } from "@/types/animal";
+import type { Animal } from "@/types/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useEffect, useState, type FC } from "react";
 

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import SidebarLayout from "@/layout/SidebarLayout";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
-import type { Animal } from "@/types/animal";
+import type { Animal } from "@/types/types";
 
 type AdoptFormState = {
   fullName: string;
