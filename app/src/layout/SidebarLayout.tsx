@@ -6,11 +6,10 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
 interface DashboardLayoutProps {
-  children: React.ReactNode;
   userRole: "admin" | "staff" | "fosterparent";
 }
 
-export default function SidebarLayout({ children, userRole }: DashboardLayoutProps) {
+export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (

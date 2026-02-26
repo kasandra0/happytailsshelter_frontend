@@ -28,7 +28,7 @@ function App() {
               <Route path="*" element={<Error404 />} />
             </Route>
 
-            <Route path="/staff" element={<SidebarLayout children={undefined} userRole={"staff"} />}>
+            <Route path="/staff" element={<SidebarLayout userRole={"staff"} />}>
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="animals" element={<AnimalListingPage />} />
               <Route path="animals/:id" element={<Demo />} />
