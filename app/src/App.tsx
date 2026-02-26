@@ -19,7 +19,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <div className="flex flex-1 flex-row p-4">
+        <div className="flex flex-1 flex-row">
           <Routes>
             <Route path="/">
               <Route path="" element={<LandingPage />} />
@@ -31,9 +31,8 @@ function App() {
             <Route path="/staff" element={<SidebarLayout userRole={"staff"} />}>
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="animals" element={<AnimalListingPage />} />
-              <Route path="animals/:id" element={<Demo />} />
               <Route path="animals/new" element={<AnimalIntakePage />} />
-              <Route path="animals/:id" element={<AnimalProfilePage animal={{} as any} />} />
+              <Route path="animals/:id" element={<AnimalProfilePage />} />
               <Route path="inventory" element={<InventoryListingPage />} />
               <Route path="inventory/:id" element={<InventoryItemPage />} />
             </Route>
@@ -43,7 +42,7 @@ function App() {
               <Route path="myanimals" element={<></>} />
               <Route path="profile" element={<></>} />
               <Route path="animals/:id/adopt" element={<AdoptPage />} />
-              <Route path="animals/:id" element={<AnimalProfilePage animal={{} as any} />} />
+              <Route path="animals/:id" element={<AnimalProfilePage />} />
             </Route>
 
             <Route path="/">

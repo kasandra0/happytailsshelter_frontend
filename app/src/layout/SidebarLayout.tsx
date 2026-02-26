@@ -32,7 +32,7 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
       {/* Main content area */}
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         {/* Header */}
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+        <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
           {/* Sidebar trigger button */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
