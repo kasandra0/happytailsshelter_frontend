@@ -37,7 +37,6 @@ function App() {
               <Route path="inventory/:id" element={<InventoryItemPage />} />
             </Route>
 
-
             <Route path="/fosterparent">
               <Route path="myanimals" element={<></>} />
               <Route path="profile" element={<></>} />

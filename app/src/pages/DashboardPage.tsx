@@ -1,5 +1,3 @@
-import SidebarLayout from "@/layout/SidebarLayout";
-
 export function DashboardPage() {
 
     return (
