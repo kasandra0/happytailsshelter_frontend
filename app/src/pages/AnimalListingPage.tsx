@@ -2,6 +2,7 @@ import { ManageAnimalForm } from "@/components/form/manageAnimalForm";
 import { Modal } from "@/components/modal/modal";
 import { DataTable } from "@/components/table/Table";
 import { Button } from "@/components/ui/button";
+import { calculateAge } from "@/lib/utils";
 import { useAnimalStore } from "@/store/animals/animalStore";
 import type { Animal } from "@/types/types";
 import {
@@ -29,9 +30,9 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
         accessorKey: "date_of_birth",
         header: "Age",
         cell: ({ row }) => {
-          const now = new Date();
-          const formattedDate = new Date(row.getValue("date_of_birth"));
-          return now.getUTCFullYear() - formattedDate.getUTCFullYear();
+          const dateOfBirth = row.getValue("date_of_birth") as string;
+          const birthDate = new Date(dateOfBirth);
+          return calculateAge(birthDate);
         },
       },
       {

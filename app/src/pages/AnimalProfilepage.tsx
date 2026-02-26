@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getAnimalById } from "@/lib/api";
+import { calculateAge } from "@/lib/utils";
 import type { Animal } from "@/types/types";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -36,8 +37,6 @@ export function AnimalProfilePage({ }: AnimalProfilePageProps) {
     
   }, [params]);
     const dateOfBirth = animal?.date_of_birth ? new Date(animal.date_of_birth) : null;
-    const age = dateOfBirth ? Math.floor((Date.now() - dateOfBirth.getTime()) / (1000 * 60 * 60 * 24 * 365.25)) : "Unknown";
-
     return (
       <div className="p-4">
         {animal ? (
@@ -46,7 +45,7 @@ export function AnimalProfilePage({ }: AnimalProfilePageProps) {
             <div className="flex flex-col gap-2 mt-4">
             <p>Breed: {animal.breed}</p>
             <p>DOB: {dateOfBirth ? dateOfBirth.toLocaleDateString() : "Unknown"}</p>
-            <p>Age: {age}</p>
+            <p>Age: {dateOfBirth ? calculateAge(dateOfBirth) : "Unknown"}</p>
             <p>Gender: {animal.gender}</p>
             <p>Description: {animal.description}</p>
             <p>Status: {animal.status}</p>
