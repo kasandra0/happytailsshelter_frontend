@@ -12,7 +12,6 @@ import {
   DropdownMenuItem,
 } from "@radix-ui/react-dropdown-menu";
 import type { ColumnDef } from "@tanstack/react-table";
-import { id } from "date-fns/locale";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState, type FC, useMemo } from "react";
 
@@ -109,6 +108,7 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
 
   const handleSubmit = async (animal: Animal) => {
     await updateAnimal(animal);
+    setModalOpen(false);
   };
 
   return (
@@ -122,10 +122,11 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
         open={modalOpen}
         onOpenChange={setModalOpen}
         title="Confirm Update"
-        component={<ManageAnimalForm animal={selectedAnimal} />}
+        component={
+          <ManageAnimalForm animal={selectedAnimal} onSubmit={handleSubmit} />
+        }
         submitText="Update"
         onCancel={handleCancel}
-        onSubmit={handleSubmit}
         form="manage-animal-form"
       />
     </div>

@@ -5,16 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Field,
   FieldError,
@@ -49,10 +40,12 @@ export const animalFormSchema = z.object({
 
 export interface ManageAnimalFormInputs {
   animal: Animal | null;
+  onSubmit: (data: Animal) => void;
 }
 
 export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
   animal,
+  onSubmit,
 }) => {
   const form = useForm<z.infer<typeof animalFormSchema>>({
     resolver: zodResolver(animalFormSchema),
@@ -60,33 +53,16 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
       animal_id: animal?.animal_id ?? 0,
       microchip: animal?.microchip ?? "",
       name: animal?.name ?? "",
-      date_of_birth: animal?.date_of_birth ?? new Date(),
+      date_of_birth: new Date(animal?.date_of_birth ?? ""),
       gender: animal?.gender,
       color: animal?.color,
       breed: animal?.breed,
       species: animal?.species,
-      weight: animal?.weight,
-      status: animal?.species ?? "",
+      weight: Number(animal?.weight),
+      status: animal?.status ?? "",
       description: animal?.description ?? "",
     },
   });
-
-  function onSubmit(data: z.infer<typeof animalFormSchema>) {
-    toast("You submitted the following values:", {
-      description: (
-        <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-      position: "bottom-right",
-      classNames: {
-        content: "flex flex-col gap-2",
-      },
-      style: {
-        "--border-radius": "calc(var(--radius)  + 4px)",
-      } as React.CSSProperties,
-    });
-  }
 
   return (
     <Card className="w-full sm:max-w-md">

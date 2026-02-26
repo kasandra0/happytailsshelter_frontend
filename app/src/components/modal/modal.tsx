@@ -15,8 +15,8 @@ export type ModalInputs = {
   title: string;
   description?: string;
   component?: any;
-  onCancel: () => void;
-  onSubmit: (data?: any) => Promise<any>;
+  onCancel?: () => void;
+  onSubmit?: (data?: any) => Promise<any>;
   cancelText?: string;
   submitText?: string;
   form?: string;
@@ -49,7 +49,7 @@ export const Modal: FC<ModalInputs> = ({
             {cancelText}
           </Button>
 
-          <Button type="submit" form={form} onClick={onSubmit}>
+          <Button type="submit" form={`${form}`} onClick={onSubmit}>
             {submitText}
           </Button>
         </DialogFooter>
