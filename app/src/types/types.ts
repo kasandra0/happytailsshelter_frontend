@@ -1,3 +1,4 @@
+// src/types/types.ts 
 export type Animal = {
   animal_id: number;
   microchip: string;
@@ -13,4 +14,12 @@ export type Animal = {
   photo_url?: string;
   created_at?: Date;
   updated_at?: Date;
+};
+
+export type User = {
+  userId: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  roles?: string[];
 };
