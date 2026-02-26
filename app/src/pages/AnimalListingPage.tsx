@@ -15,6 +15,7 @@ import {
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState, type FC, useMemo } from "react";
+import { NavLink } from "react-router-dom";
 
 interface AnimalListingPageProps {}
 
@@ -23,8 +24,17 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
     () => [
       { accessorKey: "animal_id", header: "Animal ID" },
       {
+        id: "name",
         accessorKey: "name",
         header: "Animal Name",
+        cell: ({ row }) => {
+          const animal = row.original;
+          return (
+            <NavLink to={`${animal.animal_id}`}>
+              {animal.name}
+            </NavLink>
+          );
+        }
       },
       {
         accessorKey: "date_of_birth",

@@ -26,7 +26,6 @@ export function AnimalProfilePage({ }: AnimalProfilePageProps) {
     }
   };
   useEffect(() => {
-    console.log("Animal ID from params:", params);
     const animalId = params.id;
     if (!animalId) {
       console.error("No animal ID provided in URL parameters.");
