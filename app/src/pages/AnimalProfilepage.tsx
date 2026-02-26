@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import type { Animal } from "@/types/animal";
+import type { Animal } from "@/types/types";
 
 interface AnimalProfilePageProps {
   animal: Animal;

@@ -1,10 +1,10 @@
-import { ManageAnimalForm } from "@/components/form/ManageAnimalForm";
+import { ManageAnimalForm } from "@/components/form/manageAnimalForm";
 import { Modal } from "@/components/modal/modal";
 import { DataTable } from "@/components/table/Table";
 import { Button } from "@/components/ui/button";
 import SidebarLayout from "@/layout/SidebarLayout";
 import { api } from "@/lib/api";
-import type { Animal } from "@/types/animal";
+import type { Animal } from "@/types/types";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -103,24 +103,22 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
   const handleSubmit = async () => {};
 
   return (
-    <SidebarLayout>
-      <div className="flex flex-1 flex-col gap-4 p-4">
-        <h2 className="text-2xl font-bold">Animal Listing</h2>
-        <div className="container mx-auto py-10">
-          <DataTable columns={columns} data={animals} />
-        </div>
-
-        <Modal
-          open={modalOpen}
-          onOpenChange={setModalOpen}
-          title="Confirm Update"
-          component={<ManageAnimalForm animal={selectedAnimal} />}
-          submitText="Update"
-          onCancel={handleCancel}
-          onSubmit={handleSubmit}
-        />
+    <div className="flex flex-1 flex-col gap-4 p-4">
+      <h2 className="text-2xl font-bold">Animal Listing</h2>
+      <div className="container mx-auto py-10">
+        <DataTable columns={columns} data={animals} />
       </div>
-    </SidebarLayout>
+
+      <Modal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        title="Confirm Update"
+        component={<ManageAnimalForm animal={selectedAnimal} />}
+        submitText="Update"
+        onCancel={handleCancel}
+        onSubmit={handleSubmit}
+      />
+    </div>
   );
 };
 

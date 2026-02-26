@@ -1,14 +1,16 @@
 // src/layouts/DashboardLayout.tsx
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { PanelLeft } from "lucide-react";
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
+  userRole: "admin" | "staff" | "fosterparent";
 }
 
-export default function SidebarLayout({ children }: DashboardLayoutProps) {
+export default function SidebarLayout({ children, userRole }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
@@ -45,7 +47,7 @@ export default function SidebarLayout({ children }: DashboardLayoutProps) {
 
         {/* Page content */}
         <main className="flex-1 overflow-y-auto p-4 bg-background">
-          {children}
+          <Outlet />
         </main>
       </div>
     </div>

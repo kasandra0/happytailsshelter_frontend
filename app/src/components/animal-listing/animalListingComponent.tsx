@@ -1,4 +1,4 @@
-import type { Animal } from "@/types/animal";
+import type { Animal } from "@/types/types";
 import CardComponent from "../card/cardComponent";
 import puppy1 from "../../assets/puppy1.jpeg";
 import kitty from "../../assets/kitty.jpeg";
