@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import SidebarLayout from "@/layout/SidebarLayout";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
-import type { Animal } from "@/types/animal";
+import type { Animal } from "@/types/types";
 
 type AdoptFormState = {
   fullName: string;
@@ -100,7 +99,6 @@ export default function AdoptPage() {
   }
 
   return (
-    <SidebarLayout>
       <div className="p-6 max-w-2xl">
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -240,6 +238,5 @@ export default function AdoptPage() {
           </div>
         </form>
       </div>
-    </SidebarLayout>
   );
 }

@@ -1,3 +1,7 @@
+// ShadCn -determine if viewing via mobile device based on the window width. 
+// It listens for changes in the window size and updates the state accordingly. 
+// The breakpoint for mobile devices is set at 768 pixels, 
+// https://ui.shadcn.com/docs/primitives/use-media-query
 import * as React from "react"
 
 const MOBILE_BREAKPOINT = 768
