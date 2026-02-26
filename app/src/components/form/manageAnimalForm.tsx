@@ -28,7 +28,7 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from "@/components/ui/input-group";
-import type { Animal } from "@/types/animal";
+import type { Animal } from "@/types/types";
 
 export const animalFormSchema = z.object({
   animal_id: z.number().int().readonly(),
@@ -91,15 +91,11 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
   return (
     <Card className="w-full sm:max-w-md">
       <CardHeader>
-        <CardTitle>{animal?.animal_id}</CardTitle>
-        <CardDescription>
-          Help us improve by reporting bugs you encounter.
-        </CardDescription>
+        <CardTitle>{`${animal?.name}: ${animal?.animal_id}`}</CardTitle>
       </CardHeader>
       <CardContent>
         <form id="manage-animal-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
-            {/* Name */}
             <Controller
               name="name"
               control={form.control}
@@ -120,7 +116,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               )}
             />
 
-            {/* Microchip */}
             <Controller
               name="microchip"
               control={form.control}
@@ -141,7 +136,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               )}
             />
 
-            {/* Species */}
             <Controller
               name="species"
               control={form.control}
@@ -162,7 +156,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               )}
             />
 
-            {/* Breed */}
             <Controller
               name="breed"
               control={form.control}
@@ -183,7 +176,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               )}
             />
 
-            {/* Gender */}
             <Controller
               name="gender"
               control={form.control}
@@ -204,7 +196,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               )}
             />
 
-            {/* Color */}
             <Controller
               name="color"
               control={form.control}
@@ -225,7 +216,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               )}
             />
 
-            {/* Weight */}
             <Controller
               name="weight"
               control={form.control}
@@ -247,7 +237,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               )}
             />
 
-            {/* Date of Birth */}
             <Controller
               name="date_of_birth"
               control={form.control}
@@ -293,7 +282,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               )}
             />
 
-            {/* Description */}
             <Controller
               name="description"
               control={form.control}
@@ -326,16 +314,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
           </FieldGroup>
         </form>
       </CardContent>
-      <CardFooter>
-        <Field orientation="horizontal">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            Reset
-          </Button>
-          <Button type="submit" form="form-rhf-demo">
-            Submit
-          </Button>
-        </Field>
-      </CardFooter>
     </Card>
   );
 };

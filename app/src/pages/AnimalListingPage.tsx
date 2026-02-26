@@ -60,12 +60,13 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
             <DropdownMenuContent align="end" className="w-40 bg-white border-2">
               <DropdownMenuGroup>
                 <DropdownMenuItem onClick={() => updateAnimal(animal)}>
-                  Update Animal
+                  <span className="clickable"> Update Animal</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
+
                 // onClick={() => navigator.clipboard.writeText(payment.id)}
                 >
-                  Delete Animal
+                  <span className="clickable"> Delete Animal</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
@@ -117,6 +118,7 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
         submitText="Update"
         onCancel={handleCancel}
         onSubmit={handleSubmit}
+        form="manage-animal-form"
       />
     </div>
   );

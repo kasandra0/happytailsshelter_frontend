@@ -19,6 +19,7 @@ export type ModalInputs = {
   onSubmit: () => Promise<any>;
   cancelText?: string;
   submitText?: string;
+  form?: string;
 };
 
 export const Modal: FC<ModalInputs> = ({
@@ -26,10 +27,12 @@ export const Modal: FC<ModalInputs> = ({
   onOpenChange,
   title,
   description,
+  component,
   onCancel,
   onSubmit,
   cancelText = "Cancel",
   submitText = "Submit",
+  form,
 }) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -38,11 +41,17 @@ export const Modal: FC<ModalInputs> = ({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+
+        {component && <div className="py-4">{component}</div>}
+
         <DialogFooter>
           <Button variant="outline" onClick={onCancel}>
             {cancelText}
           </Button>
-          <Button onClick={onSubmit}>{submitText}</Button>
+
+          <Button type="submit" form={form} onClick={onSubmit}>
+            {submitText}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
