@@ -1,118 +1,58 @@
 import { Button } from "@/components/ui/button";
+import { getAnimalById } from "@/lib/api";
+import { calculateAge } from "@/lib/utils";
 import type { Animal } from "@/types/types";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 interface AnimalProfilePageProps {
-  animal: Animal;
 }
 
-export function AnimalProfilePage({ animal }: AnimalProfilePageProps) {
-  const title = animal.name ?? "Unnamed Animal";
-  const status = (animal as unknown as { status?: string }).status ?? "Status Unknown";
-  const breed = (animal as unknown as { breed?: string }).breed ?? "Unknown";
-  const age = (animal as unknown as { age?: string }).age ?? "Unknown";
-  const gender = (animal as unknown as { gender?: string }).gender ?? "Unknown";
-  const description =
-    (animal as unknown as { description?: string }).description ??
-    "No description available yet.";
+export function AnimalProfilePage({ }: AnimalProfilePageProps) {
+  const [animal, setAnimal] = useState<Animal>();
+  const params = useParams();
+  const fetchAnimal = async (id: string) => {
+    const animalId = parseInt(id, 10);
+    if (isNaN(animalId)) {
+      console.error("Invalid animal ID:", id);
+      return;
+    }
+    try {
+      const fetchedAnimal = await getAnimalById(animalId);
+      console.log(`id: ${animalId} Fetched animal:`, fetchedAnimal);
+      setAnimal(fetchedAnimal);
+    } catch (error) {
+      console.error("Error fetching animal:", error);
+    }
+  };
+  useEffect(() => {
+    const animalId = params.id;
+    if (!animalId) {
+      console.error("No animal ID provided in URL parameters.");
+      return;
+    }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex justify-center items-center p-6">
-      <div className="max-w-3xl w-full bg-white rounded-2xl shadow-xl p-8 sm:p-10 space-y-8 border border-gray-100">
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-            {title}
-          </h1>
-
-          <div className="flex justify-center">
-            <span className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-semibold text-gray-700">
-              {status}
-            </span>
+    fetchAnimal(animalId);
+    
+  }, [params]);
+    const dateOfBirth = animal?.date_of_birth ? new Date(animal.date_of_birth) : null;
+    return (
+      <div className="p-4">
+        {animal ? (
+          <div>
+            <h1 className="text-2xl font-bold">{animal.name}</h1>
+            <div className="flex flex-col gap-2 mt-4">
+            <p>Breed: {animal.breed}</p>
+            <p>DOB: {dateOfBirth ? dateOfBirth.toLocaleDateString() : "Unknown"}</p>
+            <p>Age: {dateOfBirth ? calculateAge(dateOfBirth) : "Unknown"}</p>
+            <p>Gender: {animal.gender}</p>
+            <p>Description: {animal.description}</p>
+            <p>Status: {animal.status}</p>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
-            <p className="text-xs uppercase tracking-wide text-gray-500">
-              Breed
-            </p>
-            <p className="mt-1 text-lg font-semibold text-gray-900">
-              {breed}
-            </p>
           </div>
-
-          <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
-            <p className="text-xs uppercase tracking-wide text-gray-500">
-              Age
-            </p>
-            <p className="mt-1 text-lg font-semibold text-gray-900">
-              {age}
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
-            <p className="text-xs uppercase tracking-wide text-gray-500">
-              Gender
-            </p>
-            <p className="mt-1 text-lg font-semibold text-gray-900 capitalize">
-              {gender}
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
-            <p className="text-xs uppercase tracking-wide text-gray-500">
-              Adoption
-            </p>
-            <p className="mt-1 text-lg font-semibold text-gray-900">
-              Ready to meet you
-            </p>
-            <p className="mt-1 text-sm text-gray-600">
-              Submit an application to start the adoption process.
-            </p>
-          </div>
-        </div>
-
-        <section className="rounded-2xl border border-gray-100 bg-white p-0">
-          <div className="rounded-2xl bg-gray-50 p-6">
-            <h2 className="text-lg font-semibold text-gray-900">
-              About {title}
-            </h2>
-            <p className="mt-2 text-gray-600 leading-relaxed">
-              {description}
-            </p>
-
-            <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              {"color" in (animal as object) && (
-                <div className="rounded-lg border border-gray-100 bg-white p-3">
-                  <p className="text-gray-500">Color</p>
-                  <p className="font-medium text-gray-900">
-                    {String((animal as unknown as { color?: string }).color ?? "Unknown")}
-                  </p>
-                </div>
-              )}
-
-              {"location" in (animal as object) && (
-                <div className="rounded-lg border border-gray-100 bg-white p-3">
-                  <p className="text-gray-500">Location</p>
-                  <p className="font-medium text-gray-900">
-                    {String((animal as unknown as { location?: string }).location ?? "Unknown")}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <div className="space-y-3">
-          <Button className="w-full py-6 text-lg font-semibold rounded-xl transition-transform hover:scale-[1.01] active:scale-[0.99]">
-            Apply to Adopt {title}
-          </Button>
-
-          <p className="text-center text-xs text-gray-500">
-            By applying, you’re taking the first step toward giving {title} a loving home.
-          </p>
-        </div>
+        ) : (
+          <p>Loading animal details...</p>
+        )}
       </div>
-    </div>
-  );
+    );
 }
