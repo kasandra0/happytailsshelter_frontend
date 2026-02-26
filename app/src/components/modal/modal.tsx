@@ -16,7 +16,7 @@ export type ModalInputs = {
   description?: string;
   component?: any;
   onCancel: () => void;
-  onSubmit: () => Promise<any>;
+  onSubmit: (data?: any) => Promise<any>;
   cancelText?: string;
   submitText?: string;
   form?: string;

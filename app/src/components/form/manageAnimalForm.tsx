@@ -48,7 +48,7 @@ export const animalFormSchema = z.object({
 });
 
 export interface ManageAnimalFormInputs {
-  animal?: Animal;
+  animal: Animal | null;
 }
 
 export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
