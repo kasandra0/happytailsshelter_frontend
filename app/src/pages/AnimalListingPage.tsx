@@ -13,7 +13,7 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-} from "@radix-ui/react-dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -73,7 +73,7 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm">
                   <span className="sr-only">Open menu</span>
-                  <MoreHorizontal />
+                  <MoreHorizontal className="h-4 w-4"/>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -135,6 +135,11 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
     setModalOpen(true);
   };
 
+  const handleCreateAnimal = () => {
+    setSelectedAnimal(null);
+    setModalOpen(true);
+  };
+
   const handleDeleteAnimal = (id: number) => {
     setAnimalToDeleteId(id);
     setDeleteDialogOpen(true);
@@ -163,7 +168,10 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
-      <h2 className="text-2xl font-bold">Animal Listing</h2>
+      <h2 className="text-2xl font-bold">Animal Listing</h2>  
+      <Button onClick={handleCreateAnimal} >
+                  create
+                </Button>
       <div className="container mx-auto py-10">
         <DataTable columns={columns} data={animals} />
       </div>
