@@ -3,7 +3,6 @@
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import * as z from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -197,7 +196,7 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="animal-weight">Weight (kg)</FieldLabel>
+                  <FieldLabel htmlFor="animal-weight">Weight</FieldLabel>
                   <Input
                     {...field}
                     id="animal-weight"
@@ -237,7 +236,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               )}
             />
 
-            {/* Status */}
             <Controller
               name="status"
               control={form.control}
