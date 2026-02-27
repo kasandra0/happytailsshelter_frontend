@@ -5,6 +5,16 @@ import { Button } from "@/components/ui/button";
 import { useInventoryItemStore } from "@/store/inventoryItems/inventoryItemsStore";
 import type { InventoryItem } from "@/types/types";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
@@ -98,6 +108,10 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
   );
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [inventoryItemToDeleteId, setInventoryItemToDeleteId] = useState<
+    number | null
+  >(null);
   const {
     inventoryItems,
     selectedInventoryItem,
@@ -117,8 +131,16 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
     console.log("update clicked");
   };
 
-  const handleDeleteInventoryItem = async (id: number) => {
-    await deleteInventoryItem(id);
+  const handleDeleteInventoryItem = (id: number) => {
+    setInventoryItemToDeleteId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (inventoryItemToDeleteId === null) return;
+    await deleteInventoryItem(inventoryItemToDeleteId);
+    setInventoryItemToDeleteId(null);
+    setDeleteDialogOpen(false);
   };
 
   const handleCancel = () => {};
@@ -149,6 +171,26 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
         onCancel={handleCancel}
         form="manage-inventory-item-form"
       />
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the inventory item. This action
+              cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteDialogOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
