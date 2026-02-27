@@ -1,3 +1,4 @@
+import React, { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -9,11 +10,38 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { login } from "@/services/authService"
+import { useNavigate } from "react-router-dom"
+import useGlobalContext from "@/hooks/useGlobalContext"
 
 export function LoginPage({
     className,
     ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+    const [formData, setFormData] = useState({ email: "", password: "" });
+    const [errorMessage, setErrorMessage] = useState("");
+    const navigate = useNavigate();
+    const globalContext = useGlobalContext();
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        console.log("Form submitted with data:", formData);
+        // Handle login logic here
+        try {            
+            const response = await login(formData.email, formData.password);
+            console.log("Login successful, response:", response);
+            // Store the token in localStorage or context for later use
+
+            if (response.status !== 200) {
+                console.error("Login failed:", response);
+                setErrorMessage("Login failed. Please check your email and password.");
+                return;
+      }
+        } catch (error) {   
+            console.error("Login failed:", error);
+            // Show an error message to the user
+        }
+    };
     return (
         <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
             <div className="w-full max-w-sm">
@@ -26,11 +54,13 @@ export function LoginPage({
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <form>
+                            <form onSubmit={handleSubmit} className="grid w-full gap-6">
                                 <div className="flex flex-col gap-6">
                                     <div className="grid gap-2">
                                         <Label htmlFor="email">Email</Label>
                                         <Input
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             id="email"
                                             type="email"
                                             placeholder="m@example.com"
@@ -47,13 +77,16 @@ export function LoginPage({
                                                 Forgot your password?
                                             </a>
                                         </div>
-                                        <Input id="password" type="password" required />
+                                        <Input 
+                                            value={formData.password}
+                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                            id="password" 
+                                            // type="password" 
+                                            required 
+                                        />
                                     </div>
                                     <Button type="submit" className="w-full">
                                         Login
-                                    </Button>
-                                    <Button variant="outline" className="w-full">
-                                        Login with Google
                                     </Button>
                                 </div>
                                 <div className="mt-4 text-center text-sm">
