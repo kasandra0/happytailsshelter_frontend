@@ -15,7 +15,7 @@ import InventoryItemPage from "./pages/InventoryItemPage";
 import MyAnimals from "./pages/MyAnimalsPage";
 import MyAnimalsPage from "./pages/MyAnimalsPage";
 
-import { SignUpPage } from "./pages/SignUpPage";
+import SignUpPage from "./pages/SignUpPage"
 import { useEffect, useState } from "react";
 
 function App() {
