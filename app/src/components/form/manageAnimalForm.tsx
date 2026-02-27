@@ -196,7 +196,7 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="animal-weight">Weight (kg)</FieldLabel>
+                  <FieldLabel htmlFor="animal-weight">Weight</FieldLabel>
                   <Input
                     {...field}
                     id="animal-weight"
@@ -236,7 +236,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               )}
             />
 
-            {/* Status */}
             <Controller
               name="status"
               control={form.control}

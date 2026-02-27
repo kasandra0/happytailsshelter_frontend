@@ -14,6 +14,16 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from "@radix-ui/react-dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState, type FC, useMemo } from "react";
@@ -96,6 +106,8 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
   );
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [animalToDeleteId, setAnimalToDeleteId] = useState<number | null>(null);
   const [medicalLogModalOpen, setMedicalLogModalOpen] = useState(false);
   const {
     animals,
@@ -123,8 +135,16 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
     setModalOpen(true);
   };
 
-  const handleDeleteAnimal = async (id: number) => {
-    await deleteAnimal(id);
+  const handleDeleteAnimal = (id: number) => {
+    setAnimalToDeleteId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (animalToDeleteId === null) return;
+    await deleteAnimal(animalToDeleteId);
+    setAnimalToDeleteId(null);
+    setDeleteDialogOpen(false);
   };
 
   const handleCancel = () => {
@@ -172,6 +192,26 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
         onCancel={handleCancel}
         form="manage-animal-form"
       />
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the animal. This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteDialogOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

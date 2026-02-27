@@ -16,6 +16,15 @@ export type Animal = {
   updated_at?: Date;
 };
 
+export type InventoryItem = {
+  inventory_item_id: number;
+  name: string;
+  type?: string;
+  quantity?: number;
+  cost?: string;
+  lastupdated?: Date;
+};
+
 export type User = {
   userId: number;
   email: string;
