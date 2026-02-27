@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, redirect } from "react-router-dom";
 import Demo from "./pages/ComponentDemos";
 import { LoginPage } from "./pages/LoginPage";
 import { Error404 } from "./pages/Error404";
@@ -16,10 +16,25 @@ import MyAnimals from "./pages/MyAnimalsPage";
 import MyAnimalsPage from "./pages/MyAnimalsPage";
 
 import { SignUpPage } from "./pages/SignUpPage";
+import { useEffect, useState } from "react";
 
 function App() {
   // after authentication is connected - use setUser function to set user in the global context
-  const { setUser } = useGlobalContext();
+  const { setUser, user } = useGlobalContext();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+      if(user) console.log("User in global context on App load:", user);
+
+        if (!user) {
+          setIsLoading(false);
+          redirect("/");
+          return;
+        }
+  }, [setUser, user]);
+
+
+
   return (
     <>
       <BrowserRouter>

@@ -1,5 +1,6 @@
 // src/layouts/DashboardLayout.tsx
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarRail } from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarRail } from "@/components/ui/sidebar";
+import { logout } from "@/services/authService";
 import { PanelLeft } from "lucide-react";
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
@@ -51,6 +52,14 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
   }
 
 
+  async function handleLogout(): Promise<void> {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  }
+
   return (
     <div className="flex h-screen w-screen bg-background gap-1 overflow-hidden">
       {/* Sidebar - slides in/out */}
@@ -89,6 +98,14 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
                   </SidebarGroup>
                 ))}
               </SidebarContent>
+              <SidebarFooter>
+                <SidebarMenuButton onClick={handleLogout} className="w-full">
+                  Logout
+                </SidebarMenuButton>
+                <div className="flex h-16 items-center px-6 border-t border-sidebar-border/50">
+                  <span className="text-sm text-muted-foreground">Logged in as {userRole === "admin" ? "Admin" : "Foster Parent"}</span>
+                </div>
+              </SidebarFooter>
               <SidebarRail />
             </Sidebar>
           </SidebarProvider>

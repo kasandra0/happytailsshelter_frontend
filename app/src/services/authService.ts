@@ -18,3 +18,12 @@ export const login = async (email: string, password: string) => {
   }
 };
 
+export const logout = async () => {
+  try {
+    alert("Logout functionality not implemented yet.");
+  } catch (error) {
+    console.error('Logout error:', error);
+    throw error;
+  }
+};
+
