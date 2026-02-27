@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { getAnimalById } from "@/lib/api";
 import { calculateAge } from "@/lib/utils";
 import type { Animal } from "@/types/types";
