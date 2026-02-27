@@ -41,7 +41,6 @@ export function LoginPage({
             }
             const token = response.data.data.token;
             const payload = JSON.parse(atob(token.split('.')[1]));
-            console.log("Decoded token payload:", payload);
             const user: User = {
                 userId: payload.user_id,
                 email: payload.email,
@@ -108,7 +107,7 @@ export function LoginPage({
                                             value={formData.password}
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                             id="password"
-                                            // type="password" 
+                                            type="password" 
                                             required
                                         />
                                     </div>
