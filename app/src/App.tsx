@@ -15,6 +15,7 @@ import InventoryItemPage from "./pages/InventoryItemPage";
 import MyAnimals from "./pages/MyAnimalsPage";
 import MyAnimalsPage from "./pages/MyAnimalsPage";
 
+import { SignUpPage } from "./pages/SignUpPage";
 
 function App() {
   // after authentication is connected - use setUser function to set user in the global context
@@ -26,6 +27,7 @@ function App() {
           <Routes>
             <Route path="/">
               <Route path="" element={<LandingPage />} />
+              <Route path="signup" element={<SignUpPage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="error" element={<Error404 />} />
               <Route path="*" element={<Error404 />} />
