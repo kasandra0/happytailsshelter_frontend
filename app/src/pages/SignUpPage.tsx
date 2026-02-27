@@ -46,7 +46,7 @@ export function SignUpPage({
 
                 <Button type="submit" className="w-full">
                   Sign Up
-                </Button>
+                </Button>    // should be working 
 
               </form>
             </CardContent>
