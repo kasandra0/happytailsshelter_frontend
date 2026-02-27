@@ -34,4 +34,5 @@ export const getAnimalById = async (id: number) => {
     console.error(`Error fetching animal with id ${id}:`, error);
     throw error;
   }
+  
 };

@@ -1,10 +1,12 @@
 import { ManageAnimalForm } from "@/components/form/manageAnimalForm";
+import { ManageMedicalLogForm } from "@/components/form/manageMedicalLogForm";
 import { Modal } from "@/components/modal/modal";
 import { DataTable } from "@/components/table/Table";
 import { Button } from "@/components/ui/button";
 import { calculateAge } from "@/lib/utils";
 import { useAnimalStore } from "@/store/animals/animalStore";
-import type { Animal } from "@/types/types";
+import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
+import type { Animal, MedicalLog } from "@/types/types";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -79,9 +81,15 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
                 className="w-40 bg-white border-2"
               >
                 <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onClick={() => handleUpdateAnimalMedicalLog(animal)}
+                  >
+                    <span className="clickable">Add Medical Log Entry</span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleUpdateAnimal(animal)}>
                     <span className="clickable"> Update Animal</span>
                   </DropdownMenuItem>
+
                   <DropdownMenuItem
                     onClick={() => handleDeleteAnimal(animal.animal_id)}
                   >
@@ -100,6 +108,7 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [animalToDeleteId, setAnimalToDeleteId] = useState<number | null>(null);
+  const [medicalLogModalOpen, setMedicalLogModalOpen] = useState(false);
   const {
     animals,
     selectedAnimal,
@@ -109,14 +118,21 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
     setSelectedAnimal,
   } = useAnimalStore();
 
+  const { createMedicalLog, fetchMedicalLogs } = useMedicalLogStore();
+
   useEffect(() => {
     fetchAnimals();
+    fetchMedicalLogs();
   }, []);
+
+  const handleUpdateAnimalMedicalLog = (animal: Animal) => {
+    setSelectedAnimal(animal);
+    setMedicalLogModalOpen(true);
+  };
 
   const handleUpdateAnimal = (animal: Animal) => {
     setSelectedAnimal(animal);
     setModalOpen(true);
-    console.log("update clicked");
   };
 
   const handleDeleteAnimal = (id: number) => {
@@ -131,11 +147,18 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
     setDeleteDialogOpen(false);
   };
 
-  const handleCancel = () => {};
+  const handleCancel = () => {
+    setModalOpen(false);
+    setMedicalLogModalOpen(false);
+  };
 
   const handleSubmit = async (animal: Animal) => {
     await updateAnimal(animal);
     setModalOpen(false);
+  };
+  const handleMedicalLogSubmit = async (medicalLog: MedicalLog) => {
+    await createMedicalLog(medicalLog);
+    setMedicalLogModalOpen(false);
   };
 
   return (
@@ -145,6 +168,19 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
         <DataTable columns={columns} data={animals} />
       </div>
 
+      <Modal
+        open={medicalLogModalOpen}
+        onOpenChange={setMedicalLogModalOpen}
+        title="Add Medical Log Entry"
+        component={
+          <ManageMedicalLogForm
+            animal={selectedAnimal}
+            onSubmit={handleMedicalLogSubmit}
+          />
+        }
+        onCancel={handleCancel}
+        form="manage-medical-log-form"
+      />
       <Modal
         open={modalOpen}
         onOpenChange={setModalOpen}

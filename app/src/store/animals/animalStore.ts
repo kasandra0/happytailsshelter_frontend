@@ -8,7 +8,6 @@ interface AnimalState {
   loading: boolean;
   error: string | null;
 
-  // Actions
   fetchAnimals: () => Promise<void>;
   createAnimal: (animal: Omit<Animal, "animal_id">) => Promise<void>;
   updateAnimal: (animal: Animal) => Promise<void>;
