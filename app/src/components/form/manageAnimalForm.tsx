@@ -52,7 +52,7 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
       animal_id: animal?.animal_id ?? 0,
       microchip: animal?.microchip ?? "",
       name: animal?.name ?? "",
-      date_of_birth: new Date(animal?.date_of_birth ?? ""),
+      date_of_birth: animal?.date_of_birth ? new Date(animal.date_of_birth) : new Date(),
       gender: animal?.gender,
       color: animal?.color,
       breed: animal?.breed,

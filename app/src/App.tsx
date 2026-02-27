@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, redirect } from "react-router-dom";
 import Demo from "./pages/ComponentDemos";
 import { LoginPage } from "./pages/LoginPage";
 import { Error404 } from "./pages/Error404";
@@ -16,10 +16,25 @@ import MyAnimals from "./pages/MyAnimalsPage";
 import MyAnimalsPage from "./pages/MyAnimalsPage";
 
 import { SignUpPage } from "./pages/SignUpPage";
+import { useEffect, useState } from "react";
 
 function App() {
   // after authentication is connected - use setUser function to set user in the global context
-  const { setUser } = useGlobalContext();
+  const { setUser, user } = useGlobalContext();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+      if(user) console.log("User in global context on App load:", user);
+
+        if (!user) {
+          setIsLoading(false);
+          redirect("/");
+          return;
+        }
+  }, [setUser, user]);
+
+
+
   return (
     <>
       <BrowserRouter>
@@ -33,7 +48,7 @@ function App() {
               <Route path="*" element={<Error404 />} />
             </Route>
 
-            <Route path="/staff" element={<SidebarLayout userRole={"staff"} />}>
+            <Route path="/staff" element={<SidebarLayout userRole={"admin"} />}>
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="animals" element={<AnimalListingPage />} />
               <Route path="animals/new" element={<AnimalIntakePage />} />
@@ -42,7 +57,8 @@ function App() {
               <Route path="inventory/:id" element={<InventoryItemPage />} />
             </Route>
 
-            <Route path="/fosterparent">
+            <Route path="/fosterparent" element={<SidebarLayout userRole={"user"} />}>
+              <Route path="dashboard" element={<DashboardPage />} />
               <Route path="myanimals" element={<MyAnimalsPage />} />
               <Route path="profile" element={<></>} />
               <Route path="animals/:id/adopt" element={<AdoptPage />} />
