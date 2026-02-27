@@ -33,7 +33,7 @@ function App() {
               <Route path="*" element={<Error404 />} />
             </Route>
 
-            <Route path="/staff" element={<SidebarLayout userRole={"staff"} />}>
+            <Route path="/staff" element={<SidebarLayout userRole={"admin"} />}>
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="animals" element={<AnimalListingPage />} />
               <Route path="animals/new" element={<AnimalIntakePage />} />
@@ -42,7 +42,7 @@ function App() {
               <Route path="inventory/:id" element={<InventoryItemPage />} />
             </Route>
 
-            <Route path="/fosterparent">
+            <Route path="/fosterparent" element={<SidebarLayout userRole={"user"} />}>
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="myanimals" element={<MyAnimalsPage />} />
               <Route path="profile" element={<></>} />

@@ -1,16 +1,55 @@
 // src/layouts/DashboardLayout.tsx
-import { AppSidebar } from "@/components/AppSidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarRail } from "@/components/ui/sidebar";
 import { PanelLeft } from "lucide-react";
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 interface DashboardLayoutProps {
-  userRole: "admin" | "staff" | "fosterparent";
+  userRole: "admin" | "user";
 }
 
 export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const adminNav = {
+    title: "Employee Tools",
+    url: "#",
+    items: [
+      {
+        title: "Dashboard",
+        url: "dashboard",
+      },
+      {
+        title: "Animals",
+        url: "animals",
+      },
+      {
+        title: "Inventory",
+        url: "inventory",
+      },
+      {
+        title: "Intake Form",
+        url: "animals/new",
+      },
+    ],
+  }
+  const userNav = {
+    title: "Foster Parent Tools",
+    url: "#",
+    items: [
+      {
+        title: "My Animals",
+        url: "/fosterparent/myanimals",
+      },
+      {
+        title: "My Profile",
+        url: "/fosterparent/profile",
+      },
+    ],
+  };
+  const data = {
+    navMain: userRole === "admin" ? [adminNav] : [userNav],
+  }
+
 
   return (
     <div className="flex h-screen w-screen bg-background gap-1 overflow-hidden">
@@ -24,7 +63,34 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
       >
         <div className="w-48 h-full p-4">
           <SidebarProvider>
-            <AppSidebar />
+            <Sidebar collapsible="none">
+              <SidebarHeader>
+                <div className="flex h-16 items-center px-6 border-b border-sidebar-border/50">
+                  <img src="/src/assets/happytails-icon.svg" alt="Happy Tails Shelter logo: a stylized icon representing a pet shelter, accompanied by the text Happy Tails in bold serif font" className="h-8 w-8 mr-2" />
+                  <span className="font-heading font-bold text-xl tracking-tight text-primary">Happy Tails</span>
+                </div>
+              </SidebarHeader>
+              <SidebarContent>
+                {/* We create a SidebarGroup for each parent. */}
+                {data.navMain.map((item) => (
+                  <SidebarGroup key={item.title}>
+                    <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        {item.items.map((item) => (
+                          <SidebarMenuItem key={item.title}>
+                            <SidebarMenuButton asChild>
+                              <NavLink to={item.url}>{item.title}</NavLink>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                ))}
+              </SidebarContent>
+              <SidebarRail />
+            </Sidebar>
           </SidebarProvider>
         </div>
       </aside>
