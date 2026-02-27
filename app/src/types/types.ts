@@ -28,10 +28,12 @@ export type InventoryItem = {
 export type User = {
   userId: number;
   email: string;
+  name: string;
   firstName: string;
   lastName: string;
-  roles?: string[];
+  role: number; // 1 - admin, 2 - user
 };
+
 
 export type MedicalLog = {
   log_history_id: number;
