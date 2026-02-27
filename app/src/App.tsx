@@ -43,6 +43,7 @@ function App() {
             </Route>
 
             <Route path="/fosterparent">
+              <Route path="dashboard" element={<DashboardPage />} />
               <Route path="myanimals" element={<MyAnimalsPage />} />
               <Route path="profile" element={<></>} />
               <Route path="animals/:id/adopt" element={<AdoptPage />} />

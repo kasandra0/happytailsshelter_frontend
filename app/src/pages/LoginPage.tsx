@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { use, useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import { login } from "@/services/authService"
 import { useNavigate } from "react-router-dom"
 import useGlobalContext from "@/hooks/useGlobalContext"
+import type { User } from "@/types/types"
 
 export function LoginPage({
     className,
@@ -27,18 +28,40 @@ export function LoginPage({
         event.preventDefault();
         console.log("Form submitted with data:", formData);
         // Handle login logic here
-        try {            
+        try {
             const response = await login(formData.email, formData.password);
             console.log("Login successful, response:", response);
-            // Store the token in localStorage or context for later use
+
+            // get user data from response and set it in global context
 
             if (response.status !== 200) {
                 console.error("Login failed:", response);
                 setErrorMessage("Login failed. Please check your email and password.");
                 return;
-      }
-        } catch (error) {   
+            }
+            const token = response.data.data.token;
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            console.log("Decoded token payload:", payload);
+            const user: User = {
+                userId: payload.user_id,
+                email: payload.email,
+                role: parseInt(payload.role, 10), 
+                name: payload.name, // TODO: convert to split name
+                firstName: '', // not in token
+                lastName: '', // not in token
+            };
+            console.log("User set in global context:", user);
+            globalContext.setUser(user);
+            if (user.role === 1) {
+                navigate("/staff/dashboard");
+            } else if (user.role === 2) {
+                navigate("/fosterparent/dashboard");
+            }else {
+                navigate("/error");
+            }
+        } catch (error) {
             console.error("Login failed:", error);
+            setErrorMessage("Login failed.");
             // Show an error message to the user
         }
     };
@@ -51,6 +74,10 @@ export function LoginPage({
                             <CardTitle className="text-2xl">Login</CardTitle>
                             <CardDescription>
                                 Enter your email below to login to your account
+                            {/* Error message container */}
+                            {errorMessage && (
+                                <div className="text-red-500 text-sm">{errorMessage}</div>
+                            )}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -77,12 +104,12 @@ export function LoginPage({
                                                 Forgot your password?
                                             </a>
                                         </div>
-                                        <Input 
+                                        <Input
                                             value={formData.password}
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                            id="password" 
+                                            id="password"
                                             // type="password" 
-                                            required 
+                                            required
                                         />
                                     </div>
                                     <Button type="submit" className="w-full">
