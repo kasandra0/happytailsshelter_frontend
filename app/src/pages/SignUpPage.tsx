@@ -60,7 +60,7 @@ export default function LoginPage({
         <div className={cn("flex flex-col gap-6", className)} {...props}>
           <Card>
             <CardHeader>
-              <CardTitle>Login</CardTitle>
+              <CardTitle>Sign Up</CardTitle>
               <CardDescription>
                 Enter your credentials to access your account
               </CardDescription>
