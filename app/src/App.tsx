@@ -12,6 +12,9 @@ import SidebarLayout from "./layout/SidebarLayout";
 import AnimalIntakePage from "./pages/AnimalIntakePage";
 import InventoryListingPage from "./pages/InventoryListingPage";
 import InventoryItemPage from "./pages/InventoryItemPage";
+import MyAnimals from "./pages/MyAnimalsPage";
+import MyAnimalsPage from "./pages/MyAnimalsPage";
+
 import { SignUpPage } from "./pages/SignUpPage";
 
 function App() {
@@ -40,7 +43,7 @@ function App() {
             </Route>
 
             <Route path="/fosterparent">
-              <Route path="myanimals" element={<></>} />
+              <Route path="myanimals" element={<MyAnimalsPage />} />
               <Route path="profile" element={<></>} />
               <Route path="animals/:id/adopt" element={<AdoptPage />} />
               <Route path="animals/:id" element={<AnimalProfilePage />} />
