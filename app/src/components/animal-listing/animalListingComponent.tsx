@@ -5,22 +5,21 @@ import kitty from "../../assets/kitty.jpeg";
 import puppy2 from "../../assets/puppy2.jpeg";
 import type { FC } from "react";
 
-export interface AnimalListingComponentProps{
+export interface AnimalListingComponentProps {
   animal?: Animal;
-};
+}
 
-const AnimalListingComponent: FC<AnimalListingComponentProps> = ({ animal }) => {
+const AnimalListingComponent: FC<AnimalListingComponentProps> = ({
+  animal,
+}) => {
   const getAnimalPhoto = (index: number) => {
-    return index%3 === 0 ? puppy1
-      : index%3 === 1
-        ? kitty
-        : puppy2;
+    return index % 3 === 0 ? puppy1 : index % 3 === 1 ? kitty : puppy2;
   };
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-4 p-4">
-        {animal &&
+      <div className="flex w-full h-full">
+        {animal && (
           <CardComponent
             key={animal.animal_id}
             title={animal.name}
@@ -32,9 +31,9 @@ const AnimalListingComponent: FC<AnimalListingComponentProps> = ({ animal }) => 
               animal.status === "A" ? () => console.log("click") : undefined
             }
           />
-}
+        )}
       </div>
     </>
   );
-}
+};
 export default AnimalListingComponent;

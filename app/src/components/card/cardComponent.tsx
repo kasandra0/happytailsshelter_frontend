@@ -20,7 +20,7 @@ const CardComponent: FC<CardComponentInputs> = ({
   buttonText,
 }) => {
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg">
+    <div className="flex flex-col h-full rounded overflow-hidden shadow-lg w-full">
       <img
         className="w-full h-auto"
         height={300}
@@ -28,9 +28,9 @@ const CardComponent: FC<CardComponentInputs> = ({
         alt="image"
       />
       <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-2">
-          {title}{" "}
-          <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="font-bold text-xl">{title}</span>
+          <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
             {tag}
           </span>
         </div>
