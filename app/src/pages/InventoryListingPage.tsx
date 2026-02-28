@@ -116,6 +116,7 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
     inventoryItems,
     selectedInventoryItem,
     fetchInventoryItems,
+    createInventoryItem,
     updateInventoryItem,
     deleteInventoryItem,
     setSelectedInventoryItem,
@@ -146,13 +147,25 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
   const handleCancel = () => {};
 
   const handleSubmit = async (inventoryItem: InventoryItem) => {
+    if (selectedInventoryItem) {
     await updateInventoryItem(inventoryItem);
+    } else {
+      const { inventory_item_id, ... newItem } = inventoryItem;
+      await createInventoryItem(newItem)
+    }
     setModalOpen(false);
+    setSelectedInventoryItem(null);
   };
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
       <h2 className="text-2xl font-bold">Inventory Item Listing</h2>
+        {/* Create new Inventory item button */}
+        <Button onClick={() => {
+            setSelectedInventoryItem(null); 
+            setModalOpen(true);
+          }}>Add New Item
+        </Button>
       <div className="container mx-auto py-10">
         <DataTable columns={columns} data={inventoryItems} />
       </div>

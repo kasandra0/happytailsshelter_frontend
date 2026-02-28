@@ -38,18 +38,17 @@ export const useInventoryItemStore = create<InventoryItemState>((set) => ({
     }
   },
 
-  createInventoryItem: async (animal) => {
+  createInventoryItem: async (inventoryItem: Omit<InventoryItem, "inventory_item_id">) => {
     set({ loading: true, error: null });
     try {
       const response = await api.post<{ data: InventoryItem }>(
-        "animals",
-        animal
+        "inventory-items", inventoryItem,
       );
       set((state) => ({
         inventoryItems: [...state.inventoryItems, response.data],
       }));
     } catch (error) {
-      set({ error: "Failed to create inventory" });
+      set({ error: "Failed to create inventory item" });
     } finally {
       set({ loading: false });
     }
