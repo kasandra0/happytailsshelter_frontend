@@ -82,6 +82,18 @@ export default function LoginPage({
                 </div>
 
                 <div className="grid gap-2">
+                  <Label htmlFor="Name">Name</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="John Doe"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="grid gap-2">
                   <Label htmlFor="password">Password</Label>
                   <Input
                     id="password"
