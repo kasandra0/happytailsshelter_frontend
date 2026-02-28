@@ -1,7 +1,22 @@
+import { useState } from "react"; 
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { ManageAnimalForm } from "@/components/form/manageAnimalForm";
+import { useAnimalStore } from "@/store/animals/animalStore";
+import type { Animal } from "@/types/types";
+
 
 export default function AnimalIntakePage() {
+  const navigate = useNavigate();
+  const { createAnimal } = useAnimalStore();
+
+  const handleSubmit = async (animal: Animal) => {
+    const { animal_id, ...newAnimal } = animal;
+    await createAnimal(newAnimal);
+    navigate("/animals"); 
+  };
+
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
       <div className="flex items-start justify-between gap-4">
@@ -19,17 +34,17 @@ export default function AnimalIntakePage() {
 
       <div className="container mx-auto py-10">
         <div className="rounded-md border p-6">
-          <h3 className="text-lg font-semibold">Intake Form</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            This page is under construction. Please check back later.
-          </p>
+          <h3 className="text-lg font-semibold mb-6">Intake Form</h3>
 
-          <div className="mt-6 flex gap-2">
-            <Button disabled>Save Animal</Button>
-            <Button disabled variant="outline">
-              Cancel
-            </Button>
-          </div>
+          <form id="manage-animal-form" onSubmit={(e) => e.preventDefault()}>
+            <ManageAnimalForm animal={null} onSubmit={handleSubmit} />
+            
+            <div className="mt-6">
+              <Button type="submit" form="manage-animal-form">
+                Add New Animal
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
