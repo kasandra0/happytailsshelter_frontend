@@ -17,6 +17,7 @@ export default function LoginPage({
 }: React.ComponentPropsWithoutRef<"div">) {
 
   const [email, setEmail] = useState("")
+  const [name, setName] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
@@ -87,8 +88,8 @@ export default function LoginPage({
                     id="name"
                     type="text"
                     placeholder="John Doe"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                   />
                 </div>
