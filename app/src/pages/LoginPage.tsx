@@ -40,6 +40,7 @@ export function LoginPage({
                 return;
             }
             const token = response.data.data.token;
+            localStorage.setItem("token", token);
             const payload = JSON.parse(atob(token.split('.')[1]));
             const user: User = {
                 userId: payload.user_id,
