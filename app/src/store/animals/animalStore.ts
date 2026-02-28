@@ -36,7 +36,19 @@ export const useAnimalStore = create<AnimalState>((set) => ({
   createAnimal: async (animal) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.post<{ data: Animal }>("animals", animal);
+      const noIdData = {
+        microchip: animal.microchip,
+        name: animal.name,
+        date_of_birth: animal.date_of_birth,
+        gender: animal.gender,
+        color: animal.color,
+        breed: animal.breed,
+        species: animal.species,
+        weight: animal.weight,
+        status: animal.status,
+        description: animal.description,
+      };
+      const response = await api.post<{ data: Animal }>("animals", noIdData);
       set((state) => ({ animals: [...state.animals, response.data] }));
     } catch (error) {
       set({ error: "Failed to create animal" });

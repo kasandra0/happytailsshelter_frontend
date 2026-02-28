@@ -28,12 +28,12 @@ export const animalFormSchema = z.object({
     .min(1, "Name is required")
     .max(64, "Name must be at most 64 characters"),
   date_of_birth: z.date(),
-  gender: z.string().optional(),
+  gender: z.string().max(1, "Must be M or F"),
   color: z.string().optional(),
   breed: z.string().optional(),
   species: z.string().min(1, "Species is required"),
   weight: z.number().positive("Weight must be a positive number").optional(),
-  status: z.string().optional(),
+  status: z.string().min(1, "Status is required").max(1, "Must be A or X"),
   description: z.string().optional(),
 });
 
@@ -52,7 +52,9 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
       animal_id: animal?.animal_id ?? 0,
       microchip: animal?.microchip ?? "",
       name: animal?.name ?? "",
-      date_of_birth: animal?.date_of_birth ? new Date(animal.date_of_birth) : new Date(),
+      date_of_birth: animal?.date_of_birth
+        ? new Date(animal.date_of_birth)
+        : new Date(),
       gender: animal?.gender,
       color: animal?.color,
       breed: animal?.breed,
@@ -63,10 +65,13 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
     },
   });
 
+  const title =
+    animal === null ? "New Animal" : `${animal?.name}: ${animal?.animal_id}`;
+
   return (
     <Card className="w-full sm:max-w-md">
       <CardHeader>
-        <CardTitle>{`${animal?.name}: ${animal?.animal_id}`}</CardTitle>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <form id="manage-animal-form" onSubmit={form.handleSubmit(onSubmit)}>
@@ -103,6 +108,67 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
                     aria-invalid={fieldState.invalid}
                     placeholder="e.g. 985112345678903"
                     autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="status"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="animal-status">Status</FieldLabel>
+                  <Input
+                    {...field}
+                    id="animal-status"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="e.g. A for Available, X for Adopted"
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="gender"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="animal-gender">Gender</FieldLabel>
+                  <Input
+                    {...field}
+                    id="animal-gender"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="e.g. M, F"
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="weight"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="animal-weight">Weight</FieldLabel>
+                  <Input
+                    {...field}
+                    id="animal-weight"
+                    type="number"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="e.g. 12.5"
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -152,26 +218,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
             />
 
             <Controller
-              name="gender"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="animal-gender">Gender</FieldLabel>
-                  <Input
-                    {...field}
-                    id="animal-gender"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="e.g. Male, Female"
-                    autoComplete="off"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
               name="color"
               control={form.control}
               render={({ field, fieldState }) => (
@@ -183,27 +229,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
                     aria-invalid={fieldState.invalid}
                     placeholder="e.g. Brown, Black"
                     autoComplete="off"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="weight"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="animal-weight">Weight</FieldLabel>
-                  <Input
-                    {...field}
-                    id="animal-weight"
-                    type="number"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="e.g. 12.5"
-                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -228,26 +253,6 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
                         : ""
                     }
                     onChange={(e) => field.onChange(e.target.valueAsDate)}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="status"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="animal-status">Status</FieldLabel>
-                  <Input
-                    {...field}
-                    id="animal-status"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="e.g. Available, Adopted"
-                    autoComplete="off"
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />

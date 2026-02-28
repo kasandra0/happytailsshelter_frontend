@@ -73,7 +73,7 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm">
                   <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="h-4 w-4"/>
+                  <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -109,10 +109,12 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [animalToDeleteId, setAnimalToDeleteId] = useState<number | null>(null);
   const [medicalLogModalOpen, setMedicalLogModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
   const {
     animals,
     selectedAnimal,
     fetchAnimals,
+    createAnimal,
     updateAnimal,
     deleteAnimal,
     setSelectedAnimal,
@@ -131,11 +133,13 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
   };
 
   const handleUpdateAnimal = (animal: Animal) => {
+    setModalTitle("Update Animal");
     setSelectedAnimal(animal);
     setModalOpen(true);
   };
 
   const handleCreateAnimal = () => {
+    setModalTitle("Create Animal");
     setSelectedAnimal(null);
     setModalOpen(true);
   };
@@ -158,7 +162,9 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
   };
 
   const handleSubmit = async (animal: Animal) => {
-    await updateAnimal(animal);
+    animal.animal_id === 0
+      ? await createAnimal(animal)
+      : await updateAnimal(animal);
     setModalOpen(false);
   };
   const handleMedicalLogSubmit = async (medicalLog: MedicalLog) => {
@@ -168,11 +174,14 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
-      <h2 className="text-2xl font-bold">Animal Listing</h2>  
-      <Button onClick={handleCreateAnimal} >
-                  create
-                </Button>
-      <div className="container mx-auto py-10">
+      <h2 className="text-2xl text-center font-bold">Animal Listing</h2>
+
+      <div className="container mx-auto">
+        <div className="flex flex-row justify-end my-2">
+          <Button className="justify-end" onClick={handleCreateAnimal}>
+            Create
+          </Button>
+        </div>
         <DataTable columns={columns} data={animals} />
       </div>
 
@@ -192,11 +201,10 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
       <Modal
         open={modalOpen}
         onOpenChange={setModalOpen}
-        title="Confirm Update"
+        title={modalTitle}
         component={
           <ManageAnimalForm animal={selectedAnimal} onSubmit={handleSubmit} />
         }
-        submitText="Update"
         onCancel={handleCancel}
         form="manage-animal-form"
       />
