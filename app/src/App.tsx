@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, redirect } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import Demo from "./pages/ComponentDemos";
 import { LoginPage } from "./pages/LoginPage";
 import { Error404 } from "./pages/Error404";
@@ -7,37 +8,51 @@ import AnimalListingPage from "./pages/AnimalListingPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import LandingPage from "./pages/LandingPage";
 import AdoptPage from "./pages/AdoptPage";
-import useGlobalContext from "./hooks/useGlobalContext";
+import { defaultUser, GlobalContext } from "./hooks/GlobalContext";
 import SidebarLayout from "./layout/SidebarLayout";
 import AnimalIntakePage from "./pages/AnimalIntakePage";
 import InventoryListingPage from "./pages/InventoryListingPage";
 import InventoryItemPage from "./pages/InventoryItemPage";
-import MyAnimals from "./pages/MyAnimalsPage";
 import MyAnimalsPage from "./pages/MyAnimalsPage";
 
 import SignUpPage from "./pages/SignUpPage"
 import { useEffect, useState } from "react";
+import type { User } from "./types/types";
+import { getCurrentUser } from "./services/userService";
 
 function App() {
-  // after authentication is connected - use setUser function to set user in the global context
-  const { setUser, user } = useGlobalContext();
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [user, setUser] = useState<User | null>(defaultUser);
   useEffect(() => {
-      if(user) console.log("User in global context on App load:", user);
-
-        if (!user) {
-          setIsLoading(false);
-          redirect("/");
-          return;
-        }
-  }, [setUser, user]);
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
+      console.log("No token found in localStorage.");
+      setUser(null);
+      return;
+    }
+    if (storedToken) {
+      const payload = JSON.parse(atob(storedToken.split('.')[1]));
+      const exp = (payload.exp)
+      if (Date.now() >= exp * 1000) {
+        localStorage.removeItem("token");
+        setUser(null);
+        return;
+      }
+    }
+    getCurrentUser().then((userData) => {
+      console.log("Current user data fetched:", userData);
+      setUser(userData);
+    }).catch((error) => {
+      console.error("Error fetching current user:", error);
+      setUser(null);
+    });
+  }, []);
 
 
 
   return (
     <>
-      <BrowserRouter>
+    <GlobalContext.Provider value={{ user, setUser }}>
+    <BrowserRouter>
         <div className="flex flex-1 flex-row">
           <Routes>
             <Route path="/">
@@ -48,21 +63,23 @@ function App() {
               <Route path="*" element={<Error404 />} />
             </Route>
 
-            <Route path="/staff" element={<SidebarLayout userRole={"admin"} />}>
-              <Route path="dashboard" element={<DashboardPage />} />
-              <Route path="animals" element={<AnimalListingPage />} />
-              <Route path="animals/new" element={<AnimalIntakePage />} />
-              <Route path="animals/:id" element={<AnimalProfilePage />} />
-              <Route path="inventory" element={<InventoryListingPage />} />
-              <Route path="inventory/:id" element={<InventoryItemPage />} />
-            </Route>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/staff" element={<SidebarLayout userRole={"admin"} />}>
+                <Route path="dashboard" element={<DashboardPage />} />
+                <Route path="animals" element={<AnimalListingPage />} />
+                <Route path="animals/new" element={<AnimalIntakePage />} />
+                <Route path="animals/:id" element={<AnimalProfilePage />} />
+                <Route path="inventory" element={<InventoryListingPage />} />
+                <Route path="inventory/:id" element={<InventoryItemPage />} />
+              </Route>
 
-            <Route path="/fosterparent" element={<SidebarLayout userRole={"user"} />}>
-              <Route path="dashboard" element={<DashboardPage />} />
-              <Route path="myanimals" element={<MyAnimalsPage />} />
-              <Route path="profile" element={<></>} />
-              <Route path="animals/:id/adopt" element={<AdoptPage />} />
-              <Route path="animals/:id" element={<AnimalProfilePage />} />
+              <Route path="/fosterparent" element={<SidebarLayout userRole={"user"} />}>
+                <Route path="dashboard" element={<DashboardPage />} />
+                <Route path="myanimals" element={<MyAnimalsPage />} />
+                <Route path="profile" element={<></>} />
+                <Route path="animals/:id/adopt" element={<AdoptPage />} />
+                <Route path="animals/:id" element={<AnimalProfilePage />} />
+              </Route>
             </Route>
 
             <Route path="/">
@@ -73,7 +90,7 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
-
+      </GlobalContext.Provider>
     </>
   );
 }

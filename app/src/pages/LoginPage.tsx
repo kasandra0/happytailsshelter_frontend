@@ -1,4 +1,4 @@
-import React, { use, useState } from "react"
+import React, { use, useContext, useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,8 +12,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { login } from "@/services/authService"
 import { useNavigate } from "react-router-dom"
-import useGlobalContext from "@/hooks/useGlobalContext"
 import type { User } from "@/types/types"
+import { GlobalContext } from "@/hooks/GlobalContext"
 
 export function LoginPage({
     className,
@@ -22,7 +22,7 @@ export function LoginPage({
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
-    const globalContext = useGlobalContext();
+    const globalContext = useContext(GlobalContext);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

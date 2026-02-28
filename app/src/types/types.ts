@@ -28,10 +28,10 @@ export type InventoryItem = {
 export type User = {
   userId: number;
   email: string;
-  name: string;
+  name?: string;
   firstName: string;
   lastName: string;
-  role: number; // 1 - admin, 2 - user
+  role: number; // 2 - admin, 1 - user
 };
 
 

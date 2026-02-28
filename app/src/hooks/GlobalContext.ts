@@ -1,0 +1,20 @@
+import type { User } from "@/types/types";
+import { createContext } from "react";
+
+type GlobalContextType = {
+  user: User | null;
+  setUser: (user: User | null) => void;
+};
+
+export const defaultUser: User = {
+  userId: 0,
+  role: 0,
+  email: "",
+  firstName: "",
+  lastName: "",
+};
+
+export const GlobalContext = createContext<GlobalContextType>({
+  user: null,
+  setUser: () => {},
+});
