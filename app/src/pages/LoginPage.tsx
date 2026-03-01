@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { login } from "@/services/authService"
 import { useNavigate } from "react-router-dom"
-import type { User } from "@/types/types"
+import { ADMIN_ROLE, FOSTER_PARENT_ROLE, type User } from "@/types/types"
 import { GlobalContext } from "@/hooks/GlobalContext"
 
 export function LoginPage({
@@ -52,9 +52,9 @@ export function LoginPage({
             };
             console.log("User set in global context:", user);
             globalContext.setUser(user);
-            if (user.role === 1) {
-                navigate("/staff/dashboard");
-            } else if (user.role === 2) {
+            if (user.role === ADMIN_ROLE) {
+                navigate("/admin/dashboard");
+            } else if (user.role === FOSTER_PARENT_ROLE) {
                 navigate("/fosterparent/dashboard");
             } else {
                 navigate("/error");

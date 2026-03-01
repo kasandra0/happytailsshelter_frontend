@@ -31,8 +31,10 @@ export type User = {
   name?: string;
   firstName: string;
   lastName: string;
-  role: number; // 2 - admin, 1 - user
+  role: number; // 2 - admin, 1 - foster parent
 };
+export const ADMIN_ROLE = 2;
+export const FOSTER_PARENT_ROLE = 1;
 
 
 export type MedicalLog = {
