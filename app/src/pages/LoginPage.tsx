@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,8 +12,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { login } from "@/services/authService"
 import { useNavigate } from "react-router-dom"
-import useGlobalContext from "@/hooks/useGlobalContext"
-import type { User } from "@/types/types"
+import { ADMIN_ROLE, FOSTER_PARENT_ROLE, type User } from "@/types/types"
+import { GlobalContext } from "@/hooks/GlobalContext"
 
 export function LoginPage({
     className,
@@ -22,7 +22,7 @@ export function LoginPage({
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
-    const globalContext = useGlobalContext();
+    const globalContext = useContext(GlobalContext);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -40,6 +40,7 @@ export function LoginPage({
                 return;
             }
             const token = response.data.data.token;
+            localStorage.setItem("token", token);
             const payload = JSON.parse(atob(token.split('.')[1]));
             const user: User = {
                 userId: payload.user_id,
@@ -49,18 +50,17 @@ export function LoginPage({
                 firstName: '', // not in token
                 lastName: '', // not in token
             };
-            console.log("User set in global context:", user);
             globalContext.setUser(user);
-            if (user.role === 1) {
-                navigate("/staff/dashboard");
-            } else if (user.role === 2) {
+            if (user.role === ADMIN_ROLE) {
+                navigate("/admin/dashboard");
+            } else if (user.role === FOSTER_PARENT_ROLE) {
                 navigate("/fosterparent/dashboard");
             } else {
                 navigate("/error");
             }
         } catch (error) {
             console.error("Login failed:", error);
-            setErrorMessage("Login failed.");
+            setErrorMessage("Login failed. Please check your email and password.");
             // Show an error message to the user
         }
     };

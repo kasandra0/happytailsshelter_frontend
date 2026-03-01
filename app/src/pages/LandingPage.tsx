@@ -1,7 +1,25 @@
 import { Button } from '@/components/ui/button';
-import React from 'react';
+import { GlobalContext } from '@/hooks/GlobalContext';
+import { ADMIN_ROLE, FOSTER_PARENT_ROLE } from '@/types/types';
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LandingPage: React.FC = () => {
+    const { user } = useContext(GlobalContext);
+    const navigate = useNavigate();
+
+    const goToDashboard = () => {
+        if (user) {
+            if (user.role === ADMIN_ROLE) {
+                navigate('/admin/dashboard');
+            } else if (user.role === FOSTER_PARENT_ROLE) {
+                navigate('/fosterparent/dashboard');
+            }
+            return;
+        }
+        navigate('/login');
+    };
+
     return (
         <div className="min-h-screen w-full flex flex-col items-center justify-center px-4">
             <div className="text-center max-w-md">
@@ -24,7 +42,7 @@ const LandingPage: React.FC = () => {
                 {/* Sign in Button */}
                 <Button
                     size="lg"
-                    onClick={() => window.location.href = '/login'}
+                    onClick={goToDashboard}
                     className="w-full text-white font-semibold shadow-md hover:opacity-90 transition-opacity"
                 >
                     Sign In to Dashboard
