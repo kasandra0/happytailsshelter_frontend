@@ -44,7 +44,7 @@ export function LoginPage({
             const user: User = {
                 userId: payload.user_id,
                 email: payload.email,
-                role: parseInt(payload.role, 10), 
+                role: parseInt(payload.role, 10),
                 name: payload.name, // TODO: convert to split name
                 firstName: '', // not in token
                 lastName: '', // not in token
@@ -55,7 +55,7 @@ export function LoginPage({
                 navigate("/staff/dashboard");
             } else if (user.role === 2) {
                 navigate("/fosterparent/dashboard");
-            }else {
+            } else {
                 navigate("/error");
             }
         } catch (error) {
@@ -73,10 +73,10 @@ export function LoginPage({
                             <CardTitle className="text-2xl">Login</CardTitle>
                             <CardDescription>
                                 Enter your email below to login to your account
-                            {/* Error message container */}
-                            {errorMessage && (
-                                <div className="text-red-500 text-sm">{errorMessage}</div>
-                            )}
+                                {/* Error message container */}
+                                {errorMessage && (
+                                    <div className="text-red-500 text-sm">{errorMessage}</div>
+                                )}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -107,7 +107,7 @@ export function LoginPage({
                                             value={formData.password}
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                             id="password"
-                                            type="password" 
+                                            type="password"
                                             required
                                         />
                                     </div>
@@ -117,7 +117,7 @@ export function LoginPage({
                                 </div>
                                 <div className="mt-4 text-center text-sm">
                                     Don&apos;t have an account?{" "}
-                                    <a href="#" className="underline underline-offset-4">
+                                    <a href="/signup" className="underline underline-offset-4">
                                         Sign up
                                     </a>
                                 </div>

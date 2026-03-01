@@ -36,15 +36,17 @@ export const Modal: FC<ModalInputs> = ({
 }) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
-        {component && <div className="py-4">{component}</div>}
+        {component && (
+          <div className="overflow-y-auto flex-1 py-4">{component}</div>
+        )}
 
-        <DialogFooter>
+        <DialogFooter className="flex flex-row gap-2 justify-end">
           <Button variant="outline" onClick={onCancel}>
             {cancelText}
           </Button>
