@@ -50,7 +50,6 @@ export function LoginPage({
                 firstName: '', // not in token
                 lastName: '', // not in token
             };
-            console.log("User set in global context:", user);
             globalContext.setUser(user);
             if (user.role === ADMIN_ROLE) {
                 navigate("/admin/dashboard");
@@ -61,7 +60,7 @@ export function LoginPage({
             }
         } catch (error) {
             console.error("Login failed:", error);
-            setErrorMessage("Login failed.");
+            setErrorMessage("Login failed. Please check your email and password.");
             // Show an error message to the user
         }
     };
