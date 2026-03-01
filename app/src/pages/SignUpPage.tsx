@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label"
 type FieldErrors = Partial<Record<"name" | "email" | "password" | "confirmPassword", string>>
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const passwordRules = { minLen: 8, upper: /[A-Z]/, lower: /[a-z]/, number: /[0-9]/ }
+const passwordRules = { minLen: 10, upper: /[A-Z]/, lower: /[a-z]/, number: /[0-9]/ }
 
 function validatePassword(pw: string): string | null {
   if (pw.length < passwordRules.minLen) return "Password must be at least 10 characters."
@@ -48,7 +48,7 @@ export default function SignUpPage({
   const validate = (): boolean => {
     const errs: FieldErrors = {}
 
-    if (!name.trim()) errs.name = "Please enter your name."
+    if (!name.trim()) errs.name = "Please enter your name." // two inputs : name and last name , change UI 
     if (!email.trim()) errs.email = "Please enter your email."
     else if (!emailRegex.test(email.trim()))
       errs.email = "Please enter a valid email (example: name@email.com)."
@@ -74,17 +74,21 @@ export default function SignUpPage({
 
     setLoading(true)
     try {
-      const res = await fetch("/api/signup", {
+      const res = await fetch("http://localhost:3000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: name.trim(),
-          email: email.trim().toLowerCase(),
+          firstName: name.trim(),
+          lastName: "", // feed value to the request 
+          email: email.trim().toLowerCase(),  
           password,
         }),
       })
 
       const data = await res.json().catch(() => ({}))
+
+      console.log("REGISTER status:", res.status)
+      console.log("REGISTER response:", data)
 
       if (!res.ok) {
         const msg =
@@ -160,7 +164,7 @@ export default function SignUpPage({
                   )}
                 </div>
 
-            git <div className="grid gap-2">
+                <div className="grid gap-2">
                   <Label htmlFor="confirmPassword">Confirm password</Label>
                   <Input
                     id="confirmPassword"
