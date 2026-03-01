@@ -19,7 +19,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const passwordRules = { minLen: 8, upper: /[A-Z]/, lower: /[a-z]/, number: /[0-9]/ }
 
 function validatePassword(pw: string): string | null {
-  if (pw.length < passwordRules.minLen) return "Password must be at least 8 characters."
+  if (pw.length < passwordRules.minLen) return "Password must be at least 10 characters."
   if (!passwordRules.upper.test(pw)) return "Password must include at least 1 uppercase letter."
   if (!passwordRules.lower.test(pw)) return "Password must include at least 1 lowercase letter."
   if (!passwordRules.number.test(pw)) return "Password must include at least 1 number."
@@ -121,7 +121,7 @@ export default function SignUpPage({
                   <Input
                     id="name"
                     type="text"
-                    placeholder="Name Last Name"
+                    placeholder="Full Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     aria-invalid={!!fieldErrors.name}
@@ -134,7 +134,7 @@ export default function SignUpPage({
                   <Input
                     id="email"
                     type="email"
-                    placeholder="example@email.com"
+                    placeholder="name@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     aria-invalid={!!fieldErrors.email}
