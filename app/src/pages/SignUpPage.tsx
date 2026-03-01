@@ -121,7 +121,7 @@ export default function SignUpPage({
                   <Input
                     id="name"
                     type="text"
-                    placeholder="Claudia Dominguez"
+                    placeholder="Name Last Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     aria-invalid={!!fieldErrors.name}
@@ -134,7 +134,7 @@ export default function SignUpPage({
                   <Input
                     id="email"
                     type="email"
-                    placeholder="claudia@email.com"
+                    placeholder="example@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     aria-invalid={!!fieldErrors.email}
@@ -147,7 +147,7 @@ export default function SignUpPage({
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Min 8 chars, upper/lower/number"
+                    placeholder="Min 10 chars, upper/lower/number"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     aria-invalid={!!fieldErrors.password}
