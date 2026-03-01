@@ -160,7 +160,7 @@ export default function SignUpPage({
                   )}
                 </div>
 
-                <div className="grid gap-2">
+            git <div className="grid gap-2">
                   <Label htmlFor="confirmPassword">Confirm password</Label>
                   <Input
                     id="confirmPassword"
