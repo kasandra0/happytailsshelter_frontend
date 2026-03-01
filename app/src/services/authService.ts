@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
 export const login = async (email: string, password: string) => {
   try {
     const response = await axiosInstance.post(`${BASE_URL}auth/login`,
-         { email, password });
+      { email, password });
     return response;
   } catch (error) {
     console.error('Login error:', error);
@@ -27,3 +27,13 @@ export const logout = async () => {
   }
 };
 
+export const register = async (firstName: string, lastName: string, email: string, password: string) => {
+  try {
+    const response = await axiosInstance.post(`auth/register`,
+      { firstName, lastName, email, password });
+    return response;
+  } catch (error) {
+    console.error('Registration error:', error);
+    throw error;
+  }
+};

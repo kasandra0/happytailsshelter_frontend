@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { register } from "@/services/authService"
 
 type FieldErrors = Partial<Record<"name" | "email" | "password" | "confirmPassword", string>>
 
@@ -75,134 +76,113 @@ export default function SignUpPage({
     if (!validate()) return
 
     setLoading(true)
-    try {
-      const res = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName: firstName.trim(),
-          lastName: lastName.trim(),
-          email: email.trim().toLowerCase(),  
-          password,
-        }),
+    await register(firstName.trim(), lastName.trim(), email.trim(), password)
+      .then((response) => {
+        navigate("/login")
       })
-
-      const data = await res.json().catch(() => ({}))
-
-      console.log("REGISTER status:", res.status)
-      console.log("REGISTER response:", data)
-
-      if (!res.ok) {
-        const msg =
-          data?.message ||
-          (res.status === 409
-            ? "That email is already in use. Try logging in instead."
-            : "We couldn’t create your account. Please try again.")
-        throw new Error(msg)
-      }
-
-      if (data?.token) localStorage.setItem("token", data.token)
-      navigate("/dashboard")
-    } catch (err: any) {
-      setFormError(err?.message || "Something went wrong. Please try again.")
-    } finally {
-      setLoading(false)
+      .catch((error) => {
+        console.error("Registration error:", error)
+        setFormError("Registration failed. Please try again.")
+      })
+      .finally(() => {
+        setLoading(false)
+      })
     }
-  }
 
-  return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Sign Up</CardTitle>
-              <CardDescription>Create your account to continue</CardDescription>
-            </CardHeader>
 
-            <CardContent>
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="grid gap-2">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input
-                      id="firstName"
-                      type="text"
-                      placeholder="First Name"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      aria-invalid={!!fieldErrors.name}
-                    />
+    return (
+      <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+        <div className="w-full max-w-sm">
+          <div className={cn("flex flex-col gap-6", className)} {...props}>
+            <Card>
+              <CardHeader>
+                <CardTitle>Sign Up</CardTitle>
+                <CardDescription>Create your account to continue</CardDescription>
+              </CardHeader>
+
+              <CardContent>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="grid gap-2">
+                      <Label htmlFor="firstName">First Name</Label>
+                      <Input
+                        id="firstName"
+                        type="text"
+                        placeholder="First Name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        aria-invalid={!!fieldErrors.name}
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="lastName">Last Name</Label>
+                      <Input
+                        id="lastName"
+                        type="text"
+                        placeholder="Last Name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        aria-invalid={!!fieldErrors.name}
+                      />
+                    </div>
                   </div>
+                  {fieldErrors.name && <p className="text-sm text-red-500">{fieldErrors.name}</p>}
+
                   <div className="grid gap-2">
-                    <Label htmlFor="lastName">Last Name</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
-                      id="lastName"
-                      type="text"
-                      placeholder="Last Name"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      aria-invalid={!!fieldErrors.name}
+                      id="email"
+                      type="email"
+                      placeholder="name@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      aria-invalid={!!fieldErrors.email}
                     />
+                    {fieldErrors.email && <p className="text-sm text-red-500">{fieldErrors.email}</p>}
                   </div>
-                </div>
-                {fieldErrors.name && <p className="text-sm text-red-500">{fieldErrors.name}</p>}
 
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="name@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    aria-invalid={!!fieldErrors.email}
-                  />
-                  {fieldErrors.email && <p className="text-sm text-red-500">{fieldErrors.email}</p>}
-                </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Min 10 chars, upper/lower/number"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      aria-invalid={!!fieldErrors.password}
+                    />
+                    {fieldErrors.password && <p className="text-sm text-red-500">{fieldErrors.password}</p>}
+                    {!fieldErrors.password && (
+                      <p className="text-xs text-muted-foreground">
+                        Must be 10+ characters and include uppercase, lowercase, and a number.
+                      </p>
+                    )}
+                  </div>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Min 10 chars, upper/lower/number"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    aria-invalid={!!fieldErrors.password}
-                  />
-                  {fieldErrors.password && <p className="text-sm text-red-500">{fieldErrors.password}</p>}
-                  {!fieldErrors.password && (
-                    <p className="text-xs text-muted-foreground">
-                      Must be 10+ characters and include uppercase, lowercase, and a number.
-                    </p>
-                  )}
-                </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="confirmPassword">Confirm password</Label>
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      aria-invalid={!!fieldErrors.confirmPassword}
+                    />
+                    {fieldErrors.confirmPassword && (
+                      <p className="text-sm text-red-500">{fieldErrors.confirmPassword}</p>
+                    )}
+                  </div>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="confirmPassword">Confirm password</Label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    aria-invalid={!!fieldErrors.confirmPassword}
-                  />
-                  {fieldErrors.confirmPassword && (
-                    <p className="text-sm text-red-500">{fieldErrors.confirmPassword}</p>
-                  )}
-                </div>
+                  {formError && <p className="text-sm text-red-500">{formError}</p>}
 
-                {formError && <p className="text-sm text-red-500">{formError}</p>}
-
-                <Button type="submit" className="w-full" disabled={!canSubmit}>
-                  {loading ? "Creating account..." : "Create account"}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+                  <Button type="submit" className="w-full" disabled={!canSubmit}>
+                    {loading ? "Creating account..." : "Create account"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
