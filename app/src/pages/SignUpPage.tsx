@@ -32,7 +32,8 @@ export default function SignUpPage({
 }: React.ComponentPropsWithoutRef<"div">) {
   const navigate = useNavigate()
 
-  const [name, setName] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -41,14 +42,15 @@ export default function SignUpPage({
   const [loading, setLoading] = useState(false)
 
   const canSubmit = useMemo(
-    () => !!(name.trim() && email.trim() && password && confirmPassword && !loading),
-    [name, email, password, confirmPassword, loading]
+    () => !!(firstName.trim() && lastName.trim() && email.trim() && password && confirmPassword && !loading),
+    [firstName, lastName, email, password, confirmPassword, loading]
   )
 
   const validate = (): boolean => {
     const errs: FieldErrors = {}
 
-    if (!name.trim()) errs.name = "Please enter your name." // two inputs : name and last name , change UI 
+    if (!firstName.trim()) errs.name = "Please enter your first name."
+    if (!lastName.trim()) errs.name = "Please enter your last name."
     if (!email.trim()) errs.email = "Please enter your email."
     else if (!emailRegex.test(email.trim()))
       errs.email = "Please enter a valid email (example: name@email.com)."
@@ -78,8 +80,8 @@ export default function SignUpPage({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          firstName: name.trim(),
-          lastName: "", // feed value to the request 
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
           email: email.trim().toLowerCase(),  
           password,
         }),
@@ -120,18 +122,31 @@ export default function SignUpPage({
 
             <CardContent>
               <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Full Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    aria-invalid={!!fieldErrors.name}
-                  />
-                  {fieldErrors.name && <p className="text-sm text-red-500">{fieldErrors.name}</p>}
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="grid gap-2">
+                    <Label htmlFor="firstName">First Name</Label>
+                    <Input
+                      id="firstName"
+                      type="text"
+                      placeholder="First Name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      aria-invalid={!!fieldErrors.name}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      type="text"
+                      placeholder="Last Name"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      aria-invalid={!!fieldErrors.name}
+                    />
+                  </div>
                 </div>
+                {fieldErrors.name && <p className="text-sm text-red-500">{fieldErrors.name}</p>}
 
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
