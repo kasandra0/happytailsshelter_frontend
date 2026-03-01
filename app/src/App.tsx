@@ -27,8 +27,7 @@ function App() {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
       const payload = JSON.parse(atob(storedToken.split('.')[1]));
-      const exp = (payload.exp)
-      if (Date.now() >= exp * 1000) {
+      if (Date.now() >= payload.exp * 1000) {
         localStorage.removeItem("token");
         setUser(null);
         setIsLoading(false);
