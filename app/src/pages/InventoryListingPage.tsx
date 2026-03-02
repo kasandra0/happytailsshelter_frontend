@@ -14,17 +14,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-} from "@radix-ui/react-dropdown-menu";
+
 import type { ColumnDef } from "@tanstack/table-core";
 import { MoreHorizontal } from "lucide-react";
 import { useMemo, type FC, useEffect, useState } from "react";
 import { NavLink } from "react-router";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface InventoryListingPageProps {}
 
@@ -77,7 +78,7 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm">
                   <span className="sr-only">Open menu</span>
-                  <MoreHorizontal />
+                  <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -88,14 +89,14 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
                   <DropdownMenuItem
                     onClick={() => handleUpdateInventoryItem(inventoryItem)}
                   >
-                    <span className="clickable"> Update Item</span>
+                    <span className="clickable">Update Item</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() =>
                       handleDeleteInventoryItem(inventoryItem.inventory_item_id)
                     }
                   >
-                    <span className="clickable"> Delete Item</span>
+                    <span className="clickable">Delete Item</span>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
@@ -112,6 +113,7 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
   const [inventoryItemToDeleteId, setInventoryItemToDeleteId] = useState<
     number | null
   >(null);
+  const [modalTitle, setModalTitle] = useState("");
   const {
     inventoryItems,
     selectedInventoryItem,
@@ -126,7 +128,14 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
     fetchInventoryItems();
   }, []);
 
+  const handleCreateInventoryItem = () => {
+    setModalTitle("Create Inventory Item");
+    setSelectedInventoryItem(null);
+    setModalOpen(true);
+  };
+
   const handleUpdateInventoryItem = (inventoryItem: InventoryItem) => {
+    setModalTitle("Update Inventory Item");
     setSelectedInventoryItem(inventoryItem);
     setModalOpen(true);
   };
@@ -147,10 +156,10 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
 
   const handleSubmit = async (inventoryItem: InventoryItem) => {
     if (selectedInventoryItem) {
-    await updateInventoryItem(inventoryItem);
+      await updateInventoryItem(inventoryItem);
     } else {
-      const { inventory_item_id, ... newItem } = inventoryItem;
-      await createInventoryItem(newItem)
+      const { inventory_item_id, ...newItem } = inventoryItem;
+      await createInventoryItem(newItem);
     }
     setModalOpen(false);
     setSelectedInventoryItem(null);
@@ -158,28 +167,27 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
-      <h2 className="text-2xl font-bold">Inventory Item Listing</h2>
-        {/* Create new Inventory item button */}
-        <Button onClick={() => {
-            setSelectedInventoryItem(null); 
-            setModalOpen(true);
-          }}>Add New Item
-        </Button>
-      <div className="container mx-auto py-10">
+      <h2 className="text-2xl text-center font-bold">Inventory Item Listing</h2>
+
+      <div className="container mx-auto">
+        <div className="flex flex-row justify-end my-2">
+          <Button className="justify-end" onClick={handleCreateInventoryItem}>
+            Create
+          </Button>
+        </div>
         <DataTable columns={columns} data={inventoryItems} />
       </div>
 
       <Modal
         open={modalOpen}
         onOpenChange={setModalOpen}
-        title="Confirm Update"
+        title={modalTitle}
         component={
           <ManageInventoryItemForm
             inventoryItem={selectedInventoryItem}
             onSubmit={handleSubmit}
           />
         }
-        submitText="Update"
         onCancel={handleCancel}
         form="manage-inventory-item-form"
       />

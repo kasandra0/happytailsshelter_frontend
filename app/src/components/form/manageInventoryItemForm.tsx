@@ -37,10 +37,15 @@ export const ManageInventoryItemForm: React.FC<
     },
   });
 
+  const title =
+    inventoryItem === null
+      ? "New Inventory Item"
+      : `${inventoryItem?.name}: ${inventoryItem?.inventory_item_id}`;
+
   return (
     <Card className="w-full sm:max-w-md">
       <CardHeader>
-        <CardTitle>{`${inventoryItem?.name}: ${inventoryItem?.inventory_item_id}`}</CardTitle>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <form
