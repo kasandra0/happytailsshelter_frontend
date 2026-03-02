@@ -31,6 +31,7 @@ export const userFosterHistoryStore = create<FosterHistoryState>((set) => ({
       response.data.forEach((history) => {
         history.animal = {
             animal_id: history.animal_id,
+            photo_url: history.photo_url,
             microchip: history.microchip,
             name: history.name,
             species: history.species,

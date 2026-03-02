@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import type { Animal } from "@/types/types";
 import { calculateAge } from "@/lib/utils";
-import puppy1 from "../assets/puppy1.jpeg";
+import { Camera } from "lucide-react";
 
 export interface AnimalProfileProps {
   animal: Animal;
@@ -30,17 +30,24 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
   const statusStyle = animal.status
     ? (STATUS_STYLES[animal.status] ?? "bg-gray-100 text-gray-600")
     : "bg-gray-100 text-gray-600";
-  const photo = animal.photo_url ?? puppy1;
+  const photo = animal.photo_url;
 
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="md:flex">
         <div className="md:shrink-0">
-          <img
-            className="h-64 w-full object-cover md:h-full md:w-64"
-            src={photo}
-            alt={`Photo of ${animal.name}`}
-          />
+          {photo ? (
+            <img
+              className="h-64 w-full object-cover md:h-full md:w-64"
+              src={photo}
+              alt={`Photo of ${animal.name}`}
+            />
+          ) : (
+            <div className="h-64 w-full bg-gray-200 flex flex-col items-center justify-center text-gray-500 md:h-full md:w-64">
+              <Camera className="w-12 h-12 mb-2" />
+              <span className="text-sm font-medium">No image available</span>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-4 p-6 w-full">

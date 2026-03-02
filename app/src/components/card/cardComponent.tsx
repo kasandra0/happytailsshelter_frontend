@@ -21,12 +21,16 @@ const CardComponent: FC<CardComponentInputs> = ({
 }) => {
   return (
     <div className="flex flex-col h-full rounded overflow-hidden shadow-lg w-full">
-      <img
-        className="w-full h-auto"
-        height={300}
-        src={`${image}`}
-        alt="image"
-      />
+      {image ? (
+        <img
+          className="w-full h-auto"
+          height={300}
+          src={image}
+          alt="image"
+        />
+      ) : (
+        <div className="w-full bg-gray-200 flex items-center justify-center" style={{ height: 300 }} />
+      )}
       <div className="px-6 py-4">
         <div className="flex items-center gap-2 mb-2">
           <span className="font-bold text-xl">{title}</span>

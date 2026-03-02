@@ -1,6 +1,6 @@
 import AnimalListingComponent from "@/components/animal-listing/animalListingComponent";
 import { useAnimalStore } from "@/store/animals/animalStore";
-import { userFosterHistoryStore } from "@/store/animals/fosterhistory/fosterHistoryStore";
+import { userFosterHistoryStore } from "@/store/fosterhistory/fosterHistoryStore";
 import type { Animal } from "@/types/types";
 import { useEffect, type FC, type Key } from "react";
 
@@ -14,6 +14,11 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
 
     fetchUserFosterHistory(1);
   }, []);
+  const handleAnimalClick = (animalId: number) => {
+    console.log("Animal clicked with ID:", animalId);
+
+    // Implement navigation to animal profile page or other actions here
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -26,7 +31,8 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
             animal: Animal | undefined;
           }) => {
             return (
-              <div key={fosterHistoryLog.animal_id}>
+              <div key={fosterHistoryLog.animal_id}
+              >
                 <AnimalListingComponent animal={fosterHistoryLog.animal} />
               </div>
             );
