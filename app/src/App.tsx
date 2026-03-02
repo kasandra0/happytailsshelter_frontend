@@ -35,7 +35,6 @@ function App() {
       }
     }
     getCurrentUser().then((userData) => {
-      console.log("Current user data fetched:", userData);
       setUser(userData);
       setIsLoading(false);
     }).catch((error) => {

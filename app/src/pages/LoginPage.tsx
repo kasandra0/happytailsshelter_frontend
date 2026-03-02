@@ -26,11 +26,9 @@ export function LoginPage({
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log("Form submitted with data:", formData);
         // Handle login logic here
         try {
             const response = await login(formData.email, formData.password);
-            console.log("Login successful, response:", response);
 
             // get user data from response and set it in global context
 
