@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { User } from "@/types/types";
 
-const BASE_URL = 'http://localhost:3000/api/';
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
 export const getCurrentUser = async (): Promise<User> => {
     try {
         const token = localStorage.getItem("token");
-        const response = await axiosInstance.get(`users/me`,
+        const response = await axiosInstance.get(`api/users/me`,
             {
                 headers: {
                     'Content-Type': 'application/json',

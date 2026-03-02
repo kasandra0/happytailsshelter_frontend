@@ -1,6 +1,6 @@
 import type { Animal } from "@/types/types";
 
-const BASE_URL = 'http://localhost:3000/api/';
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const url = `${BASE_URL}${endpoint}`;
