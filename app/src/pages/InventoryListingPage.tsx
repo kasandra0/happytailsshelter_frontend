@@ -129,7 +129,6 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
   const handleUpdateInventoryItem = (inventoryItem: InventoryItem) => {
     setSelectedInventoryItem(inventoryItem);
     setModalOpen(true);
-    console.log("update clicked");
   };
 
   const handleDeleteInventoryItem = (id: number) => {
