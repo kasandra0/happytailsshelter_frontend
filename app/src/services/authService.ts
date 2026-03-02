@@ -27,3 +27,13 @@ export const logout = async () => {
   }
 };
 
+export const register = async (firstName: string, lastName: string, email: string, password: string) => {
+  try {
+    const response = await axiosInstance.post(`auth/register`,
+      { firstName, lastName, email, password });
+    return response;
+  } catch (error) {
+    console.error('Registration error:', error);
+    throw error;
+  }
+};

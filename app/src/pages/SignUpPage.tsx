@@ -12,14 +12,16 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { register } from "@/services/authService"
+import { Eye, EyeOff } from "lucide-react"
 
 type FieldErrors = Partial<Record<"name" | "email" | "password" | "confirmPassword", string>>
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const passwordRules = { minLen: 8, upper: /[A-Z]/, lower: /[a-z]/, number: /[0-9]/ }
+const passwordRules = { minLen: 10, upper: /[A-Z]/, lower: /[a-z]/, number: /[0-9]/ }
 
 function validatePassword(pw: string): string | null {
-  if (pw.length < passwordRules.minLen) return "Password must be at least 8 characters."
+  if (pw.length < passwordRules.minLen) return "Password must be at least 10 characters."
   if (!passwordRules.upper.test(pw)) return "Password must include at least 1 uppercase letter."
   if (!passwordRules.lower.test(pw)) return "Password must include at least 1 lowercase letter."
   if (!passwordRules.number.test(pw)) return "Password must include at least 1 number."
@@ -32,32 +34,31 @@ export default function SignUpPage({
 }: React.ComponentPropsWithoutRef<"div">) {
   const navigate = useNavigate()
 
-  const [name, setName] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [formError, setFormError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const canSubmit = useMemo(
-    () => !!(name.trim() && email.trim() && password && confirmPassword && !loading),
-    [name, email, password, confirmPassword, loading]
+    () => !!(firstName.trim() && lastName.trim() && email.trim() && password && confirmPassword && !loading),
+    [firstName, lastName, email, password, confirmPassword, loading]
   )
 
   const validate = (): boolean => {
     const errs: FieldErrors = {}
 
-    if (!name.trim()) errs.name = "Please enter your name."
+    if (!firstName.trim()) errs.name = "Please enter your first name."
+    if (!lastName.trim()) errs.name = "Please enter your last name."
     if (!email.trim()) errs.email = "Please enter your email."
     else if (!emailRegex.test(email.trim()))
       errs.email = "Please enter a valid email (example: name@email.com)."
 
     if (!password) errs.password = "Please create a password."
-    else {
-      const pwErr = validatePassword(password)
-      if (pwErr) errs.password = pwErr
-    }
 
     if (!confirmPassword) errs.confirmPassword = "Please confirm your password."
     else if (confirmPassword !== password) errs.confirmPassword = "Passwords do not match."
@@ -73,36 +74,19 @@ export default function SignUpPage({
     if (!validate()) return
 
     setLoading(true)
-    try {
-      const res = await fetch("/api/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name.trim(),
-          email: email.trim().toLowerCase(),
-          password,
-        }),
+    await register(firstName.trim(), lastName.trim(), email.trim(), password)
+      .then((response) => {
+        navigate("/login")
       })
-
-      const data = await res.json().catch(() => ({}))
-
-      if (!res.ok) {
-        const msg =
-          data?.message ||
-          (res.status === 409
-            ? "That email is already in use. Try logging in instead."
-            : "We couldn’t create your account. Please try again.")
-        throw new Error(msg)
-      }
-
-      if (data?.token) localStorage.setItem("token", data.token)
-      navigate("/dashboard")
-    } catch (err: any) {
-      setFormError(err?.message || "Something went wrong. Please try again.")
-    } finally {
-      setLoading(false)
-    }
+      .catch((error) => {
+        console.error("Registration error:", error)
+        setFormError("Registration failed. Please try again.")
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
+
 
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
@@ -116,25 +100,38 @@ export default function SignUpPage({
 
             <CardContent>
               <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Claudia Dominguez"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    aria-invalid={!!fieldErrors.name}
-                  />
-                  {fieldErrors.name && <p className="text-sm text-red-500">{fieldErrors.name}</p>}
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="grid gap-2">
+                    <Label htmlFor="firstName">First Name</Label>
+                    <Input
+                      id="firstName"
+                      type="text"
+                      placeholder="First Name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      aria-invalid={!!fieldErrors.name}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      type="text"
+                      placeholder="Last Name"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      aria-invalid={!!fieldErrors.name}
+                    />
+                  </div>
                 </div>
+                {fieldErrors.name && <p className="text-sm text-red-500">{fieldErrors.name}</p>}
 
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="claudia@email.com"
+                    placeholder="name@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     aria-invalid={!!fieldErrors.email}
@@ -144,31 +141,47 @@ export default function SignUpPage({
 
                 <div className="grid gap-2">
                   <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Min 8 chars, upper/lower/number"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    aria-invalid={!!fieldErrors.password}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      aria-invalid={!!fieldErrors.password}
+                    />
+                    <Button
+                      className="absolute top-0 right-0 h-full px-3 hover:bg-transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                      size="icon"
+                      type="button"
+                      variant="ghost"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </Button>
+                  </div>
                   {fieldErrors.password && <p className="text-sm text-red-500">{fieldErrors.password}</p>}
                   {!fieldErrors.password && (
                     <p className="text-xs text-muted-foreground">
-                      Must be 10+ characters and include uppercase, lowercase, and a number.
                     </p>
                   )}
                 </div>
 
                 <div className="grid gap-2">
                   <Label htmlFor="confirmPassword">Confirm password</Label>
+                  <div className="relative">
                   <Input
                     id="confirmPassword"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     aria-invalid={!!fieldErrors.confirmPassword}
                   />
+                  
+                  </div>
                   {fieldErrors.confirmPassword && (
                     <p className="text-sm text-red-500">{fieldErrors.confirmPassword}</p>
                   )}
