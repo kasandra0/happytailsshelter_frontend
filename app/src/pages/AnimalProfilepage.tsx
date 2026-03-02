@@ -18,7 +18,6 @@ export function AnimalProfilePage({ }: AnimalProfilePageProps) {
     }
     try {
       const fetchedAnimal = await getAnimalById(animalId);
-      console.log(`id: ${animalId} Fetched animal:`, fetchedAnimal);
       setAnimal(fetchedAnimal);
     } catch (error) {
       console.error("Error fetching animal:", error);

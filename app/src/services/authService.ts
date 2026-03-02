@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE_URL = 'http://localhost:3000/api/';
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await axiosInstance.post(`${BASE_URL}auth/login`,
+    const response = await axiosInstance.post(`api/auth/login`,
          { email, password });
     return response;
   } catch (error) {
