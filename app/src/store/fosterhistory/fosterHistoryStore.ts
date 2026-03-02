@@ -25,7 +25,9 @@ export const userFosterHistoryStore = create<FosterHistoryState>((set) => ({
   fetchUserFosterHistory: async (userId) => {
     // set({ loading: true, error: null });
     try {
-      const response = await api.get<{ data: FosterHistory[] }>(`foster-history/user/${userId}`);
+      const response = await api.get<{ data: FosterHistory[] }>(`api/foster-history/user/${userId}`);
+
+      
       response.data.forEach((history) => {
         history.animal = {
             animal_id: history.animal_id,

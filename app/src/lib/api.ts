@@ -28,7 +28,7 @@ export const api = {
 
 export const getAnimalById = async (id: number) => {
   try {
-    const response = await api.get<{ data: Animal }>(`animals/${id}`);
+    const response = await api.get<{ data: Animal }>(`api/animals/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching animal with id ${id}:`, error);
