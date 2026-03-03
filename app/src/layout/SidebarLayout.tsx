@@ -16,7 +16,7 @@ import {
 import { logout } from "@/services/authService";
 import { PanelLeft } from "lucide-react";
 import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 interface DashboardLayoutProps {
   userRole?: "admin" | "user";
@@ -24,6 +24,7 @@ interface DashboardLayoutProps {
 
 export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
   const adminNav = {
     title: "Employee Tools",
     url: "#",
@@ -67,6 +68,7 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
   async function handleLogout(): Promise<void> {
     try {
       await logout();
+      navigate('/')
     } catch (error) {
       console.error("Logout error:", error);
     }
