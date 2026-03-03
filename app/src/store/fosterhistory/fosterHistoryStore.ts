@@ -1,6 +1,12 @@
-import { api } from "@/lib/api";
+import axios from "axios";
 import type { Animal, FosterHistory } from "@/types/types";
 import { create } from "zustand";
+
+const axiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_BASE_URL,
+  headers: { "Content-Type": "application/json" },
+  withCredentials: true,
+});
 
 interface FosterHistoryState {
   fosterHistory: FosterHistory[];
@@ -25,10 +31,9 @@ export const userFosterHistoryStore = create<FosterHistoryState>((set) => ({
   fetchUserFosterHistory: async (userId) => {
     // set({ loading: true, error: null });
     try {
-      const response = await api.get<{ data: FosterHistory[] }>(`api/foster-history/user/${userId}`);
+      const response = await axiosInstance.get<{ data: FosterHistory[] }>(`api/foster-history/user/${userId}`);
 
-      
-      response.data.forEach((history) => {
+      response.data.data.forEach((history: FosterHistory) => {
         history.animal = {
             animal_id: history.animal_id,
             photo_url: history.photo_url,
@@ -36,10 +41,10 @@ export const userFosterHistoryStore = create<FosterHistoryState>((set) => ({
             name: history.name,
             species: history.species,
             breed: history.breed,
-            date_of_birth: history.date_of_birth,            
+            date_of_birth: history.date_of_birth,
         } as Animal;
       });
-      set({ fosterHistory: response.data });
+      set({ fosterHistory: response.data.data });
     } catch (error) {
     //   set({ error: "Failed to fetch animals" });
     } finally {
