@@ -4,21 +4,21 @@ import { create } from "zustand";
 
 interface AnimalState {
   animals: Animal[];
-  selectedAnimal: Animal | null;
+  selectedAnimal?: Animal;
   loading: boolean;
   error: string | null;
 
   fetchAnimals: () => Promise<void>;
-  getAnimal: (animalIdL: number) => Promise<void>;
+  getAnimal: (animalId: number) => Promise<void>;
   createAnimal: (animal: Omit<Animal, "animal_id">) => Promise<void>;
   updateAnimal: (animal: Animal) => Promise<void>;
   deleteAnimal: (animal_id: number) => Promise<void>;
-  setSelectedAnimal: (animal: Animal | null) => void;
+  setSelectedAnimal: (animal?: Animal) => void;
 }
 
 export const useAnimalStore = create<AnimalState>((set) => ({
   animals: [],
-  selectedAnimal: null,
+  selectedAnimal: undefined,
   loading: false,
   error: null,
 
