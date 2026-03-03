@@ -1,5 +1,18 @@
 // src/layouts/DashboardLayout.tsx
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarRail } from "@/components/ui/sidebar";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarRail,
+} from "@/components/ui/sidebar";
 import { logout } from "@/services/authService";
 import { PanelLeft } from "lucide-react";
 import { useState } from "react";
@@ -32,7 +45,7 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
         url: "animals/new",
       },
     ],
-  }
+  };
   const userNav = {
     title: "Foster Parent Tools",
     url: "#",
@@ -49,8 +62,7 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
   };
   const data = {
     navMain: userRole === "admin" ? [adminNav] : [userNav],
-  }
-
+  };
 
   async function handleLogout(): Promise<void> {
     try {
@@ -75,8 +87,14 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
             <Sidebar collapsible="none">
               <SidebarHeader>
                 <div className="flex h-16 items-center px-6 border-b border-sidebar-border/50">
-                  <img src="/src/assets/happytails-icon.svg" alt="Happy Tails Shelter logo: a stylized icon representing a pet shelter, accompanied by the text Happy Tails in bold serif font" className="h-8 w-8 mr-2" />
-                  <span className="font-heading font-bold text-xl tracking-tight text-primary">Happy Tails</span>
+                  <img
+                    src="/src/assets/happytails-icon.svg"
+                    alt="Happy Tails Shelter logo: a stylized icon representing a pet shelter, accompanied by the text Happy Tails in bold serif font"
+                    className="h-8 w-8 mr-2"
+                  />
+                  <span className="font-heading font-bold text-xl tracking-tight text-primary">
+                    Happy Tails
+                  </span>
                 </div>
               </SidebarHeader>
               <SidebarContent>
@@ -88,9 +106,21 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
                       <SidebarMenu>
                         {item.items.map((item) => (
                           <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton asChild>
-                              <NavLink to={item.url}>{item.title}</NavLink>
-                            </SidebarMenuButton>
+                            <NavLink to={item.url}>
+                              {({ isActive }) => (
+                                <SidebarMenuButton
+                                  isActive={isActive}
+                                  disabled={isActive}
+                                  className={
+                                    isActive
+                                      ? "bg-primary text-primary-foreground opacity-70"
+                                      : ""
+                                  }
+                                >
+                                  {item.title}
+                                </SidebarMenuButton>
+                              )}
+                            </NavLink>
                           </SidebarMenuItem>
                         ))}
                       </SidebarMenu>
@@ -103,7 +133,10 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
                   Logout
                 </SidebarMenuButton>
                 <div className="flex h-16 items-center px-6 border-t border-sidebar-border/50">
-                  <span className="text-sm text-muted-foreground">Logged in as {userRole === "admin" ? "Admin" : "Foster Parent"}</span>
+                  <span className="text-sm text-muted-foreground">
+                    Logged in as{" "}
+                    {userRole === "admin" ? "Admin" : "Foster Parent"}
+                  </span>
                 </div>
               </SidebarFooter>
               <SidebarRail />
