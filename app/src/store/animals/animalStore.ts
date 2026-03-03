@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { axiosInstance } from "@/services/authService";
 import type { Animal } from "@/types/types";
 import { create } from "zustand";
 
@@ -9,6 +9,7 @@ interface AnimalState {
   error: string | null;
 
   fetchAnimals: () => Promise<void>;
+  getAnimal: (animalIdL: number) => Promise<void>;
   createAnimal: (animal: Omit<Animal, "animal_id">) => Promise<void>;
   updateAnimal: (animal: Animal) => Promise<void>;
   deleteAnimal: (animal_id: number) => Promise<void>;
@@ -24,8 +25,23 @@ export const useAnimalStore = create<AnimalState>((set) => ({
   fetchAnimals: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await api.get<{ data: Animal[] }>("api/animals");
+      const response = (await axiosInstance.get<{ data: Animal[] }>("animals"))
+        .data;
       set({ animals: response.data });
+    } catch (error) {
+      set({ error: "Failed to fetch animals" });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  getAnimal: async (animalId: number) => {
+    set({ loading: true, error: null });
+    try {
+      const response = (
+        await axiosInstance.get<{ data: Animal }>(`animals/${animalId}`)
+      ).data;
+      set({ selectedAnimal: response.data });
     } catch (error) {
       set({ error: "Failed to fetch animals" });
     } finally {
@@ -48,7 +64,10 @@ export const useAnimalStore = create<AnimalState>((set) => ({
         status: animal.status,
         description: animal.description,
       };
-      const response = await api.post<{ data: Animal }>("/api/animals", noIdData);
+      const response = (
+        await axiosInstance.post<{ data: Animal }>("animals", noIdData)
+      ).data;
+
       set((state) => ({ animals: [...state.animals, response.data] }));
     } catch (error) {
       set({ error: "Failed to create animal" });
@@ -60,10 +79,13 @@ export const useAnimalStore = create<AnimalState>((set) => ({
   updateAnimal: async (animal) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.put<{ data: Animal }>(
-        `/api/animals/${animal.animal_id}`,
-        animal
-      );
+      const response = (
+        await axiosInstance.put<{ data: Animal }>(
+          `animals/${animal.animal_id}`,
+          animal
+        )
+      ).data;
+
       set((state) => ({
         animals: state.animals.map((a) =>
           a.animal_id === animal.animal_id ? response.data : a
@@ -79,7 +101,7 @@ export const useAnimalStore = create<AnimalState>((set) => ({
   deleteAnimal: async (animal_id) => {
     set({ loading: true, error: null });
     try {
-      await api.delete(`/api/animals/${animal_id}`);
+      await axiosInstance.delete(`animals/${animal_id}`);
       set((state) => ({
         animals: state.animals.filter((a) => a.animal_id !== animal_id),
       }));

@@ -1,12 +1,13 @@
+import { axiosInstance } from "@/services/authService";
 import type { Animal } from "@/types/types";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const url = `${BASE_URL}${endpoint}`;
-    // console.log(`Making API request to: ${url} with options:`, options);
+  const url = `${BASE_URL}${endpoint}`;
+  // console.log(`Making API request to: ${url} with options:`, options);
   const response = await fetch(`${BASE_URL}${endpoint}`, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { "Content-Type": "application/json" },
     ...options,
   });
 
@@ -20,19 +21,18 @@ async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
 export const api = {
   get: <T>(endpoint: string) => request<T>(endpoint),
   post: <T>(endpoint: string, body: unknown) =>
-    request<T>(endpoint, { method: 'POST', body: JSON.stringify(body) }),
+    request<T>(endpoint, { method: "POST", body: JSON.stringify(body) }),
   put: <T>(endpoint: string, body: unknown) =>
-    request<T>(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
-  delete: <T>(endpoint: string) => request<T>(endpoint, { method: 'DELETE' }),
+    request<T>(endpoint, { method: "PUT", body: JSON.stringify(body) }),
+  delete: <T>(endpoint: string) => request<T>(endpoint, { method: "DELETE" }),
 };
 
 export const getAnimalById = async (id: number) => {
   try {
-    const response = await api.get<{ data: Animal }>(`api/animals/${id}`);
+    const response = await axiosInstance.get<{ data: Animal }>(`animals/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching animal with id ${id}:`, error);
     throw error;
   }
-  
 };

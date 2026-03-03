@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { axiosInstance } from "@/services/authService";
 import type { InventoryItem } from "@/types/types";
 import { create } from "zustand";
 
@@ -27,9 +27,9 @@ export const useInventoryItemStore = create<InventoryItemState>((set) => ({
   fetchInventoryItems: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await api.get<{ data: InventoryItem[] }>(
-        "inventory-items"
-      );
+      const response = (
+        await axiosInstance.get<{ data: InventoryItem[] }>("inventory-items")
+      ).data;
       set({ inventoryItems: response.data });
     } catch (error) {
       set({ error: "Failed to fetch inventory items" });
@@ -38,12 +38,17 @@ export const useInventoryItemStore = create<InventoryItemState>((set) => ({
     }
   },
 
-  createInventoryItem: async (inventoryItem: Omit<InventoryItem, "inventory_item_id">) => {
+  createInventoryItem: async (
+    inventoryItem: Omit<InventoryItem, "inventory_item_id">
+  ) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.post<{ data: InventoryItem }>(
-        "inventory-items", inventoryItem,
-      );
+      const response = (
+        await axiosInstance.post<{ data: InventoryItem }>(
+          "inventory-items",
+          inventoryItem
+        )
+      ).data;
       set((state) => ({
         inventoryItems: [...state.inventoryItems, response.data],
       }));
@@ -57,10 +62,12 @@ export const useInventoryItemStore = create<InventoryItemState>((set) => ({
   updateInventoryItem: async (inventoryItem) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.put<{ data: InventoryItem }>(
-        `inventory-items/${inventoryItem.inventory_item_id}`,
-        inventoryItem
-      );
+      const response = (
+        await axiosInstance.put<{ data: InventoryItem }>(
+          `inventory-items/${inventoryItem.inventory_item_id}`,
+          inventoryItem
+        )
+      ).data;
 
       set((state) => ({
         inventoryItems: state.inventoryItems.map((i) =>
@@ -79,7 +86,7 @@ export const useInventoryItemStore = create<InventoryItemState>((set) => ({
   deleteInventoryItem: async (inventoryItemId) => {
     set({ loading: true, error: null });
     try {
-      await api.delete(`inventory-items/${inventoryItemId}`);
+      await axiosInstance.delete(`inventory-items/${inventoryItemId}`);
       set((state) => ({
         inventoryItems: state.inventoryItems.filter(
           (i) => i.inventory_item_id !== inventoryItemId
