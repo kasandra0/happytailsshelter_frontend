@@ -22,7 +22,7 @@ export const login = async (email: string, password: string) => {
 
 export const logout = async () => {
   try {
-    alert("Logout functionality not implemented yet.");
+    localStorage.removeItem("token")
   } catch (error) {
     console.error("Logout error:", error);
     throw error;

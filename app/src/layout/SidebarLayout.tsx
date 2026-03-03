@@ -13,40 +13,60 @@ import {
   SidebarProvider,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { GlobalContext } from "@/hooks/GlobalContext";
 import { logout } from "@/services/authService";
+import { ADMIN_ROLE } from "@/types/types";
 import { PanelLeft } from "lucide-react";
-import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { useContext, useState } from "react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+
+interface NavItem {
+  title: string;
+  url: string;
+}
+
+interface NavGroup {
+  title: string;
+  url: string;
+  items: NavItem[];
+}
+
+interface NavData {
+  navMain: NavGroup[];
+}
 
 interface DashboardLayoutProps {
-  userRole?: "admin" | "user";
+  userRole: number
 }
 
 export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const adminNav = {
+  const { user, setUser } = useContext(GlobalContext);
+
+  const navigate = useNavigate();
+  const adminNav: NavGroup = {
     title: "Employee Tools",
     url: "#",
     items: [
       {
         title: "Dashboard",
-        url: "dashboard",
+        url: "/admin/dashboard",
       },
       {
         title: "Animals",
-        url: "animals",
+        url: "/admin/animals",
       },
       {
         title: "Inventory",
-        url: "inventory",
+        url: "/admin/inventory",
       },
       {
         title: "Intake Form",
-        url: "animals/new",
+        url: "/admin/animals/new",
       },
     ],
   };
-  const userNav = {
+  const fosterparentNav: NavGroup = {
     title: "Foster Parent Tools",
     url: "#",
     items: [
@@ -60,13 +80,18 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
       },
     ],
   };
-  const data = {
-    navMain: userRole === "admin" ? [adminNav] : [userNav],
-  };
+  let navData: NavData = { navMain: [] }
+  if (user){
+    navData = {
+    navMain: user.role === ADMIN_ROLE ? [adminNav, fosterparentNav] : [fosterparentNav],
+    }
+  }
 
   async function handleLogout(): Promise<void> {
     try {
       await logout();
+      setUser(null);
+      navigate('/')
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -99,7 +124,7 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
               </SidebarHeader>
               <SidebarContent>
                 {/* We create a SidebarGroup for each parent. */}
-                {data.navMain.map((item) => (
+                {navData.navMain.map((item) => (
                   <SidebarGroup key={item.title}>
                     <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
                     <SidebarGroupContent>
