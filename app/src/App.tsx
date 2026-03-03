@@ -73,7 +73,7 @@ function App() {
 
               <Route element={<ProtectedRoute requiredRole={1} />}>
                 <Route path="/fosterparent" element={<SidebarLayout userRole={"user"} />}>
-                  <Route path="dashboard" element={<DashboardPage />} />
+                  <Route path="dashboard" element={<MyAnimalsPage />} />
                   <Route path="myanimals" element={<MyAnimalsPage />} />
                   <Route path="profile" element={<></>} />
                   <Route path="animals/:id/adopt" element={<AdoptPage />} />
