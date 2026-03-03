@@ -1,5 +1,10 @@
 import { useState, useEffect, type FC, useContext } from "react";
-import type { Animal, FosterHistory, MedicalLog } from "@/types/types";
+import {
+  ADMIN_ROLE,
+  type Animal,
+  type FosterHistory,
+  type MedicalLog,
+} from "@/types/types";
 import { calculateAge } from "@/lib/utils";
 import { Camera, MoreHorizontal } from "lucide-react";
 import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
@@ -295,13 +300,15 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
       </div>
 
       {/* Foster History Table */}
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold">Foster History</h2>
-          <Button onClick={handleCreateFosterHistory}>Create</Button>
+      {user?.role === ADMIN_ROLE && (
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">Foster History</h2>
+            <Button onClick={handleCreateFosterHistory}>Create</Button>
+          </div>
+          <DataTable columns={fosterColumns} data={fosterHistory} />
         </div>
-        <DataTable columns={fosterColumns} data={fosterHistory} />
-      </div>
+      )}
 
       {/* Medical Log Modal */}
       <Modal
