@@ -31,8 +31,8 @@ export const medicalLogFormSchema = z.object({
 });
 
 export interface ManageMedicalLogFormProps {
-  animal: Animal | null;
-  medicalLog?: MedicalLog | null;
+  animal?: Animal;
+  medicalLog?: MedicalLog;
   onSubmit: (data: MedicalLog) => void;
 }
 

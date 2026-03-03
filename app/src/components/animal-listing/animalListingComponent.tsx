@@ -1,9 +1,9 @@
-import type { Animal } from "@/types/types";
+import type { Animal, MedicalLog } from "@/types/types";
 import CardComponent from "../card/cardComponent";
-import puppy1 from "../../assets/puppy1.jpeg";
-import kitty from "../../assets/kitty.jpeg";
-import puppy2 from "../../assets/puppy2.jpeg";
-import type { FC } from "react";
+import { useState, type FC } from "react";
+import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
+import { ManageMedicalLogForm } from "../form/manageMedicalLogForm";
+import { Modal } from "../modal/modal";
 
 export interface AnimalListingComponentProps {
   animal?: Animal;
@@ -12,10 +12,28 @@ export interface AnimalListingComponentProps {
 const AnimalListingComponent: FC<AnimalListingComponentProps> = ({
   animal,
 }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const { createMedicalLog } = useMedicalLogStore();
+
+  const handleCreateMedicalLog = () => {
+    setModalTitle("Create Medical Log Entry");
+    setModalOpen(true);
+  };
+
+  const handleSubmit = async (medicalLog: MedicalLog) => {
+    await createMedicalLog(medicalLog);
+    setModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setModalOpen(false);
+    setModalOpen(false);
+  };
 
   return (
     <>
-      <div className="flex w-full h-full">
+      <div className="flex w-full h-full  min-h-[400px]">
         {animal && (
           <CardComponent
             key={animal.animal_id}
@@ -23,13 +41,22 @@ const AnimalListingComponent: FC<AnimalListingComponentProps> = ({
             image={animal.photo_url}
             tag={animal.status == "A" ? "Available" : "Adopted"}
             description={animal.description ?? ""}
-            buttonText="Adopt me"
-            click={
-              animal.status === "A" ? () => console.log("click") : undefined
-            }
+            buttonText="Add Medical Log Entry"
+            click={handleCreateMedicalLog}
           />
         )}
       </div>
+
+      <Modal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        title={modalTitle}
+        component={
+          <ManageMedicalLogForm animal={animal} onSubmit={handleSubmit} />
+        }
+        onCancel={handleCancel}
+        form="manage-medical-log-form"
+      />
     </>
   );
 };

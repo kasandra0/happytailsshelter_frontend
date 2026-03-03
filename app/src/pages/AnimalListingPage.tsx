@@ -140,7 +140,7 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
 
   const handleCreateAnimal = () => {
     setModalTitle("Create Animal");
-    setSelectedAnimal(null);
+    setSelectedAnimal(undefined);
     setModalOpen(true);
   };
 

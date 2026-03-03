@@ -38,7 +38,7 @@ export const animalFormSchema = z.object({
 });
 
 export interface ManageAnimalFormInputs {
-  animal: Animal | null;
+  animal?: Animal;
   onSubmit: (data: Animal) => void;
 }
 
