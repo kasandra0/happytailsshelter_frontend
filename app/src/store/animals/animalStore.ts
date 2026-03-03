@@ -9,6 +9,7 @@ interface AnimalState {
   error: string | null;
 
   fetchAnimals: () => Promise<void>;
+  getAnimal: (animalIdL: number) => Promise<void>;
   createAnimal: (animal: Omit<Animal, "animal_id">) => Promise<void>;
   updateAnimal: (animal: Animal) => Promise<void>;
   deleteAnimal: (animal_id: number) => Promise<void>;
@@ -27,6 +28,20 @@ export const useAnimalStore = create<AnimalState>((set) => ({
       const response = (await axiosInstance.get<{ data: Animal[] }>("animals"))
         .data;
       set({ animals: response.data });
+    } catch (error) {
+      set({ error: "Failed to fetch animals" });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  getAnimal: async (animalId: number) => {
+    set({ loading: true, error: null });
+    try {
+      const response = (
+        await axiosInstance.get<{ data: Animal }>(`animals/${animalId}`)
+      ).data;
+      set({ selectedAnimal: response.data });
     } catch (error) {
       set({ error: "Failed to fetch animals" });
     } finally {

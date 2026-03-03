@@ -1,56 +1,46 @@
-import { getAnimalById } from "@/lib/api";
 import { calculateAge } from "@/lib/utils";
-import type { Animal } from "@/types/types";
+import { useAnimalStore } from "@/store/animals/animalStore";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-interface AnimalProfilePageProps {
-}
+interface AnimalProfilePageProps {}
 
-export function AnimalProfilePage({ }: AnimalProfilePageProps) {
-  const [animal, setAnimal] = useState<Animal>();
+export function AnimalProfilePage({}: AnimalProfilePageProps) {
+  const { getAnimal, selectedAnimal } = useAnimalStore();
   const params = useParams();
-  const fetchAnimal = async (id: string) => {
-    const animalId = parseInt(id, 10);
-    if (isNaN(animalId)) {
-      console.error("Invalid animal ID:", id);
-      return;
-    }
-    try {
-      const fetchedAnimal = await getAnimalById(animalId);
-      setAnimal(fetchedAnimal);
-    } catch (error) {
-      console.error("Error fetching animal:", error);
-    }
-  };
+
   useEffect(() => {
     const animalId = params.id;
+
     if (!animalId) {
       console.error("No animal ID provided in URL parameters.");
       return;
     }
 
-    fetchAnimal(animalId);
-    
+    getAnimal(Number(animalId));
   }, [params]);
-    const dateOfBirth = animal?.date_of_birth ? new Date(animal.date_of_birth) : null;
-    return (
-      <div className="p-4">
-        {animal ? (
-          <div>
-            <h1 className="text-2xl font-bold">{animal.name}</h1>
-            <div className="flex flex-col gap-2 mt-4">
-            <p>Breed: {animal.breed}</p>
-            <p>DOB: {dateOfBirth ? dateOfBirth.toLocaleDateString() : "Unknown"}</p>
+  const dateOfBirth = selectedAnimal?.date_of_birth
+    ? new Date(selectedAnimal.date_of_birth)
+    : null;
+  return (
+    <div className="p-4">
+      {selectedAnimal ? (
+        <div>
+          <h1 className="text-2xl font-bold">{selectedAnimal?.name}</h1>
+          <div className="flex flex-col gap-2 mt-4">
+            <p>Breed: {selectedAnimal?.breed}</p>
+            <p>
+              DOB: {dateOfBirth ? dateOfBirth.toLocaleDateString() : "Unknown"}
+            </p>
             <p>Age: {dateOfBirth ? calculateAge(dateOfBirth) : "Unknown"}</p>
-            <p>Gender: {animal.gender}</p>
-            <p>Description: {animal.description}</p>
-            <p>Status: {animal.status}</p>
+            <p>Gender: {selectedAnimal?.gender}</p>
+            <p>Description: {selectedAnimal?.description}</p>
+            <p>Status: {selectedAnimal?.status}</p>
           </div>
-          </div>
-        ) : (
-          <p>Loading animal details...</p>
-        )}
-      </div>
-    );
+        </div>
+      ) : (
+        <p>Loading animal details...</p>
+      )}
+    </div>
+  );
 }
