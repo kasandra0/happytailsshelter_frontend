@@ -18,6 +18,7 @@ import SignUpPage from "./pages/SignUpPage"
 import { useEffect, useState } from "react";
 import type { User } from "./types/types";
 import { getCurrentUser } from "./services/userService";
+import { Forbidden403 } from "./pages/Forbidden403";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -33,15 +34,17 @@ function App() {
         setIsLoading(false);
         return;
       }
+      getCurrentUser().then((userData) => {
+        setUser(userData);
+        setIsLoading(false);
+      }).catch((error) => {
+        console.error("Error fetching current user:", error);
+        setUser(null);
+        setIsLoading(false);
+      });
+    } else {
+      setIsLoading(false);
     }
-    getCurrentUser().then((userData) => {
-      setUser(userData);
-      setIsLoading(false);
-    }).catch((error) => {
-      console.error("Error fetching current user:", error);
-      setUser(null);
-      setIsLoading(false);
-    });
   }, []);
 
 
@@ -57,6 +60,7 @@ function App() {
                 <Route path="signup" element={<SignUpPage />} />
                 <Route path="login" element={<LoginPage />} />
                 <Route path="error" element={<Error404 />} />
+                <Route path="forbidden" element={<Forbidden403/>} />
                 <Route path="*" element={<Error404 />} />
               </Route>
 
