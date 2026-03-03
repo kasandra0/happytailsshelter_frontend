@@ -36,7 +36,6 @@ export type User = {
 export const ADMIN_ROLE = 2;
 export const FOSTER_PARENT_ROLE = 1;
 
-
 export type MedicalLog = {
   log_history_id: number;
   animal_id: number;
@@ -63,6 +62,8 @@ export type FosterHistory = {
   status?: string;
   description?: string;
   photo_url?: string;
+  start_date?: Date;
+  end_date?: Date;
   created_at?: Date;
   updated_at?: Date;
-}
+};

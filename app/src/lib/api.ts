@@ -5,7 +5,6 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${BASE_URL}${endpoint}`;
-  // console.log(`Making API request to: ${url} with options:`, options);
   const response = await fetch(`${BASE_URL}${endpoint}`, {
     headers: { "Content-Type": "application/json" },
     ...options,

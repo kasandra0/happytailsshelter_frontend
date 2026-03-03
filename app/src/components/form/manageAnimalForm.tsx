@@ -33,7 +33,9 @@ export const animalFormSchema = z.object({
   breed: z.string().optional(),
   species: z.string().min(1, "Species is required"),
   weight: z.number().positive("Weight must be a positive number").optional(),
-  status: z.string().min(1, "Status is required").max(1, "Must be A or X"),
+  status: z.string().refine((val) => ["A", "X", "F"].includes(val), {
+    message: "Invalid status",
+  }),
   description: z.string().optional(),
 });
 
@@ -60,7 +62,7 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
       breed: animal?.breed,
       species: animal?.species,
       weight: Number(animal?.weight),
-      status: animal?.status ?? "",
+      status: (animal?.status as "A" | "X" | "F") ?? "A",
       description: animal?.description ?? "",
     },
   });
@@ -121,14 +123,17 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="animal-status">Status</FieldLabel>
-                  <Input
+                  <FieldLabel htmlFor="foster-status">Status</FieldLabel>
+                  <select
                     {...field}
-                    id="animal-status"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="e.g. A for Available, X for Adopted"
-                    autoComplete="off"
-                  />
+                    id="foster-status"
+                    className="w-full border rounded px-3 py-2 text-sm"
+                  >
+                    <option value="">Select a status</option>
+                    <option value="A">Available</option>
+                    <option value="X">Adopted</option>
+                    <option value="F">Fostered</option>
+                  </select>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
