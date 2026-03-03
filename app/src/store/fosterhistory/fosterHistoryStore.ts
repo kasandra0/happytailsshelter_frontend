@@ -1,55 +1,163 @@
-import axios from "axios";
+import { axiosInstance } from "@/services/authService";
 import type { Animal, FosterHistory } from "@/types/types";
 import { create } from "zustand";
 
-const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
-  headers: { "Content-Type": "application/json" },
-  withCredentials: true,
-});
-
 interface FosterHistoryState {
   fosterHistory: FosterHistory[];
-//   selected: Animal | null;
-//   loading: boolean;
-//   error: string | null;
+  selectedFosterHistory: FosterHistory | null;
+  loading: boolean;
+  error: string | null;
 
-  // Actions
+  fetchAllFosterHistory: () => Promise<void>;
   fetchUserFosterHistory: (userId: number) => Promise<void>;
-//   createAnimal: (animal: Omit<Animal, "animal_id">) => Promise<void>;
-//   updateAnimal: (animal: Animal) => Promise<void>;
-//   deleteAnimal: (animal_id: number) => Promise<void>;
-//   setSelectedAnimal: (animal: Animal | null) => void;
+  fetchAnimalFosterHistory: (animalId: number) => Promise<void>;
+  createFosterHistory: (
+    fosterHistory: Omit<FosterHistory, "foster_history_id">
+  ) => Promise<void>;
+  updateFosterHistory: (fosterHistory: FosterHistory) => Promise<void>;
+  deleteFosterHistory: (id: number) => Promise<void>;
+  setSelectedFosterHistory: (fosterHistory: FosterHistory | null) => void;
 }
 
-export const userFosterHistoryStore = create<FosterHistoryState>((set) => ({
+const mapAnimalToHistory = (history: FosterHistory): FosterHistory => ({
+  ...history,
+  animal: {
+    animal_id: history.animal_id,
+    photo_url: history.photo_url,
+    microchip: history.microchip,
+    name: history.name,
+    species: history.species,
+    breed: history.breed,
+    date_of_birth: history.date_of_birth,
+  } as Animal,
+});
+
+export const useFosterHistoryStore = create<FosterHistoryState>((set) => ({
   fosterHistory: [],
-//   selectedAnimal: null,
-//   loading: false,
-//   error: null,
+  selectedFosterHistory: null,
+  loading: false,
+  error: null,
+
+  fetchAllFosterHistory: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = (
+        await axiosInstance.get<{ data: FosterHistory[] }>("foster-history")
+      ).data;
+      set({ fosterHistory: response.data.map(mapAnimalToHistory) });
+    } catch (error) {
+      set({ error: "Failed to fetch foster history" });
+    } finally {
+      set({ loading: false });
+    }
+  },
 
   fetchUserFosterHistory: async (userId) => {
-    // set({ loading: true, error: null });
+    set({ loading: true, error: null });
     try {
-      const response = await axiosInstance.get<{ data: FosterHistory[] }>(`api/foster-history/user/${userId}`);
-
-      response.data.data.forEach((history: FosterHistory) => {
-        history.animal = {
-            animal_id: history.animal_id,
-            photo_url: history.photo_url,
-            microchip: history.microchip,
-            name: history.name,
-            species: history.species,
-            breed: history.breed,
-            date_of_birth: history.date_of_birth,
-        } as Animal;
-      });
-      set({ fosterHistory: response.data.data });
+      const response = (
+        await axiosInstance.get<{ data: FosterHistory[] }>(
+          `foster-history/user/${userId}`
+        )
+      ).data;
+      set({ fosterHistory: response.data.map(mapAnimalToHistory) });
     } catch (error) {
-    //   set({ error: "Failed to fetch animals" });
+      set({ error: "Failed to fetch user foster history" });
     } finally {
-    //   set({ loading: false });
+      set({ loading: false });
     }
-  }
+  },
 
+  fetchAnimalFosterHistory: async (animalId) => {
+    set({ loading: true, error: null });
+    try {
+      const response = (
+        await axiosInstance.get<{ data: FosterHistory[] }>(
+          `foster-history/animal/${animalId}`
+        )
+      ).data;
+      set({ fosterHistory: response.data.map(mapAnimalToHistory) });
+    } catch (error) {
+      set({ error: "Failed to fetch animal foster history" });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  createFosterHistory: async (fosterHistory) => {
+    set({ loading: true, error: null });
+    try {
+      const {
+        animal_display,
+        foster_history_id,
+        animal,
+        name,
+        description,
+        status,
+        ...payload
+      } = fosterHistory as any;
+
+      const response = (
+        await axiosInstance.post<{ data: FosterHistory }>(
+          "foster-history",
+          payload
+        )
+      ).data;
+
+      set((state) => ({
+        fosterHistory: [
+          ...state.fosterHistory,
+          mapAnimalToHistory(response.data),
+        ],
+      }));
+    } catch (error) {
+      set({ error: "Failed to create foster history" });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  updateFosterHistory: async (fosterHistory) => {
+    set({ loading: true, error: null });
+    try {
+      const { animal_display, foster_history_id, animal, ...payload } =
+        fosterHistory as any;
+      const response = (
+        await axiosInstance.put<{ data: FosterHistory }>(
+          `foster-history/${fosterHistory.foster_history_id}`,
+          payload
+        )
+      ).data;
+      set((state) => ({
+        fosterHistory: state.fosterHistory.map((f) =>
+          f.foster_history_id === fosterHistory.foster_history_id
+            ? mapAnimalToHistory(response.data)
+            : f
+        ),
+      }));
+    } catch (error) {
+      set({ error: "Failed to update foster history" });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  deleteFosterHistory: async (id) => {
+    set({ loading: true, error: null });
+    try {
+      await axiosInstance.delete(`foster-history/${id}`);
+      set((state) => ({
+        fosterHistory: state.fosterHistory.filter(
+          (f) => f.foster_history_id !== id
+        ),
+      }));
+    } catch (error) {
+      set({ error: "Failed to delete foster history" });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  setSelectedFosterHistory: (fosterHistory) =>
+    set({ selectedFosterHistory: fosterHistory }),
 }));
