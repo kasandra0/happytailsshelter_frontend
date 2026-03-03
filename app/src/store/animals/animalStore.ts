@@ -24,7 +24,7 @@ export const useAnimalStore = create<AnimalState>((set) => ({
   fetchAnimals: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await api.get<{ data: Animal[] }>("animals");
+      const response = await api.get<{ data: Animal[] }>("api/animals");
       set({ animals: response.data });
     } catch (error) {
       set({ error: "Failed to fetch animals" });
@@ -48,7 +48,7 @@ export const useAnimalStore = create<AnimalState>((set) => ({
         status: animal.status,
         description: animal.description,
       };
-      const response = await api.post<{ data: Animal }>("animals", noIdData);
+      const response = await api.post<{ data: Animal }>("/api/animals", noIdData);
       set((state) => ({ animals: [...state.animals, response.data] }));
     } catch (error) {
       set({ error: "Failed to create animal" });
@@ -61,7 +61,7 @@ export const useAnimalStore = create<AnimalState>((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.put<{ data: Animal }>(
-        `animals/${animal.animal_id}`,
+        `/api/animals/${animal.animal_id}`,
         animal
       );
       set((state) => ({
@@ -79,7 +79,7 @@ export const useAnimalStore = create<AnimalState>((set) => ({
   deleteAnimal: async (animal_id) => {
     set({ loading: true, error: null });
     try {
-      await api.delete(`animals/${animal_id}`);
+      await api.delete(`/api/animals/${animal_id}`);
       set((state) => ({
         animals: state.animals.filter((a) => a.animal_id !== animal_id),
       }));

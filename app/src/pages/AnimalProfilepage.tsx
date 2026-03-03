@@ -1,3 +1,4 @@
+import AnimalProfile from "@/components/AnimalProfile";
 import { getAnimalById } from "@/lib/api";
 import { calculateAge } from "@/lib/utils";
 import type { Animal } from "@/types/types";
@@ -33,21 +34,10 @@ export function AnimalProfilePage({ }: AnimalProfilePageProps) {
     fetchAnimal(animalId);
     
   }, [params]);
-    const dateOfBirth = animal?.date_of_birth ? new Date(animal.date_of_birth) : null;
     return (
       <div className="p-4">
         {animal ? (
-          <div>
-            <h1 className="text-2xl font-bold">{animal.name}</h1>
-            <div className="flex flex-col gap-2 mt-4">
-            <p>Breed: {animal.breed}</p>
-            <p>DOB: {dateOfBirth ? dateOfBirth.toLocaleDateString() : "Unknown"}</p>
-            <p>Age: {dateOfBirth ? calculateAge(dateOfBirth) : "Unknown"}</p>
-            <p>Gender: {animal.gender}</p>
-            <p>Description: {animal.description}</p>
-            <p>Status: {animal.status}</p>
-          </div>
-          </div>
+          <AnimalProfile animal={animal}/>
         ) : (
           <p>Loading animal details...</p>
         )}

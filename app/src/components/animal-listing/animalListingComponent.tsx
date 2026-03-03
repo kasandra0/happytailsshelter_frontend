@@ -12,9 +12,6 @@ export interface AnimalListingComponentProps {
 const AnimalListingComponent: FC<AnimalListingComponentProps> = ({
   animal,
 }) => {
-  const getAnimalPhoto = (index: number) => {
-    return index % 3 === 0 ? puppy1 : index % 3 === 1 ? kitty : puppy2;
-  };
 
   return (
     <>
@@ -23,7 +20,7 @@ const AnimalListingComponent: FC<AnimalListingComponentProps> = ({
           <CardComponent
             key={animal.animal_id}
             title={animal.name}
-            image={getAnimalPhoto(0)}
+            image={animal.photo_url}
             tag={animal.status == "A" ? "Available" : "Adopted"}
             description={animal.description ?? ""}
             buttonText="Adopt me"

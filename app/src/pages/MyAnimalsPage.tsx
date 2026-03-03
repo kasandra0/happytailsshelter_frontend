@@ -1,19 +1,32 @@
 import AnimalListingComponent from "@/components/animal-listing/animalListingComponent";
+import { GlobalContext } from "@/hooks/GlobalContext";
 import { useAnimalStore } from "@/store/animals/animalStore";
-import { userFosterHistoryStore } from "@/store/animals/fosterhistory/fosterHistoryStore";
+import { userFosterHistoryStore } from "@/store/fosterhistory/fosterHistoryStore";
 import type { Animal } from "@/types/types";
-import { useEffect, type FC, type Key } from "react";
+import { useContext, useEffect, type FC, type Key } from "react";
+import { useNavigate } from "react-router-dom";
 
-interface MyAnimalsPageProps {}
+interface MyAnimalsPageProps { }
 
 const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
   const { fetchAnimals } = useAnimalStore();
   const { fosterHistory, fetchUserFosterHistory } = userFosterHistoryStore();
+  const { user, isLoading } = useContext(GlobalContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetchAnimals();
+    if (user) {
+      fetchUserFosterHistory(user.userId);
+    }
 
-    fetchUserFosterHistory(1);
-  }, []);
+  }, [user]);
+
+  const handleAnimalClick = (animalId?: number) => {
+    if (animalId) {
+      navigate(`/fosterparent/animals/${animalId}`);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -26,7 +39,11 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
             animal: Animal | undefined;
           }) => {
             return (
-              <div key={fosterHistoryLog.animal_id}>
+              <div
+                key={fosterHistoryLog.animal_id}
+                onClick={() => handleAnimalClick(fosterHistoryLog.animal?.animal_id)}
+                className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              >
                 <AnimalListingComponent animal={fosterHistoryLog.animal} />
               </div>
             );
