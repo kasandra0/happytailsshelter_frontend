@@ -14,6 +14,7 @@ import { login } from "@/services/authService"
 import { useNavigate } from "react-router-dom"
 import { ADMIN_ROLE, FOSTER_PARENT_ROLE, type User } from "@/types/types"
 import { GlobalContext } from "@/hooks/GlobalContext"
+import { EyeOff, Eye } from "lucide-react"
 
 export function LoginPage({
     className,
@@ -21,6 +22,7 @@ export function LoginPage({
 }: React.ComponentPropsWithoutRef<"div">) {
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [errorMessage, setErrorMessage] = useState("");
+    const [showPassword, setShowPassword] = useState(false)
     const navigate = useNavigate();
     const globalContext = useContext(GlobalContext);
 
@@ -92,7 +94,7 @@ export function LoginPage({
                                         />
                                     </div>
                                     <div className="grid gap-2">
-                                        <div className="flex items-center">
+                                        <div className="flex justify-items-stretch">
                                             <Label htmlFor="password">Password</Label>
                                             <a
                                                 href="#"
@@ -101,13 +103,29 @@ export function LoginPage({
                                                 Forgot your password?
                                             </a>
                                         </div>
-                                        <Input
-                                            value={formData.password}
-                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                            id="password"
-                                            type="password"
-                                            required
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                value={formData.password}
+                                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                                id="password"
+                                                type={showPassword ? "text" : "password"}
+                                                required
+                                            />
+
+                                            <Button
+                                                className="absolute top-0 right-0 h-full px-3 hover:bg-transparent"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                size="icon"
+                                                type="button"
+                                                variant="ghost"
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                                                ) : (
+                                                    <Eye className="h-4 w-4 text-muted-foreground" />
+                                                )}
+                                            </Button>
+                                        </div>
                                     </div>
                                     <Button type="submit" className="w-full">
                                         Login
