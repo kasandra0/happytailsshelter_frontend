@@ -82,7 +82,7 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
           ${sidebarOpen ? "w-48" : "w-0"}
         `}
       >
-        <div className="w-48 h-full p-4">
+        <div className="w-48 h-full p-4 flex flex-col">
           <SidebarProvider>
             <Sidebar collapsible="none">
               <SidebarHeader>
@@ -128,16 +128,10 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
                   </SidebarGroup>
                 ))}
               </SidebarContent>
-              <SidebarFooter>
+              <SidebarFooter className="mt-auto mb-5 p-4 border-t border-sidebar-border/50">
                 <SidebarMenuButton onClick={handleLogout} className="w-full">
                   Logout
                 </SidebarMenuButton>
-                <div className="flex h-16 items-center px-6 border-t border-sidebar-border/50">
-                  <span className="text-sm text-muted-foreground">
-                    Logged in as{" "}
-                    {userRole === "admin" ? "Admin" : "Foster Parent"}
-                  </span>
-                </div>
               </SidebarFooter>
               <SidebarRail />
             </Sidebar>
