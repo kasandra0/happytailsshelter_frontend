@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { axiosInstance } from "@/services/authService";
 import type { MedicalLog } from "@/types/types";
 import { create } from "zustand";
 
@@ -26,7 +26,9 @@ export const useMedicalLogStore = create<MedicalLogState>((set) => ({
   fetchMedicalLogs: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await api.get<{ data: MedicalLog[] }>("medical-log");
+      const response = (
+        await axiosInstance.get<{ data: MedicalLog[] }>("medical-log")
+      ).data;
       set({ medicalLogs: response.data });
     } catch (error) {
       set({ error: "Failed to fetch medical logs" });
@@ -47,10 +49,9 @@ export const useMedicalLogStore = create<MedicalLogState>((set) => ({
         start_date: medicalLog.start_date,
         end_date: medicalLog.end_date,
       };
-      const response = await api.post<{ data: MedicalLog }>(
-        "medical-log",
-        noIdData
-      );
+      const response = (
+        await axiosInstance.post<{ data: MedicalLog }>("medical-log", noIdData)
+      ).data;
       set((state) => ({ medicalLogs: [...state.medicalLogs, response.data] }));
     } catch (error) {
       set({ error: "Failed to create medical log" });
@@ -62,10 +63,12 @@ export const useMedicalLogStore = create<MedicalLogState>((set) => ({
   updateMedicalLog: async (medicalLog) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.put<{ data: MedicalLog }>(
-        `medical-log/${medicalLog.log_history_id}`,
-        medicalLog
-      );
+      const response = (
+        await axiosInstance.put<{ data: MedicalLog }>(
+          `medical-log/${medicalLog.log_history_id}`,
+          medicalLog
+        )
+      ).data;
       set((state) => ({
         medicalLogs: state.medicalLogs.map((ml) =>
           ml.log_history_id === medicalLog.log_history_id ? response.data : ml
@@ -81,7 +84,7 @@ export const useMedicalLogStore = create<MedicalLogState>((set) => ({
   deleteMedicalLog: async (medical_log_id) => {
     set({ loading: true, error: null });
     try {
-      await api.delete(`medical-log/${medical_log_id}`);
+      await axiosInstance.delete(`medical-log/${medical_log_id}`);
       set((state) => ({
         medicalLogs: state.medicalLogs.filter(
           (ml) => ml.log_history_id !== medical_log_id

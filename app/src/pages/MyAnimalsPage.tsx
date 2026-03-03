@@ -1,6 +1,6 @@
 import AnimalListingComponent from "@/components/animal-listing/animalListingComponent";
 import { useAnimalStore } from "@/store/animals/animalStore";
-import { userFosterHistoryStore } from "@/store/animals/fosterhistory/fosterHistoryStore";
+import { userFosterHistoryStore } from "@/store/fosterhistory/fosterHistoryStore";
 import type { Animal } from "@/types/types";
 import { useEffect, type FC, type Key } from "react";
 
