@@ -18,15 +18,6 @@ import { Eye, EyeOff } from "lucide-react"
 type FieldErrors = Partial<Record<"name" | "email" | "password" | "confirmPassword", string>>
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const passwordRules = { minLen: 10, upper: /[A-Z]/, lower: /[a-z]/, number: /[0-9]/ }
-
-function validatePassword(pw: string): string | null {
-  if (pw.length < passwordRules.minLen) return "Password must be at least 10 characters."
-  if (!passwordRules.upper.test(pw)) return "Password must include at least 1 uppercase letter."
-  if (!passwordRules.lower.test(pw)) return "Password must include at least 1 lowercase letter."
-  if (!passwordRules.number.test(pw)) return "Password must include at least 1 number."
-  return null
-}
 
 export default function SignUpPage({
   className,
@@ -75,7 +66,7 @@ export default function SignUpPage({
 
     setLoading(true)
     await register(firstName.trim(), lastName.trim(), email.trim(), password)
-      .then((response) => {
+      .then(() => {
         navigate("/login")
       })
       .catch((error) => {

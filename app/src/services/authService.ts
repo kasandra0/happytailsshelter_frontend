@@ -36,7 +36,7 @@ export const register = async (
   password: string
 ) => {
   try {
-    const response = await axiosInstance.post(`auth/register`, {
+    const response = await axiosInstance.post(`api/auth/register`, {
       firstName,
       lastName,
       email,
