@@ -31,7 +31,11 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
     <div className="flex flex-col gap-2">
       <h1 className="text-2xl text-center font-bold">My Animals</h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {fosterHistory.length === 0 ? (
+        <p className="text-center text-gray-500 mt-4">
+          You currently have no animals assigned to you.
+        </p>
+      ) : (<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {fosterHistory.map(
           (fosterHistoryLog: {
             animal_id: Key | null | undefined;
@@ -51,6 +55,7 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
           }
         )}
       </div>
+      )}
     </div>
   );
 };
