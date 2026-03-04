@@ -8,22 +8,13 @@ import { ManageMedicalLogForm } from "./form/manageMedicalLogForm";
 import { Modal } from "./modal/modal";
 import { GlobalContext } from "@/hooks/GlobalContext";
 import FosterHistoryTable from "./FosterHistoryTable";
+import { STATUS_LABELS, STATUS_STYLES } from "@/constants";
 
 export interface AnimalProfileProps {
   animal: Animal;
 }
 
-const STATUS_LABELS: Record<string, string> = {
-  A: "Available",
-  X: "Adopted",
-  F: "Fostered",
-};
 
-const STATUS_STYLES: Record<string, string> = {
-  A: "bg-yellow-100 text-yellow-800",
-  X: "bg-gray-100 text-gray-600",
-  F: "bg-purple-100 text-purple-800",
-};
 
 const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
   const { user } = useContext(GlobalContext);
@@ -132,9 +123,6 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
           </div>
         </div>
       </div>
-
-      {/* Foster History */}
-      {user?.role === ADMIN_ROLE && <FosterHistoryTable animal={animal} />}
 
       {/* Medical Log Modal */}
       <Modal
