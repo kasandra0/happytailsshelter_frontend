@@ -27,43 +27,49 @@ export function LoginPage({
     const globalContext = useContext(GlobalContext);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        // Handle login logic here
-        try {
-            const response = await login(formData.email, formData.password);
+  event.preventDefault()
+  setErrorMessage("")
 
-            // get user data from response and set it in global context
+  try {
+    const response = await login(formData.email, formData.password)
+    // response.data = { success, message, data: { token } }
+    const data = response.data
 
-            if (response.status !== 200) {
-                console.error("Login failed:", response);
-                setErrorMessage("Login failed. Please check your email and password.");
-                return;
-            }
-            const token = response.data.data.token;
-            localStorage.setItem("token", token);
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            const user: User = {
-                userId: payload.user_id,
-                email: payload.email,
-                role: parseInt(payload.role, 10),
-                name: payload.name, // TODO: convert to split name
-                firstName: '', // not in token
-                lastName: '', // not in token
-            };
-            globalContext.setUser(user);
-            if (user.role === ADMIN_ROLE) {
-                navigate("/admin/dashboard");
-            } else if (user.role === FOSTER_PARENT_ROLE) {
-                navigate("/fosterparent/dashboard");
-            } else {
-                navigate("/error");
-            }
-        } catch (error) {
-            console.error("Login failed:", error);
-            setErrorMessage("Login failed. Please check your email and password.");
-            // Show an error message to the user
-        }
-    };
+    if (!data?.success) {
+      setErrorMessage(data?.message || "Login failed.")
+      return
+    }
+
+    const token = data.data.token
+    localStorage.setItem("token", token)
+
+    const payload = JSON.parse(atob(token.split(".")[1]))
+
+    const user: User = {
+      userId: payload.user_id,
+      email: payload.email,
+      role: Number(payload.role),
+      name: "", // token doesn't include name
+      firstName: "",
+      lastName: "",
+    }
+
+    globalContext.setUser(user)
+
+    if (user.role === ADMIN_ROLE) navigate("/admin/dashboard")
+    else if (user.role === FOSTER_PARENT_ROLE) navigate("/fosterparent/dashboard")
+    else navigate("/error")
+
+  } catch (error: any) {
+    console.error("Login failed:", error)
+
+    const message =
+      error?.response?.data?.message ||
+      "Login failed. Please check your email and password."
+
+    setErrorMessage(message)
+  }
+}
     return (
         <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
             <div className="w-full max-w-sm">
@@ -86,12 +92,16 @@ export function LoginPage({
                                         <Label htmlFor="email">Email</Label>
                                         <Input
                                             value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            onChange={(e) => {
+                                              setFormData({ ...formData, email: e.target.value })
+                                              if (errorMessage) setErrorMessage("")
+                                            }}
                                             id="email"
                                             type="email"
                                             placeholder="m@example.com"
                                             required
                                         />
+                                                  
                                     </div>
                                     <div className="grid gap-2">
                                         <div className="flex justify-items-stretch">
@@ -106,7 +116,10 @@ export function LoginPage({
                                         <div className="relative">
                                             <Input
                                                 value={formData.password}
-                                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                                onChange={(e) => {
+                                                    setFormData({ ...formData, password: e.target.value })
+                                                    if (errorMessage) setErrorMessage("")
+                                            }}
                                                 id="password"
                                                 type={showPassword ? "text" : "password"}
                                                 required
