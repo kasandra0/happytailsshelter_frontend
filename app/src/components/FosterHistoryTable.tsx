@@ -160,14 +160,12 @@ const FosterHistoryTable: FC<FosterHistoryTableProps> = ({ animal }) => {
 
   return (
     <>
-    <div className="flex flex-col gap-6 max-w-2xl mx-auto">
       <div className="bg-white rounded-xl shadow-lg p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">Foster History</h2>
           <Button onClick={handleCreateFosterHistory}>Create</Button>
         </div>
         <DataTable columns={fosterColumns} data={fosterHistory} />
-      </div>
       </div>
 
       <Modal
