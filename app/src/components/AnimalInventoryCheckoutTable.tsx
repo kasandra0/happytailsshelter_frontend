@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import { ManageInventoryItemCheckoutForm } from "./form/manageInventoryItemCheckoutForm";
 
 export interface AnimalInventoryCheckoutProps {
   animal: Animal;
@@ -171,7 +172,11 @@ const AnimalInventoryCheckout: FC<AnimalInventoryCheckoutProps> = ({
         onOpenChange={setModalOpen}
         title={modalTitle}
         component={
-          <div>Inventory Checkout Form goes here</div> // replace with ManageInventoryCheckoutForm when ready
+          <ManageInventoryItemCheckoutForm
+            checkout={selectedInventoryCheckout}
+            animal={animal}
+            onSubmit={handleSubmit}
+          />
         }
         onCancel={() => setModalOpen(false)}
         form="manage-inventory-checkout-form"
