@@ -59,24 +59,27 @@ export default function SignUpPage({
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setFormError("")
+  e.preventDefault()
+  setFormError("")
 
-    if (!validate()) return
+  if (!validate()) return
 
-    setLoading(true)
+  setLoading(true)
+  try {
     await register(firstName.trim(), lastName.trim(), email.trim(), password)
-      .then(() => {
-        navigate("/login")
-      })
-      .catch((error) => {
-        console.error("Registration error:", error)
-        setFormError("Registration failed. Please try again.") // email already used display the message from the syatem 
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+    navigate("/login")
+  } catch (error: any) {
+    console.error("Registration error:", error)
+
+    const message =
+      error?.response?.data?.message ||
+      "Registration failed. Please try again."
+
+    setFormError(message)
+  } finally {
+    setLoading(false)
   }
+}
 
 
   return (
