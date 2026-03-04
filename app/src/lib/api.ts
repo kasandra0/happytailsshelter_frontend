@@ -31,7 +31,6 @@ export const getAnimalById = async (id: number) => {
     const response = await axiosInstance.get<{ data: Animal }>(`animals/${id}`);
     return response.data;
   } catch (error) {
-    console.error(`Error fetching animal with id ${id}:`, error);
     throw error;
   }
 };

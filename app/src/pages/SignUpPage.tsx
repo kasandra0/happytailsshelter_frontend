@@ -70,7 +70,6 @@ export default function SignUpPage({
         navigate("/login")
       })
       .catch((error) => {
-        console.error("Registration error:", error)
         setFormError("Registration failed. Please try again.")
       })
       .finally(() => {

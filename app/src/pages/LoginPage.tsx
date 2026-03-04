@@ -35,7 +35,6 @@ export function LoginPage({
             // get user data from response and set it in global context
 
             if (response.status !== 200) {
-                console.error("Login failed:", response);
                 setErrorMessage("Login failed. Please check your email and password.");
                 return;
             }
@@ -59,7 +58,6 @@ export function LoginPage({
                 navigate("/error");
             }
         } catch (error) {
-            console.error("Login failed:", error);
             setErrorMessage("Login failed. Please check your email and password.");
             // Show an error message to the user
         }

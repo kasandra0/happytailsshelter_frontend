@@ -38,7 +38,6 @@ function App() {
         setUser(userData);
         setIsLoading(false);
       }).catch((error) => {
-        console.error("Error fetching current user:", error);
         setUser(null);
         setIsLoading(false);
       });

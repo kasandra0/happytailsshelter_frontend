@@ -13,7 +13,6 @@ export function AnimalProfilePage({}: AnimalProfilePageProps) {
     const animalId = params.id;
 
     if (!animalId) {
-      console.error("No animal ID provided in URL parameters.");
       return;
     }
 

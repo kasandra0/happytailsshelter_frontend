@@ -15,7 +15,6 @@ export const login = async (email: string, password: string) => {
     });
     return response;
   } catch (error) {
-    console.error("Login error:", error);
     throw error;
   }
 };
@@ -24,7 +23,6 @@ export const logout = async () => {
   try {
     localStorage.removeItem("token")
   } catch (error) {
-    console.error("Logout error:", error);
     throw error;
   }
 };
@@ -44,7 +42,6 @@ export const register = async (
     });
     return response;
   } catch (error) {
-    console.error("Registration error:", error);
     throw error;
   }
 };

@@ -27,7 +27,6 @@ export const getCurrentUser = async (): Promise<User> => {
             role: Number(raw.role),
         };
     } catch (error) {
-        console.error('Error fetching current user:', error);
         throw error;
     }
 };

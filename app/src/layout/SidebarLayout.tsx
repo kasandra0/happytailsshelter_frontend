@@ -88,7 +88,6 @@ export default function SidebarLayout({  }: DashboardLayoutProps) {
       setUser(null);
       navigate('/')
     } catch (error) {
-      console.error("Logout error:", error);
     }
   }
 
