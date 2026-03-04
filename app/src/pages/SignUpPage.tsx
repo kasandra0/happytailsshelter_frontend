@@ -71,7 +71,7 @@ export default function SignUpPage({
       })
       .catch((error) => {
         console.error("Registration error:", error)
-        setFormError("Registration failed. Please try again.")
+        setFormError("Registration failed. Please try again.") // email already used display the message from the syatem 
       })
       .finally(() => {
         setLoading(false)
