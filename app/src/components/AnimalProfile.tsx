@@ -1,40 +1,13 @@
-import { useState, useEffect, type FC, useContext } from "react";
-import {
-  ADMIN_ROLE,
-  type Animal,
-  type FosterHistory,
-  type MedicalLog,
-} from "@/types/types";
+import { useState, type FC, useContext } from "react";
+import { ADMIN_ROLE, type Animal, type MedicalLog } from "@/types/types";
 import { calculateAge } from "@/lib/utils";
-import { Camera, MoreHorizontal } from "lucide-react";
+import { Camera } from "lucide-react";
 import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
 import { Button } from "./ui/button";
 import { ManageMedicalLogForm } from "./form/manageMedicalLogForm";
 import { Modal } from "./modal/modal";
-import { DataTable } from "./table/Table";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import type { ColumnDef } from "@tanstack/react-table";
-import { useMemo } from "react";
-import { useFosterHistoryStore } from "@/store/fosterhistory/fosterHistoryStore";
-import { ManageFosterHistoryForm } from "./form/manageFosterHistoryForm";
 import { GlobalContext } from "@/hooks/GlobalContext";
-import { useAnimalStore } from "@/store/animals/animalStore";
+import FosterHistoryTable from "./FosterHistoryTable";
 
 export interface AnimalProfileProps {
   animal: Animal;
@@ -67,36 +40,10 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
     : "bg-gray-100 text-gray-600";
   const photo = animal.photo_url;
 
-  // Medical log modal
   const [medicalLogModalOpen, setMedicalLogModalOpen] = useState(false);
   const [medicalLogModalTitle, setMedicalLogModalTitle] = useState("");
   const { createMedicalLog } = useMedicalLogStore();
 
-  // Foster history modal + delete dialog
-  const [fosterModalOpen, setFosterModalOpen] = useState(false);
-  const [fosterModalTitle, setFosterModalTitle] = useState("");
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [fosterHistoryToDeleteId, setFosterHistoryToDeleteId] = useState<
-    number | null
-  >(null);
-
-  const {
-    fosterHistory,
-    selectedFosterHistory,
-    fetchAnimalFosterHistory,
-    createFosterHistory,
-    updateFosterHistory,
-    deleteFosterHistory,
-    setSelectedFosterHistory,
-  } = useFosterHistoryStore();
-
-  const { updateAnimal, getAnimal } = useAnimalStore();
-
-  useEffect(() => {
-    fetchAnimalFosterHistory(animal.animal_id);
-  }, [animal.animal_id]);
-
-  // Medical log handlers
   const handleCreateMedicalLog = () => {
     setMedicalLogModalTitle("Create Medical Log Entry");
     setMedicalLogModalOpen(true);
@@ -106,119 +53,6 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
     await createMedicalLog(medicalLog);
     setMedicalLogModalOpen(false);
   };
-
-  // Foster history handlers
-  const handleCreateFosterHistory = () => {
-    setFosterModalTitle("Create Foster History Record");
-    setSelectedFosterHistory(null);
-    setFosterModalOpen(true);
-  };
-
-  const handleUpdateFosterHistory = (record: FosterHistory) => {
-    setFosterModalTitle("Update Foster History Record");
-    setSelectedFosterHistory(record);
-    setFosterModalOpen(true);
-  };
-
-  const handleDeleteFosterHistory = (id: number) => {
-    setFosterHistoryToDeleteId(id);
-    setDeleteDialogOpen(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    if (fosterHistoryToDeleteId === null) return;
-    await deleteFosterHistory(fosterHistoryToDeleteId);
-    setFosterHistoryToDeleteId(null);
-    setDeleteDialogOpen(false);
-  };
-
-  const handleFosterSubmit = async (record: FosterHistory) => {
-    const { status, description, ...fosterPayload } = record as any;
-
-    // update the animal's status and description
-    await updateAnimal({
-      ...animal,
-      status,
-      description,
-    });
-
-    // create/update the foster history record
-    const payload = {
-      ...fosterPayload,
-      animal_id: animal.animal_id,
-      staff_id: user?.userId,
-    };
-
-    record.foster_history_id === 0
-      ? await createFosterHistory(payload)
-      : await updateFosterHistory(payload);
-
-    await getAnimal(animal.animal_id);
-
-    setFosterModalOpen(false);
-  };
-
-  const fosterColumns: ColumnDef<FosterHistory>[] = useMemo(
-    () => [
-      { accessorKey: "foster_history_id", header: "ID" },
-      { accessorKey: "user_id", header: "User ID" },
-      { accessorKey: "staff_id", header: "Staff ID" },
-      {
-        accessorKey: "start_date",
-        header: "Start Date",
-        cell: ({ row }) => {
-          const val = row.getValue("start_date");
-          return val ? new Date(val as string).toLocaleDateString() : "-";
-        },
-      },
-      {
-        accessorKey: "end_date",
-        header: "End Date",
-        cell: ({ row }) => {
-          const val = row.getValue("end_date");
-          return val ? new Date(val as string).toLocaleDateString() : "-";
-        },
-      },
-      {
-        id: "actions",
-        header: "Actions",
-        enableHiding: false,
-        cell: ({ row }) => {
-          const record = row.original as FosterHistory;
-          return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="w-40 bg-white border-2"
-              >
-                <DropdownMenuGroup>
-                  <DropdownMenuItem
-                    onClick={() => handleUpdateFosterHistory(record)}
-                  >
-                    <span className="clickable">Update Record</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() =>
-                      handleDeleteFosterHistory(record.foster_history_id)
-                    }
-                  >
-                    <span className="clickable">Delete Record</span>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          );
-        },
-      },
-    ],
-    []
-  );
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl mx-auto">
@@ -299,16 +133,8 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
         </div>
       </div>
 
-      {/* Foster History Table */}
-      {user?.role === ADMIN_ROLE && (
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">Foster History</h2>
-            <Button onClick={handleCreateFosterHistory}>Create</Button>
-          </div>
-          <DataTable columns={fosterColumns} data={fosterHistory} />
-        </div>
-      )}
+      {/* Foster History */}
+      {user?.role === ADMIN_ROLE && <FosterHistoryTable animal={animal} />}
 
       {/* Medical Log Modal */}
       <Modal
@@ -324,49 +150,6 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
         onCancel={() => setMedicalLogModalOpen(false)}
         form="manage-medical-log-form"
       />
-
-      {/* Foster History Modal */}
-      <Modal
-        open={fosterModalOpen}
-        onOpenChange={setFosterModalOpen}
-        title={fosterModalTitle}
-        component={
-          <ManageFosterHistoryForm
-            animal={animal}
-            fosterHistory={
-              selectedFosterHistory ??
-              ({
-                animal_id: animal.animal_id,
-                name: animal.name,
-              } as FosterHistory)
-            }
-            onSubmit={handleFosterSubmit}
-          />
-        }
-        onCancel={() => setFosterModalOpen(false)}
-        form="manage-foster-history-form"
-      />
-
-      {/* Delete Confirmation */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete the foster history record. This
-              action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setDeleteDialogOpen(false)}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete}>
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 };
