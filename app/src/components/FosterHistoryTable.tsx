@@ -1,4 +1,11 @@
-import { useState, useEffect, useContext, useMemo, useCallback, type FC } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  useCallback,
+  type FC,
+} from "react";
 import { ADMIN_ROLE, type Animal, type FosterHistory } from "@/types/types";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "./ui/button";
@@ -37,7 +44,9 @@ const FosterHistoryTable: FC<FosterHistoryTableProps> = ({ animal }) => {
   const [fosterModalOpen, setFosterModalOpen] = useState(false);
   const [fosterModalTitle, setFosterModalTitle] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [fosterHistoryToDeleteId, setFosterHistoryToDeleteId] = useState<number | null>(null);
+  const [fosterHistoryToDeleteId, setFosterHistoryToDeleteId] = useState<
+    number | null
+  >(null);
 
   const {
     fosterHistory,
@@ -61,11 +70,14 @@ const FosterHistoryTable: FC<FosterHistoryTableProps> = ({ animal }) => {
     setFosterModalOpen(true);
   };
 
-  const handleUpdateFosterHistory = useCallback((record: FosterHistory) => {
-    setFosterModalTitle("Update Foster History Record");
-    setSelectedFosterHistory(record);
-    setFosterModalOpen(true);
-  }, [setSelectedFosterHistory]);
+  const handleUpdateFosterHistory = useCallback(
+    (record: FosterHistory) => {
+      setFosterModalTitle("Update Foster History Record");
+      setSelectedFosterHistory(record);
+      setFosterModalOpen(true);
+    },
+    [setSelectedFosterHistory]
+  );
 
   const handleDeleteFosterHistory = useCallback((id: number) => {
     setFosterHistoryToDeleteId(id);
@@ -105,9 +117,26 @@ const FosterHistoryTable: FC<FosterHistoryTableProps> = ({ animal }) => {
 
   const fosterColumns: ColumnDef<FosterHistory>[] = useMemo(
     () => [
-      { accessorKey: "foster_history_id", header: "ID" },
-      { accessorKey: "user_id", header: "User ID" },
-      { accessorKey: "staff_id", header: "Staff ID" },
+      {
+        id: "user",
+        header: "Checked Out By",
+        cell: ({ row }) => {
+          const user = row.original.user_foster_history_user_idTouser as any;
+          return user
+            ? `${user.first_name} ${user.last_name ?? ""}`
+            : row.original.user_id;
+        },
+      },
+      {
+        accessorKey: "staff_id",
+        header: "Staff Member",
+        cell: ({ row }) => {
+          const user = row.original.user_foster_history_staff_idTouser as any;
+          return user
+            ? `${user.first_name} ${user.last_name ?? ""}`
+            : row.original.user_id;
+        },
+      },
       {
         accessorKey: "start_date",
         header: "Start Date",
@@ -138,13 +167,20 @@ const FosterHistoryTable: FC<FosterHistoryTableProps> = ({ animal }) => {
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-40 bg-white border-2">
+              <DropdownMenuContent
+                align="end"
+                className="w-40 bg-white border-2"
+              >
                 <DropdownMenuGroup>
-                  <DropdownMenuItem onClick={() => handleUpdateFosterHistory(record)}>
+                  <DropdownMenuItem
+                    onClick={() => handleUpdateFosterHistory(record)}
+                  >
                     <span className="clickable">Update Record</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => handleDeleteFosterHistory(record.foster_history_id)}
+                    onClick={() =>
+                      handleDeleteFosterHistory(record.foster_history_id)
+                    }
                   >
                     <span className="clickable">Delete Record</span>
                   </DropdownMenuItem>
@@ -194,14 +230,17 @@ const FosterHistoryTable: FC<FosterHistoryTableProps> = ({ animal }) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the foster history record. This action cannot be undone.
+              This will permanently delete the foster history record. This
+              action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setDeleteDialogOpen(false)}>
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete}>Delete</AlertDialogAction>
+            <AlertDialogAction onClick={handleConfirmDelete}>
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

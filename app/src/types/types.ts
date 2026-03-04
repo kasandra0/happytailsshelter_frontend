@@ -25,6 +25,18 @@ export type InventoryItem = {
   lastupdated?: Date;
 };
 
+export type InventoryCheckout = {
+  checkout_id: number;
+  animal_id: number;
+  checkout_date: Date;
+  return_date: Date;
+  quantity: Date;
+  inventory_item_id: number;
+  user_id: number;
+  inventory_item?: InventoryItem;
+  user?: User;
+};
+
 export type User = {
   userId: number;
   email: string;
@@ -66,4 +78,6 @@ export type FosterHistory = {
   end_date?: Date;
   created_at?: Date;
   updated_at?: Date;
+  user_foster_history_user_idTouser?: User;
+  user_foster_history_staff_idTouser?: User;
 };
