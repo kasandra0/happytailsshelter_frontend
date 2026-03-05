@@ -38,6 +38,8 @@ const AnimalInventoryCheckout: FC<AnimalInventoryCheckoutProps> = ({
   const [checkoutToDeleteId, setCheckoutToDeleteId] = useState<number | null>(
     null
   );
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const {
     inventoryCheckouts,
@@ -78,11 +80,18 @@ const AnimalInventoryCheckout: FC<AnimalInventoryCheckoutProps> = ({
   };
 
   const handleSubmit = async (checkout: InventoryCheckout) => {
-    const payload = { ...checkout, animal_id: animal.animal_id };
-    checkout.checkout_id === 0
-      ? await createInventoryCheckout(payload)
-      : await updateInventoryCheckout(payload);
-    setModalOpen(false);
+    try {
+      const payload = { ...checkout, animal_id: animal.animal_id };
+      checkout.checkout_id === 0
+        ? await createInventoryCheckout(payload)
+        : await updateInventoryCheckout(payload);
+      setModalOpen(false);
+    } catch (err: any) {
+      const message =
+        err.response?.data?.message ?? "An error occurred during checkout.";
+      setErrorMessage(message);
+      setErrorDialogOpen(true);
+    }
   };
 
   const columns: ColumnDef<InventoryCheckout>[] = useMemo(
@@ -197,6 +206,20 @@ const AnimalInventoryCheckout: FC<AnimalInventoryCheckoutProps> = ({
             </AlertDialogCancel>
             <AlertDialogAction onClick={handleConfirmDelete}>
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={errorDialogOpen} onOpenChange={setErrorDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Checkout Failed</AlertDialogTitle>
+            <AlertDialogDescription>{errorMessage}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setErrorDialogOpen(false)}>
+              OK
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
