@@ -34,7 +34,7 @@ interface AnimalListingPageProps {}
 const AnimalListingPage: FC<AnimalListingPageProps> = () => {
   const columns: ColumnDef<Animal>[] = useMemo(
     () => [
-      { accessorKey: "animal_id", header: "Animal ID" },
+      { accessorKey: "microchip", header: "Microchip Number" },
       {
         id: "name",
         accessorKey: "name",
