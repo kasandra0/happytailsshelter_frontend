@@ -32,7 +32,6 @@ interface InventoryListingPageProps {}
 const InventoryListingPage: FC<InventoryListingPageProps> = () => {
   const columns: ColumnDef<InventoryItem>[] = useMemo(
     () => [
-      { accessorKey: "inventory_item_id", header: "ID" },
       {
         id: "name",
         accessorKey: "name",

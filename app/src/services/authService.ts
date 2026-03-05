@@ -40,7 +40,7 @@ export const register = async (
       email,
       password,
     });
-    return response;
+    return response.data;
   } catch (error) {
     throw error;
   }
