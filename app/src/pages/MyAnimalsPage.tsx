@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 interface MyAnimalsPageProps {}
 
 const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
-  const { animals, fetchAnimals } = useAnimalStore();
-  const { fosterHistory, fetchUserFosterHistory } = useFosterHistoryStore();
+  const { animals, fetchAnimals, loading: animalsLoading } = useAnimalStore();
+  const { fosterHistory, fetchUserFosterHistory, loading: fosterHistoryLoading } = useFosterHistoryStore();
   const { user, isLoading } = useContext(GlobalContext);
   const navigate = useNavigate();
 
@@ -34,6 +34,15 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
       navigate(`/fosterparent/animals/${animalId}`);
     }
   };
+
+  if (animalsLoading || fosterHistoryLoading) {
+    return (
+      <div className="flex flex-col gap-2">
+        <h1 className="text-2xl text-center font-bold">My Animals</h1>
+        <p className="text-center text-gray-500 mt-4">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-2">
