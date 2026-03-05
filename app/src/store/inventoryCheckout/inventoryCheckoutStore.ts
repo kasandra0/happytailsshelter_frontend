@@ -90,8 +90,12 @@ export const useInventoryCheckoutStore = create<InventoryCheckoutState>(
         set((state) => ({
           inventoryCheckouts: [...state.inventoryCheckouts, response.data],
         }));
-      } catch (error) {
-        set({ error: "Failed to create inventory checkout" });
+      } catch (error: any) {
+        const message =
+          error.response?.data?.message ??
+          "Failed to create inventory checkout";
+        set({ error: message });
+        throw error; // re-throw so the component can catch it
       } finally {
         set({ loading: false });
       }

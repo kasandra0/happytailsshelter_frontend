@@ -30,7 +30,7 @@ export type InventoryCheckout = {
   animal_id: number;
   checkout_date: Date;
   return_date: Date;
-  quantity: Date;
+  quantity: number;
   inventory_item_id: number;
   user_id: number;
   inventory_item?: InventoryItem;
@@ -41,8 +41,8 @@ export type User = {
   userId: number;
   email: string;
   name?: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   role: number; // 2 - admin, 1 - foster parent
 };
 export const ADMIN_ROLE = 2;

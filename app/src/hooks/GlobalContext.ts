@@ -11,8 +11,8 @@ export const defaultUser: User = {
   userId: 0,
   role: 0,
   email: "",
-  firstName: "",
-  lastName: "",
+  first_name: "",
+  last_name: "",
 };
 
 export const GlobalContext = createContext<GlobalContextType>({
