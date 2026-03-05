@@ -103,7 +103,7 @@ const FosterHistoryTable: FC<FosterHistoryTableProps> = ({ animal }) => {
     const payload = {
       ...fosterPayload,
       animal_id: animal.animal_id,
-      staff_id: user?.userId,
+      staff_id: user?.user_id,
     };
 
     record.foster_history_id === 0

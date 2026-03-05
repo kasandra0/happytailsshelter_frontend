@@ -1,3 +1,4 @@
+import AnimalProfile from "@/components/AnimalProfile";
 import AnimalListingComponent from "@/components/animal-listing/animalListingComponent";
 import { GlobalContext } from "@/hooks/GlobalContext";
 import { useAnimalStore } from "@/store/animals/animalStore";
@@ -17,7 +18,7 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
   useEffect(() => {
     fetchAnimals();
     if (user) {
-      fetchUserFosterHistory(user.userId);
+      fetchUserFosterHistory(user.user_id);
     }
   }, [user]);
 
@@ -35,26 +36,27 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
         <p className="text-center text-gray-500 mt-4">
           You currently have no animals assigned to you.
         </p>
-      ) : (<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {fosterHistory.map(
-          (fosterHistoryLog: {
-            animal_id: Key | null | undefined;
-            animal: Animal | undefined;
-          }) => {
-            return (
-              <div
-                key={fosterHistoryLog.animal_id}
-                onClick={() =>
-                  handleAnimalClick(fosterHistoryLog.animal?.animal_id)
-                }
-                className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <AnimalListingComponent animal={fosterHistoryLog.animal} />
-              </div>
-            );
-          }
-        )}
-      </div>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {fosterHistory.map(
+            (fosterHistoryLog: {
+              animal_id: Key | null | undefined;
+              animal: Animal;
+            }) => {
+              return (
+                <div
+                  key={fosterHistoryLog.animal.animal_id}
+                  onClick={() =>
+                    handleAnimalClick(fosterHistoryLog.animal?.animal_id)
+                  }
+                  className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <AnimalProfile animal={fosterHistoryLog.animal} />
+                </div>
+              );
+            }
+          )}
+        </div>
       )}
     </div>
   );

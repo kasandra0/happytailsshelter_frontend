@@ -14,8 +14,6 @@ export interface AnimalProfileProps {
   animal: Animal;
 }
 
-
-
 const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
   const { user } = useContext(GlobalContext);
 

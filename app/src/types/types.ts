@@ -38,7 +38,7 @@ export type InventoryCheckout = {
 };
 
 export type User = {
-  userId: number;
+  user_id: number;
   email: string;
   name?: string;
   first_name: string;

@@ -59,7 +59,7 @@ export const ManageFosterHistoryForm: React.FC<
       foster_history_id: fosterHistory?.foster_history_id ?? 0,
       animal_id: fosterHistory?.animal_id ?? 0,
       user_id: Number(fosterHistory?.user_id) ?? 0,
-      animal_display: `${animal.animal_id}: ${animal.name}`,
+      animal_display: animal.name,
       status: (animal.status as "A" | "X" | "F") ?? "A",
       start_date: fosterHistory?.start_date
         ? new Date(fosterHistory.start_date)
@@ -110,7 +110,6 @@ export const ManageFosterHistoryForm: React.FC<
                 </Field>
               )}
             />
-            
 
             {/* Foster Parent */}
             <Controller
@@ -118,7 +117,9 @@ export const ManageFosterHistoryForm: React.FC<
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="foster-user-id">Foster Parent</FieldLabel>
+                  <FieldLabel htmlFor="foster-user-id">
+                    Foster Parent
+                  </FieldLabel>
                   <select
                     id="foster-user-id"
                     className="w-full border rounded px-3 py-2 text-sm"
@@ -127,7 +128,7 @@ export const ManageFosterHistoryForm: React.FC<
                   >
                     <option value={0}>Select a user</option>
                     {users.map((user) => (
-                      <option key={user.userId} value={user.userId}>
+                      <option key={user.user_id} value={user.user_id}>
                         {user.first_name} {user.last_name}
                       </option>
                     ))}
