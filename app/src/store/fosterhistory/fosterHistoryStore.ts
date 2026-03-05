@@ -57,7 +57,7 @@ export const useFosterHistoryStore = create<FosterHistoryState>((set) => ({
     try {
       const response = (
         await axiosInstance.get<{ data: FosterHistory[] }>(
-          `foster-history/user/${1}`
+          `foster-history/user/${userId}`
         )
       ).data;
       set({ fosterHistory: response.data.map(mapAnimalToHistory) });

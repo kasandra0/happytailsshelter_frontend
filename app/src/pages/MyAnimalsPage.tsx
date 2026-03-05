@@ -45,7 +45,7 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
             }) => {
               return (
                 <div
-                  key={fosterHistoryLog.animal_id}
+                  key={fosterHistoryLog.animal.animal_id}
                   onClick={() =>
                     handleAnimalClick(fosterHistoryLog.animal?.animal_id)
                   }
