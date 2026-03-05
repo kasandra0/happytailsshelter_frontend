@@ -19,7 +19,7 @@ export const getCurrentUser = async (): Promise<User> => {
     });
     const raw = response.data.data;
     return {
-      userId: Number(raw.user_id),
+      user_id: Number(raw.user_id),
       email: raw.email,
       first_name: raw.first_name,
       last_name: raw.last_name,

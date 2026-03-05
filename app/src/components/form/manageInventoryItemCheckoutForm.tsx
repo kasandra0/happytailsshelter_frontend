@@ -136,7 +136,7 @@ export const ManageInventoryItemCheckoutForm: React.FC<
                   >
                     <option value={0}>Select a user</option>
                     {users.map((user) => (
-                      <option key={user.userId} value={user.userId}>
+                      <option key={user.user_id} value={user.user_id}>
                         {user.first_name} {user.last_name}
                       </option>
                     ))}

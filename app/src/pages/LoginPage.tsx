@@ -46,7 +46,7 @@ export function LoginPage({
       const payload = JSON.parse(atob(token.split(".")[1]));
 
       const user: User = {
-        userId: payload.user_id,
+        user_id: payload.user_id,
         email: payload.email,
         role: Number(payload.role),
         name: "", // token doesn't include name

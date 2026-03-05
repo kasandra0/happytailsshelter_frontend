@@ -30,10 +30,10 @@ export function AnimalProfilePage({}: AnimalProfilePageProps) {
         <>
           <AnimalProfile animal={selectedAnimal} />
           {user?.role === ADMIN_ROLE && (
-            <>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <FosterHistoryTable animal={selectedAnimal} />
               <AnimalInventoryCheckout animal={selectedAnimal} />
-            </>
+            </div>
           )}
         </>
       ) : (

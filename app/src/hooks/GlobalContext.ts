@@ -8,7 +8,7 @@ type GlobalContextType = {
 };
 
 export const defaultUser: User = {
-  userId: 0,
+  user_id: 0,
   role: 0,
   email: "",
   first_name: "",
