@@ -59,7 +59,7 @@ export const ManageFosterHistoryForm: React.FC<
       foster_history_id: fosterHistory?.foster_history_id ?? 0,
       animal_id: fosterHistory?.animal_id ?? 0,
       user_id: Number(fosterHistory?.user_id) ?? 0,
-      animal_display: `${animal.animal_id}: ${animal.name}`,
+      animal_display: animal.name,
       status: (animal.status as "A" | "X" | "F") ?? "A",
       start_date: fosterHistory?.start_date
         ? new Date(fosterHistory.start_date)
