@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -17,6 +18,7 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group";
 import type { Animal, FosterHistory } from "@/types/types";
+import { useUserStore } from "@/store/users/userStore";
 
 export const fosterHistoryFormSchema = z.object({
   foster_history_id: z.number().int().readonly(),
@@ -42,6 +44,12 @@ export interface ManageFosterHistoryFormProps {
 export const ManageFosterHistoryForm: React.FC<
   ManageFosterHistoryFormProps
 > = ({ fosterHistory, onSubmit, animal }) => {
+  const { users, fetchUsers } = useUserStore();
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const formatDate = (date?: Date | string) =>
     date ? new Date(date).toISOString().split("T")[0] : "";
 
@@ -51,7 +59,7 @@ export const ManageFosterHistoryForm: React.FC<
       foster_history_id: fosterHistory?.foster_history_id ?? 0,
       animal_id: fosterHistory?.animal_id ?? 0,
       user_id: Number(fosterHistory?.user_id) ?? 0,
-      animal_display: `${animal.animal_id}: ${animal.name}`,
+      animal_display: animal.name,
       status: (animal.status as "A" | "X" | "F") ?? "A",
       start_date: fosterHistory?.start_date
         ? new Date(fosterHistory.start_date)
@@ -103,20 +111,28 @@ export const ManageFosterHistoryForm: React.FC<
               )}
             />
 
-            {/* User ID */}
+            {/* Foster Parent */}
             <Controller
               name="user_id"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="foster-user-id">User ID</FieldLabel>
-                  <Input
-                    {...field}
+                  <FieldLabel htmlFor="foster-user-id">
+                    Foster Parent
+                  </FieldLabel>
+                  <select
                     id="foster-user-id"
-                    type="number"
-                    aria-invalid={fieldState.invalid}
-                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                  />
+                    className="w-full border rounded px-3 py-2 text-sm"
+                    value={field.value}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  >
+                    <option value={0}>Select a user</option>
+                    {users.map((user) => (
+                      <option key={user.user_id} value={user.user_id}>
+                        {user.first_name} {user.last_name}
+                      </option>
+                    ))}
+                  </select>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}

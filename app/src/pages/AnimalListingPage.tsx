@@ -7,6 +7,7 @@ import { calculateAge } from "@/lib/utils";
 import { useAnimalStore } from "@/store/animals/animalStore";
 import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
 import type { Animal, MedicalLog } from "@/types/types";
+import { STATUS_LABELS, STATUS_STYLES } from "@/constants";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -34,7 +35,7 @@ interface AnimalListingPageProps {}
 const AnimalListingPage: FC<AnimalListingPageProps> = () => {
   const columns: ColumnDef<Animal>[] = useMemo(
     () => [
-      { accessorKey: "animal_id", header: "Animal ID" },
+      { accessorKey: "microchip", header: "Microchip Number" },
       {
         id: "name",
         accessorKey: "name",
@@ -60,6 +61,17 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
       {
         accessorKey: "status",
         header: "Status",
+        cell: ({ row }) => {
+          const animal = row.original;
+
+          const statusLabel = animal.status
+            ? STATUS_LABELS[animal.status] ?? animal.status
+            : "Unknown";
+          const statusStyle = animal.status
+            ? STATUS_STYLES[animal.status] ?? "bg-gray-100 text-gray-600"
+            : "bg-gray-100 text-gray-600";
+          return <span className={statusStyle}>{statusLabel}</span>;
+        },
       },
       {
         id: "actions",
@@ -120,11 +132,13 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
     setSelectedAnimal,
   } = useAnimalStore();
 
-  const { createMedicalLog, fetchMedicalLogs } = useMedicalLogStore();
+  const { createMedicalLog, fetchMedicalLogsForAnimal } = useMedicalLogStore();
 
   useEffect(() => {
     fetchAnimals();
-    fetchMedicalLogs();
+    if (selectedAnimal) {
+      fetchMedicalLogsForAnimal(selectedAnimal.animal_id);
+    }
   }, []);
 
   const handleUpdateAnimalMedicalLog = (animal: Animal) => {
@@ -168,8 +182,10 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
     setModalOpen(false);
   };
   const handleMedicalLogSubmit = async (medicalLog: MedicalLog) => {
-    await createMedicalLog(medicalLog);
-    setMedicalLogModalOpen(false);
+    if (selectedAnimal) {
+      await createMedicalLog(selectedAnimal.animal_id, medicalLog);
+      setMedicalLogModalOpen(false);
+    }
   };
 
   return (

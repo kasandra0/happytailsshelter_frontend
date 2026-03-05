@@ -16,7 +16,7 @@ import MyAnimalsPage from "./pages/MyAnimalsPage";
 
 import SignUpPage from "./pages/SignUpPage"
 import { useEffect, useState } from "react";
-import type { User } from "./types/types";
+import { ADMIN_ROLE, FOSTER_PARENT_ROLE, type User } from "./types/types";
 import { getCurrentUser } from "./services/userService";
 import { Forbidden403 } from "./pages/Forbidden403";
 
@@ -38,7 +38,6 @@ function App() {
         setUser(userData);
         setIsLoading(false);
       }).catch((error) => {
-        console.error("Error fetching current user:", error);
         setUser(null);
         setIsLoading(false);
       });
@@ -64,8 +63,8 @@ function App() {
                 <Route path="*" element={<Error404 />} />
               </Route>
 
-              <Route element={<ProtectedRoute requiredRole={2} />}>
-                <Route path="/admin" element={<SidebarLayout userRole={"admin"} />}>
+              <Route element={<ProtectedRoute requiredRole={ADMIN_ROLE} />}>
+                <Route path="/admin" element={<SidebarLayout />}>
                   <Route path="dashboard" element={<DashboardPage />} />
                   <Route path="animals" element={<AnimalListingPage />} />
                   <Route path="animals/new" element={<AnimalIntakePage />} />
@@ -75,8 +74,8 @@ function App() {
                 </Route>
               </Route>
 
-              <Route element={<ProtectedRoute requiredRole={1} />}>
-                <Route path="/fosterparent" element={<SidebarLayout userRole={"user"} />}>
+              <Route element={<ProtectedRoute requiredRole={FOSTER_PARENT_ROLE} />}>
+                <Route path="/fosterparent" element={<SidebarLayout />}>
                   <Route path="dashboard" element={<MyAnimalsPage />} />
                   <Route path="myanimals" element={<MyAnimalsPage />} />
                   <Route path="profile" element={<></>} />

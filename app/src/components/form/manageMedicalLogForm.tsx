@@ -17,6 +17,8 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group";
 import type { Animal, MedicalLog } from "@/types/types";
+import { GlobalContext } from "@/hooks/GlobalContext";
+import { useContext } from "react";
 
 export const medicalLogFormSchema = z.object({
   log_history_id: z.number().int().readonly(),
@@ -41,20 +43,22 @@ export const ManageMedicalLogForm: React.FC<ManageMedicalLogFormProps> = ({
   medicalLog,
   onSubmit,
 }) => {
+  const { user } = useContext(GlobalContext);
+
   const form = useForm<z.infer<typeof medicalLogFormSchema>>({
     resolver: zodResolver(medicalLogFormSchema),
     defaultValues: {
       log_history_id: medicalLog?.log_history_id ?? 0,
       animal_name: animal?.name,
       animal_id: animal?.animal_id ?? medicalLog?.animal_id,
-      user_id: medicalLog?.user_id ?? 1, //TODO: JJ Need to chagne when auth is ready
+      user_id: user?.user_id,
       type: medicalLog?.type ?? undefined,
       created_date: medicalLog?.created_date
         ? new Date(medicalLog.created_date)
         : new Date(),
       start_date: medicalLog?.start_date
         ? new Date(medicalLog.start_date)
-        : undefined,
+        : new Date(),
       end_date: medicalLog?.end_date
         ? new Date(medicalLog.end_date)
         : undefined,
@@ -79,28 +83,6 @@ export const ManageMedicalLogForm: React.FC<ManageMedicalLogFormProps> = ({
         >
           <FieldGroup>
             <Controller
-              name="created_date"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="log-created-date">
-                    Created Date
-                  </FieldLabel>
-                  <Input
-                    id="log-created-date"
-                    type="date"
-                    aria-invalid={fieldState.invalid}
-                    value={formatDate(field.value)}
-                    onChange={(e) => field.onChange(e.target.valueAsDate)}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
               name="start_date"
               control={form.control}
               render={({ field, fieldState }) => (
@@ -111,9 +93,12 @@ export const ManageMedicalLogForm: React.FC<ManageMedicalLogFormProps> = ({
                     type="date"
                     aria-invalid={fieldState.invalid}
                     value={formatDate(field.value)}
-                    onChange={(e) =>
-                      field.onChange(e.target.valueAsDate ?? undefined)
-                    }
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      field.onChange(
+                        val ? new Date(val + "T00:00:00") : undefined
+                      );
+                    }}
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -133,9 +118,12 @@ export const ManageMedicalLogForm: React.FC<ManageMedicalLogFormProps> = ({
                     type="date"
                     aria-invalid={fieldState.invalid}
                     value={formatDate(field.value)}
-                    onChange={(e) =>
-                      field.onChange(e.target.valueAsDate ?? undefined)
-                    }
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      field.onChange(
+                        val ? new Date(val + "T00:00:00") : undefined
+                      );
+                    }}
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />

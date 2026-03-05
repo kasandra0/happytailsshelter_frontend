@@ -10,6 +10,7 @@ interface InventoryItemState {
 
   // Actions
   fetchInventoryItems: () => Promise<void>;
+  fetchInventoryItemsForAnimal: (animalId: number) => Promise<void>;
   createInventoryItem: (
     inventoryItem: Omit<InventoryItem, "inventory_item_id">
   ) => Promise<void>;
@@ -29,6 +30,21 @@ export const useInventoryItemStore = create<InventoryItemState>((set) => ({
     try {
       const response = (
         await axiosInstance.get<{ data: InventoryItem[] }>("inventory-items")
+      ).data;
+      set({ inventoryItems: response.data });
+    } catch (error) {
+      set({ error: "Failed to fetch inventory items" });
+    } finally {
+      set({ loading: false });
+    }
+  },
+  fetchInventoryItemsForAnimal: async (animalId: number) => {
+    set({ loading: true, error: null });
+    try {
+      const response = (
+        await axiosInstance.get<{ data: InventoryItem[] }>(
+          `inventory-items/animal/${animalId}`
+        )
       ).data;
       set({ inventoryItems: response.data });
     } catch (error) {

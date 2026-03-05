@@ -36,6 +36,7 @@ export const animalFormSchema = z.object({
   status: z.string().refine((val) => ["A", "X", "F"].includes(val), {
     message: "Invalid status",
   }),
+  photo_url: z.url().optional(),
   description: z.string().optional(),
 });
 
@@ -63,6 +64,7 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
       species: animal?.species,
       weight: Number(animal?.weight),
       status: (animal?.status as "A" | "X" | "F") ?? "A",
+      photo_url: animal?.photo_url ?? "",
       description: animal?.description ?? "",
     },
   });
@@ -265,7 +267,25 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
                 </Field>
               )}
             />
-
+            <Controller
+              name="photo_url"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="animal-photo">Profile Photo URL</FieldLabel>
+                  <Input
+                    {...field}
+                    id="animal-photo"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="https://example.com/photo.jpeg"
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
             <Controller
               name="description"
               control={form.control}

@@ -36,10 +36,9 @@ interface NavData {
 }
 
 interface DashboardLayoutProps {
-  userRole: number
 }
 
-export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
+export default function SidebarLayout({  }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { user, setUser } = useContext(GlobalContext);
 
@@ -59,10 +58,6 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
       {
         title: "Inventory",
         url: "/admin/inventory",
-      },
-      {
-        title: "Intake Form",
-        url: "/admin/animals/new",
       },
     ],
   };
@@ -93,7 +88,6 @@ export default function SidebarLayout({ userRole }: DashboardLayoutProps) {
       setUser(null);
       navigate('/')
     } catch (error) {
-      console.error("Logout error:", error);
     }
   }
 
