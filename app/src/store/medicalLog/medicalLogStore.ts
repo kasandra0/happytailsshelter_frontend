@@ -4,30 +4,33 @@ import { create } from "zustand";
 
 interface MedicalLogState {
   medicalLogs: MedicalLog[];
-  selectedMedicalLog: MedicalLog | null;
+  selectedMedicalLog: MedicalLog | undefined;
   loading: boolean;
   error: string | null;
 
-  fetchMedicalLogs: () => Promise<void>;
+  fetchMedicalLogsForAnimal: (animalId: number) => Promise<void>;
   createMedicalLog: (
-    medicalLog: Omit<MedicalLog, "medical_log_id">
+    animalId: number,
+    medicalLog: Omit<MedicalLog, "log_history_id">
   ) => Promise<void>;
   updateMedicalLog: (medicalLog: MedicalLog) => Promise<void>;
-  deleteMedicalLog: (medical_log_id: number) => Promise<void>;
-  setSelectedMedicalLog: (medicalLog: MedicalLog | null) => void;
+  deleteMedicalLog: (log_history_id: number) => Promise<void>;
+  setSelectedMedicalLog: (medicalLog: MedicalLog | undefined) => void;
 }
 
 export const useMedicalLogStore = create<MedicalLogState>((set) => ({
   medicalLogs: [],
-  selectedMedicalLog: null,
+  selectedMedicalLog: undefined,
   loading: false,
   error: null,
 
-  fetchMedicalLogs: async () => {
+  fetchMedicalLogsForAnimal: async (animalId) => {
     set({ loading: true, error: null });
     try {
       const response = (
-        await axiosInstance.get<{ data: MedicalLog[] }>("medical-log")
+        await axiosInstance.get<{ data: MedicalLog[] }>(
+          `animals/${animalId}/medical-logs`
+        )
       ).data;
       set({ medicalLogs: response.data });
     } catch (error) {
@@ -37,22 +40,23 @@ export const useMedicalLogStore = create<MedicalLogState>((set) => ({
     }
   },
 
-  createMedicalLog: async (medicalLog) => {
+  createMedicalLog: async (animalId, medicalLog) => {
     set({ loading: true, error: null });
     try {
-      const noIdData = {
-        animal_id: medicalLog.animal_id,
-        type: medicalLog.type,
-        created_date: medicalLog.created_date,
-        user_id: medicalLog.user_id,
-        description: medicalLog.description,
-        start_date: medicalLog.start_date,
-        end_date: medicalLog.end_date,
-      };
-      const response = (
-        await axiosInstance.post<{ data: MedicalLog }>("medical-log", noIdData)
+      const { animal, user, ...payload } = medicalLog as any;
+
+      await axiosInstance.post<{ data: MedicalLog }>(
+        `animals/${animalId}/medical-logs`,
+        payload
+      );
+
+      // refetch to get joined user/animal data
+      const updated = (
+        await axiosInstance.get<{ data: MedicalLog[] }>(
+          `animals/${animalId}/medical-logs`
+        )
       ).data;
-      set((state) => ({ medicalLogs: [...state.medicalLogs, response.data] }));
+      set({ medicalLogs: updated.data });
     } catch (error) {
       set({ error: "Failed to create medical log" });
     } finally {
@@ -63,17 +67,18 @@ export const useMedicalLogStore = create<MedicalLogState>((set) => ({
   updateMedicalLog: async (medicalLog) => {
     set({ loading: true, error: null });
     try {
-      const response = (
-        await axiosInstance.put<{ data: MedicalLog }>(
-          `medical-log/${medicalLog.log_history_id}`,
-          medicalLog
+      const { animal, user, log_history_id, ...payload } = medicalLog as any;
+      await axiosInstance.put<{ data: MedicalLog }>(
+        `medical-log/${medicalLog.log_history_id}`,
+        payload
+      );
+      // refetch to get joined user/animal data
+      const updated = (
+        await axiosInstance.get<{ data: MedicalLog[] }>(
+          `animals/${medicalLog.animal_id}/medical-logs`
         )
       ).data;
-      set((state) => ({
-        medicalLogs: state.medicalLogs.map((ml) =>
-          ml.log_history_id === medicalLog.log_history_id ? response.data : ml
-        ),
-      }));
+      set({ medicalLogs: updated.data });
     } catch (error) {
       set({ error: "Failed to update medical log" });
     } finally {
@@ -81,13 +86,13 @@ export const useMedicalLogStore = create<MedicalLogState>((set) => ({
     }
   },
 
-  deleteMedicalLog: async (medical_log_id) => {
+  deleteMedicalLog: async (log_history_id) => {
     set({ loading: true, error: null });
     try {
-      await axiosInstance.delete(`medical-log/${medical_log_id}`);
+      await axiosInstance.delete(`medical-log/${log_history_id}`);
       set((state) => ({
         medicalLogs: state.medicalLogs.filter(
-          (ml) => ml.log_history_id !== medical_log_id
+          (ml) => ml.log_history_id !== log_history_id
         ),
       }));
     } catch (error) {

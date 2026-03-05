@@ -1,13 +1,8 @@
-import { useState, type FC, useContext } from "react";
-import { ADMIN_ROLE, type Animal, type MedicalLog } from "@/types/types";
+import { type FC } from "react";
+import { type Animal } from "@/types/types";
 import { calculateAge } from "@/lib/utils";
 import { Camera } from "lucide-react";
-import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
-import { Button } from "./ui/button";
-import { ManageMedicalLogForm } from "./form/manageMedicalLogForm";
-import { Modal } from "./modal/modal";
-import { GlobalContext } from "@/hooks/GlobalContext";
-import FosterHistoryTable from "./FosterHistoryTable";
+
 import { STATUS_LABELS, STATUS_STYLES } from "@/constants";
 
 export interface AnimalProfileProps {
@@ -15,8 +10,6 @@ export interface AnimalProfileProps {
 }
 
 const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
-  const { user } = useContext(GlobalContext);
-
   const dateOfBirth = animal.date_of_birth
     ? new Date(animal.date_of_birth)
     : null;
@@ -28,20 +21,6 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
     ? STATUS_STYLES[animal.status] ?? "bg-gray-100 text-gray-600"
     : "bg-gray-100 text-gray-600";
   const photo = animal.photo_url;
-
-  const [medicalLogModalOpen, setMedicalLogModalOpen] = useState(false);
-  const [medicalLogModalTitle, setMedicalLogModalTitle] = useState("");
-  const { createMedicalLog } = useMedicalLogStore();
-
-  const handleCreateMedicalLog = () => {
-    setMedicalLogModalTitle("Create Medical Log Entry");
-    setMedicalLogModalOpen(true);
-  };
-
-  const handleMedicalLogSubmit = async (medicalLog: MedicalLog) => {
-    await createMedicalLog(medicalLog);
-    setMedicalLogModalOpen(false);
-  };
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl mx-auto">
@@ -112,30 +91,9 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
                 </p>
               </div>
             )}
-
-            <div className="flex justify-end">
-              <Button onClick={handleCreateMedicalLog}>
-                Add Medical Log Entry
-              </Button>
-            </div>
           </div>
         </div>
       </div>
-
-      {/* Medical Log Modal */}
-      <Modal
-        open={medicalLogModalOpen}
-        onOpenChange={setMedicalLogModalOpen}
-        title={medicalLogModalTitle}
-        component={
-          <ManageMedicalLogForm
-            animal={animal}
-            onSubmit={handleMedicalLogSubmit}
-          />
-        }
-        onCancel={() => setMedicalLogModalOpen(false)}
-        form="manage-medical-log-form"
-      />
     </div>
   );
 };

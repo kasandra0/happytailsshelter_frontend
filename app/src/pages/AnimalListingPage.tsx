@@ -62,7 +62,7 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
         accessorKey: "status",
         header: "Status",
         cell: ({ row }) => {
-          const animal = row.original
+          const animal = row.original;
 
           const statusLabel = animal.status
             ? STATUS_LABELS[animal.status] ?? animal.status
@@ -70,11 +70,7 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
           const statusStyle = animal.status
             ? STATUS_STYLES[animal.status] ?? "bg-gray-100 text-gray-600"
             : "bg-gray-100 text-gray-600";
-          return (
-            <span className={statusStyle}>
-              {statusLabel}
-            </span>
-          )
+          return <span className={statusStyle}>{statusLabel}</span>;
         },
       },
       {
@@ -136,11 +132,13 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
     setSelectedAnimal,
   } = useAnimalStore();
 
-  const { createMedicalLog, fetchMedicalLogs } = useMedicalLogStore();
+  const { createMedicalLog, fetchMedicalLogsForAnimal } = useMedicalLogStore();
 
   useEffect(() => {
     fetchAnimals();
-    fetchMedicalLogs();
+    if (selectedAnimal) {
+      fetchMedicalLogsForAnimal(selectedAnimal.animal_id);
+    }
   }, []);
 
   const handleUpdateAnimalMedicalLog = (animal: Animal) => {
@@ -184,8 +182,10 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
     setModalOpen(false);
   };
   const handleMedicalLogSubmit = async (medicalLog: MedicalLog) => {
-    await createMedicalLog(medicalLog);
-    setMedicalLogModalOpen(false);
+    if (selectedAnimal) {
+      await createMedicalLog(selectedAnimal.animal_id, medicalLog);
+      setMedicalLogModalOpen(false);
+    }
   };
 
   return (

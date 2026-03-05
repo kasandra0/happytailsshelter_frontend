@@ -57,6 +57,8 @@ export type MedicalLog = {
   description?: string;
   start_date?: Date;
   end_date?: Date;
+  animal?: Animal;
+  user?: User;
 };
 export type FosterHistory = {
   foster_history_id: number;

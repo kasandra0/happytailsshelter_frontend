@@ -1,4 +1,5 @@
 import AnimalInventoryCheckout from "@/components/AnimalInventoryCheckoutTable";
+import AnimalMedicalLog from "@/components/AnimalMedicalLog";
 import AnimalProfile from "@/components/AnimalProfile";
 import FosterHistoryTable from "@/components/FosterHistoryTable";
 import { GlobalContext } from "@/hooks/GlobalContext";
@@ -27,7 +28,10 @@ export function AnimalProfilePage({}: AnimalProfilePageProps) {
     <div className="flex flex-col gap-2 p-4">
       {selectedAnimal ? (
         <>
-          <AnimalProfile animal={selectedAnimal} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <AnimalProfile animal={selectedAnimal} />
+            <AnimalMedicalLog animal={selectedAnimal} />
+          </div>
           {user?.role === ADMIN_ROLE && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <FosterHistoryTable animal={selectedAnimal} />
