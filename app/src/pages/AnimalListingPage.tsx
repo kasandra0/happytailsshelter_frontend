@@ -7,6 +7,7 @@ import { calculateAge } from "@/lib/utils";
 import { useAnimalStore } from "@/store/animals/animalStore";
 import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
 import type { Animal, MedicalLog } from "@/types/types";
+import { STATUS_LABELS, STATUS_STYLES } from "@/constants";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -60,6 +61,21 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
       {
         accessorKey: "status",
         header: "Status",
+        cell: ({ row }) => {
+          const animal = row.original
+
+          const statusLabel = animal.status
+            ? STATUS_LABELS[animal.status] ?? animal.status
+            : "Unknown";
+          const statusStyle = animal.status
+            ? STATUS_STYLES[animal.status] ?? "bg-gray-100 text-gray-600"
+            : "bg-gray-100 text-gray-600";
+          return (
+            <span className={statusStyle}>
+              {statusLabel}
+            </span>
+          )
+        },
       },
       {
         id: "actions",
