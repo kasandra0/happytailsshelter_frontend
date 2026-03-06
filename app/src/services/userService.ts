@@ -14,18 +14,13 @@ function mapUser(raw: any): User {
 }
 
 export const getCurrentUser = async (): Promise<User> => {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await axiosInstance.get(`users/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return mapUser(response.data.data);
-  } catch (error) {
-    console.error("Error fetching current user:", error);
-    throw error;
-  }
+  const token = localStorage.getItem("token");
+  const response = await axiosInstance.get(`users/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return mapUser(response.data.data);
 };
 
 export const updateUser = async (
