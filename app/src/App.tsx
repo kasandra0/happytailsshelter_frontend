@@ -13,6 +13,7 @@ import AnimalIntakePage from "./pages/AnimalIntakePage";
 import InventoryListingPage from "./pages/InventoryListingPage";
 import InventoryItemPage from "./pages/InventoryItemPage";
 import MyAnimalsPage from "./pages/MyAnimalsPage";
+import MyFosterProfilePage from "./pages/MyFosterProfilePage";
 
 import SignUpPage from "./pages/SignUpPage"
 import { useEffect, useState } from "react";
@@ -78,7 +79,7 @@ function App() {
                 <Route path="/fosterparent" element={<SidebarLayout />}>
                   <Route path="dashboard" element={<MyAnimalsPage />} />
                   <Route path="myanimals" element={<MyAnimalsPage />} />
-                  <Route path="profile" element={<></>} />
+                  <Route path="profile" element={<MyFosterProfilePage />} />
                   <Route path="animals/:id/adopt" element={<AdoptPage />} />
                   <Route path="animals/:id" element={<AnimalProfilePage />} />
                 </Route>
