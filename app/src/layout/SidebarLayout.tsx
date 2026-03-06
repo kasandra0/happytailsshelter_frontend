@@ -18,7 +18,11 @@ import { logout } from "@/services/authService";
 import { ADMIN_ROLE } from "@/types/types";
 import { PanelLeft } from "lucide-react";
 import { useContext, useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useMatches, useNavigate, type UIMatch } from "react-router-dom";
+
+interface RouteHandle {
+  title?: string;
+}
 
 interface NavItem {
   title: string;
@@ -41,6 +45,8 @@ interface DashboardLayoutProps {
 export default function SidebarLayout({  }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { user, setUser } = useContext(GlobalContext);
+  const matches = useMatches() as UIMatch<unknown, RouteHandle>[];
+  const pageTitle = matches[matches.length - 1]?.handle?.title ?? "Happy Tails";
 
   const navigate = useNavigate();
   const adminNav: NavGroup = {
@@ -170,7 +176,7 @@ export default function SidebarLayout({  }: DashboardLayoutProps) {
           >
             <PanelLeft />
           </button>
-          <h1 className="text-lg font-semibold text-foreground">Happy Tails</h1>
+          <h1 className="text-lg font-semibold text-foreground">{pageTitle}</h1>
         </header>
 
         {/* Page content */}
