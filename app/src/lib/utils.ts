@@ -20,10 +20,7 @@ interface AgeResult {
  * @param dob - Date of birth string (e.g. "2020-03-15", "03/15/2020", "March 15, 2020")
  * @param referenceDate - Date to calculate age from (defaults to today)
  */
-export function calculateAge(dob: string | undefined, referenceDate: Date = new Date()): AgeResult {
-  if (!dob){
-    throw new Error(`Date of Birth undefined`);
-  }
+export function calculateAge(dob: string, referenceDate: Date = new Date()): AgeResult {
   const birthDate = new Date(dob);
 
   if (isNaN(birthDate.getTime())) {
