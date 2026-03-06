@@ -63,14 +63,16 @@ export default function SignUpPage({
     if (!lastName.trim()) errs.lastName = "Please enter your last name."
 
     if (!email.trim()) errs.email = "Please enter your email."
-    else if (!emailRegex.test(email.trim()))
+    else if (!emailRegex.test(email.trim())) {
       errs.email = "Please enter a valid email (example: name@email.com)."
+    }
 
     if (!password) errs.password = "Please create a password."
 
     if (!confirmPassword) errs.confirmPassword = "Please confirm your password."
-    else if (confirmPassword !== password)
+    else if (confirmPassword !== password) {
       errs.confirmPassword = "Passwords do not match."
+    }
 
     setFieldErrors(errs)
     return Object.keys(errs).length === 0
@@ -86,9 +88,12 @@ export default function SignUpPage({
     if (!validate()) return
 
     setLoading(true)
+
     try {
       await register(firstName.trim(), lastName.trim(), email.trim(), password)
 
+      setFormError("")
+      setStatusMsg("")
       setStatus("success")
     } catch (error: any) {
       console.error("Registration error:", error)
@@ -117,9 +122,8 @@ export default function SignUpPage({
             </CardHeader>
 
             <CardContent>
-              {status === "idle" ? (
+              {status === "idle" && (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
-                  {/* Names */}
                   <div className="grid grid-cols-2 gap-2">
                     <div className="grid gap-2">
                       <Label htmlFor="firstName">First Name</Label>
@@ -152,7 +156,6 @@ export default function SignUpPage({
                     </div>
                   </div>
 
-                  {/* Email */}
                   <div className="grid gap-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
@@ -168,7 +171,6 @@ export default function SignUpPage({
                     )}
                   </div>
 
-                  {/* Password */}
                   <div className="grid gap-2">
                     <Label htmlFor="password">Password</Label>
                     <div className="relative">
@@ -199,7 +201,6 @@ export default function SignUpPage({
                     )}
                   </div>
 
-                  {/* Confirm Password */}
                   <div className="grid gap-2">
                     <Label htmlFor="confirmPassword">Confirm password</Label>
                     <Input
@@ -222,68 +223,51 @@ export default function SignUpPage({
                     {loading ? "Creating account..." : "Create account"}
                   </Button>
                 </form>
-              ) : (
-                <div className="flex gap-4 justify-center">
-                  {/* Completed */}
-                  <Card
-                    className={cn(
-                      "w-[240px] shadow-lg",
-                      status !== "success" && "opacity-50"
-                    )}
-                  >
-                    <CardHeader className="items-center text-center">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500">
-                        <Check className="h-6 w-6 text-white" />
-                      </div>
-                      <CardTitle className="mt-2">Completed</CardTitle>
-                      <CardDescription>
-                        Success! Your account has been created!
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-center">
-                      <Button
-                        className="w-full"
-                        onClick={() => navigate("/login")}
-                        disabled={status !== "success"}
-                        variant={status === "success" ? "default" : "secondary"}
-                      >
-                        Go to Login
-                      </Button>
-                    </CardContent>
-                  </Card>
+              )}
 
-                  {/* Failed */}
-                  <Card
-                    className={cn(
-                      "w-[240px] shadow-lg",
-                      status === "success" && "opacity-50"
-                    )}
-                  >
-                    <CardHeader className="items-center text-center">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-500">
-                        <X className="h-6 w-6 text-white" />
-                      </div>
-                      <CardTitle className="mt-2">Failed</CardTitle>
-                      <CardDescription>
-                        {statusMsg || "Oops! We couldn't create your account."}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-center">
-                      <Button
-                        className="w-full"
-                        onClick={() => {
-                          setStatus("idle")
-                          setStatusMsg("")
-                          setFormError("")
-                        }}
-                        disabled={status !== "error"}
-                        variant={status === "error" ? "default" : "secondary"}
-                      >
-                        Try again
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
+              {status === "success" && (
+                <Card className="w-full shadow-lg">
+                  <CardHeader className="items-center text-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500">
+                      <Check className="h-6 w-6 text-white" />
+                    </div>
+                    <CardTitle className="mt-2">Completed</CardTitle>
+                    <CardDescription>
+                      Success! Your account has been created!
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <Button className="w-full" onClick={() => navigate("/login")}>
+                      Go to Login
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+
+              {status === "error" && (
+                <Card className="w-full shadow-lg">
+                  <CardHeader className="items-center text-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-500">
+                      <X className="h-6 w-6 text-white" />
+                    </div>
+                    <CardTitle className="mt-2">Failed</CardTitle>
+                    <CardDescription>
+                      {statusMsg || "Oops! We couldn't create your account."}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <Button
+                      className="w-full"
+                      onClick={() => {
+                        setStatus("idle")
+                        setStatusMsg("")
+                        setFormError("")
+                      }}
+                    >
+                      Try again
+                    </Button>
+                  </CardContent>
+                </Card>
               )}
             </CardContent>
           </Card>
