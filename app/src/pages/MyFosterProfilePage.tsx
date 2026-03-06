@@ -1,9 +1,13 @@
-import { useContext, useEffect } from "react";
+import { useContext, useState } from "react";
 import { GlobalContext } from "@/hooks/GlobalContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ADMIN_ROLE, FOSTER_PARENT_ROLE } from "@/types/types";
 import { User } from "lucide-react";
 import { USER_STATUS } from "@/constants";
+import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/modal/modal";
+import { EditProfileForm, type EditProfileFormValues } from "@/components/form/editProfileForm";
+import { updateUser } from "@/services/userService";
 
 const ROLE_LABELS: Record<number, string> = {
   [FOSTER_PARENT_ROLE]: "Foster Parent",
@@ -20,8 +24,9 @@ function ProfileRow({ label, value }: { label: string; value: string }) {
 }
 
 export default function MyFosterProfilePage() {
-  const { user } = useContext(GlobalContext);
-  
+  const { user, setUser } = useContext(GlobalContext);
+  const [modalOpen, setModalOpen] = useState(false);
+
   if (!user) {
     return (
       <div className="flex flex-col gap-2">
@@ -30,6 +35,12 @@ export default function MyFosterProfilePage() {
       </div>
     );
   }
+
+  const handleSubmit = async (data: EditProfileFormValues) => {
+    const updatedUser = await updateUser(user.user_id, data);
+    setUser(updatedUser);
+    setModalOpen(false);
+  };
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -49,8 +60,20 @@ export default function MyFosterProfilePage() {
           <ProfileRow label="Email" value={user.email} />
           <ProfileRow label="Phone Number" value={user.phone_number || "--"} />
           <ProfileRow label="Foster Parent Status" value={USER_STATUS[user.status]} />
+          <Button variant="outline" className="mt-2 self-start" onClick={() => setModalOpen(true)}>
+            Edit Profile
+          </Button>
         </CardContent>
       </Card>
+
+      <Modal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        title="Edit Profile"
+        component={modalOpen && <EditProfileForm user={user} onSubmit={handleSubmit} />}
+        onCancel={() => setModalOpen(false)}
+        form="edit-profile-form"
+      />
     </div>
   );
 }
