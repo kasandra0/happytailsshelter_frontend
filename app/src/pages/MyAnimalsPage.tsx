@@ -38,7 +38,6 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
   if (animalsLoading || fosterHistoryLoading) {
     return (
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl text-center font-bold">My Animals</h1>
         <p className="text-center text-gray-500 mt-4">Loading...</p>
       </div>
     );
@@ -46,7 +45,6 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="text-2xl text-center font-bold">My Animals</h1>
 
       {enrichedFosterHistory.length === 0 ? (
         <p className="text-center text-gray-500 mt-4">

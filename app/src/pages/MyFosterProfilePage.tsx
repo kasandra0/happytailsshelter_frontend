@@ -30,7 +30,6 @@ export default function MyFosterProfilePage() {
   if (!user) {
     return (
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl text-center font-bold">My Profile</h1>
         <p className="text-center text-muted-foreground mt-4">Loading profile...</p>
       </div>
     );
@@ -44,7 +43,6 @@ export default function MyFosterProfilePage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <h1 className="text-2xl font-bold">My Profile</h1>
 
       <Card className="max-w-lg">
         <CardHeader className="flex flex-row items-center gap-4 pb-2">
