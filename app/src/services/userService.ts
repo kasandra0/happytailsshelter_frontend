@@ -18,13 +18,16 @@ export const getCurrentUser = async (): Promise<User> => {
       },
     });
     const raw = response.data.data;
-    return {
+    const user: User = {
       user_id: Number(raw.user_id),
       email: raw.email,
       first_name: raw.first_name,
       last_name: raw.last_name,
       role: Number(raw.role),
+      status: raw.status,
+      phone_number: raw.phone_number
     };
+    return user;
   } catch (error) {
     console.error("Error fetching current user:", error);
     throw error;

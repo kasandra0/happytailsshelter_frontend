@@ -44,6 +44,8 @@ export type User = {
   first_name: string;
   last_name: string;
   role: number; // 2 - admin, 1 - foster parent
+  phone_number: string;
+  status: string;
 };
 export const ADMIN_ROLE = 2;
 export const FOSTER_PARENT_ROLE = 1;
