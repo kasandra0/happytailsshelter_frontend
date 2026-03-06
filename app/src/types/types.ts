@@ -3,7 +3,7 @@ export type Animal = {
   animal_id: number;
   microchip: string;
   name: string;
-  date_of_birth?: Date;
+  date_of_birth?: string;
   gender?: string;
   color?: string;
   breed?: string;
@@ -69,7 +69,7 @@ export type FosterHistory = {
   animal: Animal;
   microchip: string;
   name: string;
-  date_of_birth?: Date;
+  date_of_birth?: string;
   gender?: string;
   color?: string;
   breed?: string;

@@ -50,8 +50,7 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
         header: "Age",
         cell: ({ row }) => {
           const dateOfBirth = row.getValue("date_of_birth") as string;
-          const birthDate = new Date(dateOfBirth);
-          return calculateAge(birthDate);
+          return calculateAge(dateOfBirth).display;
         },
       },
       {
