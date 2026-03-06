@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { GlobalContext } from "@/hooks/GlobalContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ADMIN_ROLE, FOSTER_PARENT_ROLE } from "@/types/types";
 import { User } from "lucide-react";
+import { USER_STATUS } from "@/constants";
 
 const ROLE_LABELS: Record<number, string> = {
   [FOSTER_PARENT_ROLE]: "Foster Parent",
@@ -20,7 +21,7 @@ function ProfileRow({ label, value }: { label: string; value: string }) {
 
 export default function MyFosterProfilePage() {
   const { user } = useContext(GlobalContext);
-
+  
   if (!user) {
     return (
       <div className="flex flex-col gap-2">
@@ -44,8 +45,10 @@ export default function MyFosterProfilePage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3 pt-2">
-          <ProfileRow label="Email" value={user.email} />
           <ProfileRow label="Role" value={ROLE_LABELS[user.role] ?? `Role ${user.role}`} />
+          <ProfileRow label="Email" value={user.email} />
+          <ProfileRow label="Phone Number" value={user.phone_number || "--"} />
+          <ProfileRow label="Foster Parent Status" value={USER_STATUS[user.status]} />
         </CardContent>
       </Card>
     </div>
