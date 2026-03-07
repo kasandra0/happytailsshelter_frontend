@@ -15,7 +15,7 @@ import InventoryItemPage from "./pages/InventoryItemPage";
 import MyAnimalsPage from "./pages/MyAnimalsPage";
 import MyFosterProfilePage from "./pages/MyFosterProfilePage";
 
-import SignUpPage from "./pages/SignUpPage"
+import SignUpPage from "./pages/SignUpPage";
 import { useEffect, useState } from "react";
 import { ADMIN_ROLE, FOSTER_PARENT_ROLE, type User } from "./types/types";
 import { getCurrentUser } from "./services/userService";
@@ -75,26 +75,26 @@ function App() {
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
-      const payload = JSON.parse(atob(storedToken.split('.')[1]));
+      const payload = JSON.parse(atob(storedToken.split(".")[1]));
       if (Date.now() >= payload.exp * 1000) {
         localStorage.removeItem("token");
         setUser(null);
         setIsLoading(false);
         return;
       }
-      getCurrentUser().then((userData) => {
-        setUser(userData);
-        setIsLoading(false);
-      }).catch((error) => {
-        setUser(null);
-        setIsLoading(false);
-      });
+      getCurrentUser()
+        .then((userData) => {
+          setUser(userData);
+          setIsLoading(false);
+        })
+        .catch(() => {
+          setUser(null);
+          setIsLoading(false);
+        });
     } else {
       setIsLoading(false);
     }
   }, []);
-
-
 
   return (
     <GlobalContext.Provider value={{ user, setUser, isLoading: isLoading }}>
