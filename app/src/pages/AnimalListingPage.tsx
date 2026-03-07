@@ -7,7 +7,7 @@ import { calculateAge } from "@/lib/utils";
 import { useAnimalStore } from "@/store/animals/animalStore";
 import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
 import type { Animal, MedicalLog } from "@/types/types";
-import { STATUS_LABELS, STATUS_STYLES } from "@/constants";
+import { STATUS_LABELS, STATUS_STYLES, GENDER_LABELS } from "@/constants";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -57,6 +57,10 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
       {
         accessorKey: "gender",
         header: "Gender",
+        cell: ({ row }) => {
+          const gender = row.getValue("gender") as string;
+          return <span>{GENDER_LABELS[gender] ?? gender}</span>;
+        },
       },
       {
         accessorKey: "status",

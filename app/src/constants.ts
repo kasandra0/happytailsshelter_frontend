@@ -15,3 +15,8 @@ export const STATUS_STYLES: Record<string, string> = {
   X: "bg-gray-100 text-gray-600",
   F: "bg-purple-100 text-purple-800",
 };
+
+export const GENDER_LABELS: Record<string, string> = {
+  M: "Male",
+  F: "Female",
+};
