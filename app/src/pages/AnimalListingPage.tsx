@@ -190,7 +190,6 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
-      <h2 className="text-2xl text-center font-bold">Animal Listing</h2>
 
       <div className="container mx-auto">
         <div className="flex flex-row justify-end my-2">
