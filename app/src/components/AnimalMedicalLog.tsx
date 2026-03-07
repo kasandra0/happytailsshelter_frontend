@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, type FC } from "react";
-import type { Animal, MedicalLog } from "@/types/types";
+import { useState, useEffect, useMemo, type FC, useContext } from "react";
+import { ADMIN_ROLE, type Animal, type MedicalLog } from "@/types/types";
 import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
 import { DataTable } from "./table/Table";
 import { Button } from "./ui/button";
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import { GlobalContext } from "@/hooks/GlobalContext";
 
 export interface AnimalMedicalLogProps {
   animal: Animal;
@@ -34,6 +35,8 @@ const AnimalMedicalLog: FC<AnimalMedicalLogProps> = ({ animal }) => {
   const [modalTitle, setModalTitle] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [logToDeleteId, setLogToDeleteId] = useState<number | null>(null);
+
+  const { user } = useContext(GlobalContext);
 
   const {
     medicalLogs,
@@ -123,6 +126,11 @@ const AnimalMedicalLog: FC<AnimalMedicalLogProps> = ({ animal }) => {
         enableHiding: false,
         cell: ({ row }) => {
           const log = row.original as MedicalLog;
+          const isAdmin = user?.role === ADMIN_ROLE;
+          const isOwner = log.user_id.toString() === user?.user_id.toString();
+
+          if (!isAdmin && !isOwner) return null;
+
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
