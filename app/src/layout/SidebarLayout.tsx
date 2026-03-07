@@ -14,6 +14,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { GlobalContext } from "@/hooks/GlobalContext";
+import ChatbotPage from "@/pages/ChatbotPage";
 import { logout } from "@/services/authService";
 import { ADMIN_ROLE } from "@/types/types";
 import { PanelLeft } from "lucide-react";
@@ -42,7 +43,7 @@ interface NavData {
 interface DashboardLayoutProps {
 }
 
-export default function SidebarLayout({  }: DashboardLayoutProps) {
+export default function SidebarLayout({}: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { user, setUser } = useContext(GlobalContext);
   const matches = useMatches() as UIMatch<unknown, RouteHandle>[];
@@ -81,18 +82,18 @@ export default function SidebarLayout({  }: DashboardLayoutProps) {
       },
     ],
   };
-  let navData: NavData = { navMain: [] }
-  if (user){
+  let navData: NavData = { navMain: [] };
+  if (user) {
     navData = {
-    navMain: user.role === ADMIN_ROLE ? [adminNav, fosterparentNav] : [fosterparentNav],
-    }
+      navMain: user.role === ADMIN_ROLE ? [adminNav, fosterparentNav] : [fosterparentNav],
+    };
   }
 
   async function handleLogout(): Promise<void> {
     try {
       await logout();
       setUser(null);
-      navigate('/')
+      navigate("/");
     } catch (error) {
     }
   }
@@ -123,7 +124,6 @@ export default function SidebarLayout({  }: DashboardLayoutProps) {
                 </div>
               </SidebarHeader>
               <SidebarContent>
-                {/* We create a SidebarGroup for each parent. */}
                 {navData.navMain.map((item) => (
                   <SidebarGroup key={item.title}>
                     <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
@@ -168,7 +168,6 @@ export default function SidebarLayout({  }: DashboardLayoutProps) {
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         {/* Header */}
         <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
-          {/* Sidebar trigger button */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="hover:bg-muted transition-color"
@@ -184,6 +183,8 @@ export default function SidebarLayout({  }: DashboardLayoutProps) {
           <Outlet />
         </main>
       </div>
+
+      <ChatbotPage />
     </div>
   );
 }
