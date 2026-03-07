@@ -9,7 +9,11 @@ interface MyAnimalsPageProps {}
 
 const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
   const { animals, fetchAnimals, loading: animalsLoading } = useAnimalStore();
-  const { fosterHistory, fetchUserFosterHistory, loading: fosterHistoryLoading } = useFosterHistoryStore();
+  const {
+    fosterHistory,
+    fetchUserFosterHistory,
+    loading: fosterHistoryLoading,
+  } = useFosterHistoryStore();
   const { user, isLoading } = useContext(GlobalContext);
   const navigate = useNavigate();
 
@@ -20,14 +24,23 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
     }
   }, [user]);
 
-  const enrichedFosterHistory = animals.length > 0 && fosterHistory.length > 0
-    ? fosterHistory
-        .map((log) => ({
-          ...log,
-          animal: animals.find((a) => a.animal_id === log.animal_id),
-        }))
-        .filter((log) => log.animal !== undefined)
-    : [];
+  const now = new Date();
+
+  const activeFosterHistory = fosterHistory.filter((log) => {
+    const isEndDatePast = log.end_date && new Date(log.end_date) < now;
+    const isAdopted = log.animal?.status === "X";
+    const isAdoptedByOther = isAdopted && log.user_id !== user?.user_id;
+    return !isEndDatePast && !isAdoptedByOther;
+  });
+
+  console.log(activeFosterHistory);
+
+  const pastFosterHistory = fosterHistory.filter((log) => {
+    const isEndDatePast = log.end_date && new Date(log.end_date) < now;
+    const isAdopted = log.animal?.status === "X";
+    const isAdoptedByOther = isAdopted && log.user_id !== user?.user_id;
+    return isEndDatePast || isAdoptedByOther;
+  });
 
   const handleAnimalClick = (animalId?: number) => {
     if (animalId) {
@@ -44,23 +57,50 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-6 p-4">
+      <h1 className="text-2xl text-center font-bold">My Animals</h1>
 
-      {enrichedFosterHistory.length === 0 ? (
+      {fosterHistory.length === 0 ? (
         <p className="text-center text-gray-500 mt-4">
           You currently have no animals assigned to you.
         </p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {enrichedFosterHistory.map((log) => (
-            <div
-              key={log.animal!.animal_id}
-              onClick={() => handleAnimalClick(log.animal?.animal_id)}
-              className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <AnimalProfile animal={log.animal!} />
+        <div className="flex flex-col gap-8">
+          {activeFosterHistory.length > 0 && (
+            <div className="flex flex-col gap-3">
+              <h2 className="text-lg font-semibold">Currently Fostering</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {activeFosterHistory.map((log) => (
+                  <div
+                    key={log.animal.animal_id}
+                    onClick={() => handleAnimalClick(log.animal?.animal_id)}
+                    className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <AnimalProfile animal={log.animal} />
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
+          )}
+
+          {pastFosterHistory.length > 0 && (
+            <div className="flex flex-col gap-3">
+              <h2 className="text-lg font-semibold text-gray-500">
+                Previously Fostered
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {pastFosterHistory.map((log) => (
+                  <div
+                    key={log.animal.animal_id}
+                    onClick={() => handleAnimalClick(log.animal?.animal_id)}
+                    className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <AnimalProfile animal={log.animal} isPast={true} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

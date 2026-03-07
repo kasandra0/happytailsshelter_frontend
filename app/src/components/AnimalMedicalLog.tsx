@@ -28,9 +28,13 @@ import { GlobalContext } from "@/hooks/GlobalContext";
 
 export interface AnimalMedicalLogProps {
   animal: Animal;
+  isReadOnly?: boolean;
 }
 
-const AnimalMedicalLog: FC<AnimalMedicalLogProps> = ({ animal }) => {
+const AnimalMedicalLog: FC<AnimalMedicalLogProps> = ({
+  animal,
+  isReadOnly = false,
+}) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -125,6 +129,8 @@ const AnimalMedicalLog: FC<AnimalMedicalLogProps> = ({ animal }) => {
         header: "Actions",
         enableHiding: false,
         cell: ({ row }) => {
+          if (isReadOnly) return null;
+
           const log = row.original as MedicalLog;
           const isAdmin = user?.role === ADMIN_ROLE;
           const isOwner = log.user_id.toString() === user?.user_id.toString();
@@ -166,7 +172,7 @@ const AnimalMedicalLog: FC<AnimalMedicalLogProps> = ({ animal }) => {
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold">Medical Logs</h2>
-        <Button onClick={handleCreate}>Create</Button>
+        {!isReadOnly && <Button onClick={handleCreate}>Create</Button>}
       </div>
 
       <DataTable columns={columns} data={medicalLogs} />
