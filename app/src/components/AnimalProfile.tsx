@@ -10,10 +10,7 @@ export interface AnimalProfileProps {
 }
 
 const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
-  const dateOfBirth = animal.date_of_birth
-    ? new Date(animal.date_of_birth)
-    : null;
-  const age = dateOfBirth ? calculateAge(dateOfBirth) : null;
+  const ageData = animal.date_of_birth ? calculateAge(animal.date_of_birth) : null;
   const statusLabel = animal.status
     ? STATUS_LABELS[animal.status] ?? animal.status
     : "Unknown";
@@ -62,18 +59,10 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
                 <p className="text-gray-900">{animal.breed ?? "Unknown"}</p>
               </div>
               <div>
-                <p className="font-medium text-gray-500">Date of Birth</p>
-                <p className="text-gray-900">
-                  {dateOfBirth ? dateOfBirth.toLocaleDateString() : "Unknown"}
-                </p>
-              </div>
-              <div>
                 <p className="font-medium text-gray-500">Age</p>
                 <p className="text-gray-900">
-                  {age !== null
-                    ? age === 0
-                      ? "< 1 year"
-                      : `${age} year${age !== 1 ? "s" : ""}`
+                  {ageData !== null
+                    ? ageData.display
                     : "Unknown"}
                 </p>
               </div>

@@ -7,14 +7,6 @@ type GlobalContextType = {
   isLoading: boolean;
 };
 
-export const defaultUser: User = {
-  user_id: 0,
-  role: 0,
-  email: "",
-  first_name: "",
-  last_name: "",
-};
-
 export const GlobalContext = createContext<GlobalContextType>({
   user: null,
   setUser: () => {},
