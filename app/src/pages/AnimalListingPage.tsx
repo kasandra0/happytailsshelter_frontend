@@ -80,6 +80,8 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
         cell: ({ row }) => {
           const animal = row.original as Animal;
 
+          if (animal.status === "X") return null;
+
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -190,7 +192,6 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
-
       <div className="container mx-auto">
         <div className="flex flex-row justify-end my-2">
           <Button className="justify-end" onClick={handleCreateAnimal}>
