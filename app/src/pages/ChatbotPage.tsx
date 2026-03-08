@@ -1,87 +1,92 @@
-import * as React from "react"
-import { useState } from "react"
+import * as React from "react";
+import { useState } from "react";
 
 type Message = {
-  id: number
-  sender: "user" | "bot"
-  text: string
-}
+  id: number;
+  sender: "user" | "bot";
+  text: string;
+};
 
 export default function ChatbotPage() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [input, setInput] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
       sender: "bot",
       text: "Hi! I'm Wolfie 🐺🐾 Your loyal husky friend for Happy Tails.",
     },
-  ])
+  ]);
 
   const suggestedQuestions = [
     "How do I adopt a pet?",
     "What are your hours?",
     "How can I volunteer?",
     "How do I donate?",
-  ]
+    "Show me dogs",
+    "Show me cats",
+  ];
 
-  const getBotReply = (userMessage: string) => {
-    const text = userMessage.toLowerCase()
-
-    if (text.includes("adopt")) {
-      return "To adopt a pet, browse available animals, choose one you'd like to meet, and submit an adoption application."
-    }
-
-    if (text.includes("volunteer")) {
-      return "You can volunteer by filling out our volunteer interest form and attending an orientation."
-    }
-
-    if (text.includes("donate")) {
-      return "You can support the shelter by making a one-time or recurring donation through our donations page."
-    }
-
-    if (text.includes("hours")) {
-      return "Our shelter is open Monday through Saturday from 10:00 AM to 6:00 PM."
-    }
-
-    return "I'm here to help with Happy Tails questions like adoptions, volunteering, donations, and shelter hours."
-  }
-
-  const sendMessage = (messageText: string) => {
-    if (!messageText.trim()) return
+  const sendMessage = async (messageText: string) => {
+    if (!messageText.trim()) return;
 
     const userMessage: Message = {
       id: Date.now(),
       sender: "user",
       text: messageText,
-    }
+    };
 
-    setMessages((prev) => [...prev, userMessage])
-    setInput("")
-    setIsTyping(true)
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsTyping(true);
 
-    setTimeout(() => {
+    try {
+      const response = await fetch("http://localhost:3000/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: messageText,
+        }),
+      });
+
+      const data = await response.json();
+
       const botMessage: Message = {
         id: Date.now() + 1,
         sender: "bot",
-        text: getBotReply(messageText),
-      }
+        text:
+          data.reply ??
+          "Sorry, I couldn't get a response right now.",
+      };
 
-      setMessages((prev) => [...prev, botMessage])
-      setIsTyping(false)
-    }, 900)
-  }
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Chat request failed:", error);
+
+      const errorMessage: Message = {
+        id: Date.now() + 1,
+        sender: "bot",
+        text: "Wolfie couldn't connect to the server right now. Please try again.",
+      };
+
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
 
   const handleSend = () => {
-    sendMessage(input)
-  }
+    sendMessage(input);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleSend()
+      handleSend();
     }
-  }
+  };
 
   return (
     <>
@@ -134,7 +139,7 @@ export default function ChatbotPage() {
                   )}
 
                   <div
-                    className={`px-4 py-3 rounded-2xl text-sm shadow ${
+                    className={`px-4 py-3 rounded-2xl text-sm shadow whitespace-pre-line ${
                       message.sender === "user"
                         ? "bg-green-600 text-white rounded-br-sm"
                         : "bg-white text-gray-800 border rounded-bl-sm"
@@ -201,5 +206,5 @@ export default function ChatbotPage() {
         </div>
       )}
     </>
-  )
+  );
 }
