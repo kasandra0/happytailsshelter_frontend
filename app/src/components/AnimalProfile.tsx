@@ -7,22 +7,32 @@ import { STATUS_LABELS, STATUS_STYLES } from "@/constants";
 
 export interface AnimalProfileProps {
   animal: Animal;
+  isPast?: boolean;
 }
 
-const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
-  const ageData = animal.date_of_birth ? calculateAge(animal.date_of_birth) : null;
-  const statusLabel = animal.status
+const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false }) => {
+  const ageData = animal.date_of_birth
+    ? calculateAge(animal.date_of_birth)
+    : null;
+  const statusLabel = isPast
+    ? "Previously Fostered"
+    : animal.status
     ? STATUS_LABELS[animal.status] ?? animal.status
     : "Unknown";
-  const statusStyle = animal.status
+  const statusStyle = isPast
+    ? "bg-gray-100 text-gray-500"
+    : animal.status
     ? STATUS_STYLES[animal.status] ?? "bg-gray-100 text-gray-600"
     : "bg-gray-100 text-gray-600";
   const photo = animal.photo_url;
 
   return (
-    <div className="flex flex-col gap-6 max-w-2xl mx-auto">
-      {/* Animal Card */}
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="flex flex-col gap-6">
+      <div
+        className={`bg-white rounded-xl shadow-lg overflow-hidden ${
+          isPast ? "opacity-60 grayscale" : ""
+        }`}
+      >
         <div className="md:flex">
           <div className="md:shrink-0">
             {photo ? (
@@ -61,9 +71,7 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
               <div>
                 <p className="font-medium text-gray-500">Age</p>
                 <p className="text-gray-900">
-                  {ageData !== null
-                    ? ageData.display
-                    : "Unknown"}
+                  {ageData !== null ? ageData.display : "Unknown"}
                 </p>
               </div>
               <div>
@@ -78,6 +86,14 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal }) => {
                 <p className="text-gray-700 text-sm mt-1">
                   {animal.description}
                 </p>
+              </div>
+            )}
+
+            {isPast && (
+              <div className="mt-2">
+                <span className="text-xs text-gray-400 italic">
+                  This animal is no longer in your care
+                </span>
               </div>
             )}
           </div>
