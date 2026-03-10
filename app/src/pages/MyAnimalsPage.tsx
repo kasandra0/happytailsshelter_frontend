@@ -59,8 +59,6 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
 
   return (
     <div className="flex flex-col gap-6 p-4">
-      <h1 className="text-2xl text-center font-bold">My Animals</h1>
-
       {fosterHistory.length === 0 ? (
         <p className="text-center text-gray-500 mt-4">
           You currently have no animals assigned to you.
