@@ -5,6 +5,7 @@ import * as z from "zod";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import type { User } from "@/types/types";
+import { Card, CardContent } from "../ui/card";
 
 const editProfileSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -32,6 +33,8 @@ export const EditProfileForm: React.FC<EditProfileFormProps> = ({ user, onSubmit
   });
 
   return (
+    <Card className="w-full sm:max-w-md">
+      <CardContent>
     <form id="edit-profile-form" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>
         <Controller
@@ -105,5 +108,7 @@ export const EditProfileForm: React.FC<EditProfileFormProps> = ({ user, onSubmit
         />
       </FieldGroup>
     </form>
+    </CardContent>
+    </Card>
   );
 };
