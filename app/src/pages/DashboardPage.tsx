@@ -1,4 +1,6 @@
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { getCurrentUser } from "@/services/userService"
+import type { User } from "@/types/types"
 import { format } from "date-fns"
 import {
   PieChart, Pie, Cell,
@@ -70,11 +72,16 @@ export function DashboardPage() {
   const { fosterHistory, fetchAllFosterHistory } = useFosterHistoryStore()
   const { inventoryItems, fetchInventoryItems } = useInventoryItemStore()
 
-  useEffect(() => {
-    fetchAnimals()
-    fetchAllFosterHistory()
-    fetchInventoryItems()
-  }, [])
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
+
+useEffect(() => {
+  fetchAnimals();
+  fetchAllFosterHistory();
+  fetchInventoryItems();
+  getCurrentUser()
+    .then((user) => setCurrentUser(user))
+    .catch((err) => console.error("Failed to fetch user:", err));
+  }, []);
 
   const available = animals.filter((a) => a.status === "A").length
   const fostered = animals.filter((a) => a.status === "F").length
@@ -120,6 +127,11 @@ export function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
+      {currentUser && (
+        <h2 className="text-xl font-semibold mb-4">
+          Welcome, {currentUser.first_name}!
+        </h2>
+      )}
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard title="Total Animals" value={animals.length} icon={<PawPrint className="h-5 w-5" />} />

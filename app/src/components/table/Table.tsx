@@ -62,6 +62,7 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   const isGender = header.column.id === "gender";
+                  const isStatus = header.column.id === "status";
 
                   return (
                     <TableHead key={header.id}>
@@ -76,9 +77,7 @@ export function DataTable<TData, TValue>({
                         {isGender && (
                           <select
                             className="border rounded p-1 text-sm"
-                            value={
-                              (header.column.getFilterValue() as string) ?? ""
-                            }
+                            value={(header.column.getFilterValue() as string) ?? ""}
                             onChange={(e) =>
                               header.column.setFilterValue(e.target.value)
                             }
@@ -86,6 +85,21 @@ export function DataTable<TData, TValue>({
                             <option value="">All</option>
                             <option value="M">Male</option>
                             <option value="F">Female</option>
+                          </select>
+                        )}
+
+                        {isStatus && (
+                          <select
+                            className="border rounded p-1 text-sm"
+                            value={(header.column.getFilterValue() as string) ?? ""}
+                            onChange={(e) =>
+                              header.column.setFilterValue(e.target.value)
+                            }
+                          >
+                            <option value="">All</option>
+                            <option value="A">Available</option>
+                            <option value="F">Fostered</option>
+                            <option value="X">Adopted</option>
                           </select>
                         )}
                       </div>
