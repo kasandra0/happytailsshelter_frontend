@@ -98,16 +98,16 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
               >
                 <DropdownMenuGroup>
                   <DropdownMenuItem
-                    onClick={() => handleUpdateAnimalMedicalLog(animal)}
+                    onClick={(e) => {e.stopPropagation(); handleUpdateAnimalMedicalLog(animal)}}
                   >
                     <span className="clickable">Add Medical Log Entry</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleUpdateAnimal(animal)}>
+                  <DropdownMenuItem onClick={(e) => {e.stopPropagation(); handleUpdateAnimal(animal)}}>
                     <span className="clickable"> Update Animal</span>
                   </DropdownMenuItem>
 
                   <DropdownMenuItem
-                    onClick={() => handleDeleteAnimal(animal.animal_id)}
+                    onClick={(e) => {e.stopPropagation(); handleDeleteAnimal(animal.animal_id)}}
                   >
                     <span className="clickable"> Delete Animal</span>
                   </DropdownMenuItem>
