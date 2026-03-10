@@ -28,11 +28,12 @@ import {
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState, type FC, useMemo } from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface AnimalListingPageProps {}
 
 const AnimalListingPage: FC<AnimalListingPageProps> = () => {
+  const navigate = useNavigate();
   const columns: ColumnDef<Animal>[] = useMemo(
     () => [
       { accessorKey: "microchip", header: "Microchip Number" },
@@ -40,10 +41,7 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
         id: "name",
         accessorKey: "name",
         header: "Animal Name",
-        cell: ({ row }) => {
-          const animal = row.original;
-          return <NavLink to={`${animal.animal_id}`}>{animal.name}</NavLink>;
-        },
+        cell: ({ row }) => row.original.name,
       },
       {
         accessorKey: "date_of_birth",
@@ -88,7 +86,7 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
 
           return (
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                 <Button variant="ghost" size="sm">
                   <span className="sr-only">Open menu</span>
                   <MoreHorizontal className="h-4 w-4" />
@@ -202,7 +200,11 @@ const AnimalListingPage: FC<AnimalListingPageProps> = () => {
             Create
           </Button>
         </div>
-        <DataTable columns={columns} data={animals} />
+        <DataTable
+          columns={columns}
+          data={animals}
+          onRowClick={(animal) => navigate(`${animal.animal_id}`)}
+        />
       </div>
 
       <Modal
