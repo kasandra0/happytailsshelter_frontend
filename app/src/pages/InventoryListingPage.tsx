@@ -18,7 +18,7 @@ import {
 import type { ColumnDef } from "@tanstack/table-core";
 import { MoreHorizontal } from "lucide-react";
 import { useMemo, type FC, useEffect, useState } from "react";
-import { NavLink } from "react-router";
+import { useNavigate } from "react-router";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +30,7 @@ import {
 interface InventoryListingPageProps {}
 
 const InventoryListingPage: FC<InventoryListingPageProps> = () => {
+  const navigate = useNavigate();
   const columns: ColumnDef<InventoryItem>[] = useMemo(
     () => [
       {
@@ -69,7 +70,7 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
 
           return (
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                 <Button variant="ghost" size="sm">
                   <span className="sr-only">Open menu</span>
                   <MoreHorizontal className="h-4 w-4" />
@@ -168,7 +169,9 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
             Create
           </Button>
         </div>
-        <DataTable columns={columns} data={inventoryItems} />
+        <DataTable columns={columns} data={inventoryItems}
+          onRowClick={(item) => navigate(`${item.inventory_item_id}`)}
+        />
       </div>
 
       <Modal
