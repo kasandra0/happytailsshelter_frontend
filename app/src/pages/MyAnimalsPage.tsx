@@ -1,4 +1,5 @@
 import AnimalProfile from "@/components/AnimalProfile";
+import type { ANIMAL_STATUS } from "@/constants";
 import { GlobalContext } from "@/hooks/GlobalContext";
 import { useAnimalStore } from "@/store/animals/animalStore";
 import { useFosterHistoryStore } from "@/store/fosterhistory/fosterHistoryStore";
@@ -28,7 +29,7 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
 
   const activeFosterHistory = fosterHistory.filter((log) => {
     const isEndDatePast = log.end_date && new Date(log.end_date) < now;
-    const isAdopted = log.animal?.status === "X";
+    const isAdopted = log.animal?.status === ("X" satisfies ANIMAL_STATUS);
     const isAdoptedByOther = isAdopted && log.user_id !== user?.user_id;
     return !isEndDatePast && !isAdoptedByOther;
   });
@@ -37,7 +38,7 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
 
   const pastFosterHistory = fosterHistory.filter((log) => {
     const isEndDatePast = log.end_date && new Date(log.end_date) < now;
-    const isAdopted = log.animal?.status === "X";
+    const isAdopted = log.animal?.status === ("X" satisfies ANIMAL_STATUS);
     const isAdoptedByOther = isAdopted && log.user_id !== user?.user_id;
     return isEndDatePast || isAdoptedByOther;
   });

@@ -4,6 +4,8 @@ export const STATUS_LABELS: Record<string, string> = {
   F: "Fostered",
 };
 
+export type ANIMAL_STATUS =  "A"| "X" | "F";
+
 export const USER_STATUS: Record<string, string> = {
   A: "Active", // actively accepting fosters
   X: "Inactive", //not accepting fosters
