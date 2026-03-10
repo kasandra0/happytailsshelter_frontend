@@ -36,12 +36,7 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
         id: "name",
         accessorKey: "name",
         header: "Item Name",
-        cell: ({ row }) => {
-          const item = row.original;
-          return (
-            <NavLink to={`${item.inventory_item_id}`}>{item.name}</NavLink>
-          );
-        },
+        cell: ({ row }) => row.original.name,
       },
       {
         accessorKey: "type",
