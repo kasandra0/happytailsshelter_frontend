@@ -74,7 +74,7 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
                     onClick={() => handleAnimalClick(log.animal?.animal_id)}
                     className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98] flex flex-col h-full"
                   >
-                    <AnimalProfile animal={log.animal} />
+                    <AnimalProfile animal={log.animal} layout="vertical" />
                   </div>
                 ))}
               </div>
@@ -93,7 +93,7 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
                     onClick={() => handleAnimalClick(log.animal?.animal_id)}
                     className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98] flex flex-col h-full"
                   >
-                    <AnimalProfile animal={log.animal} isPast={true} />
+                    <AnimalProfile animal={log.animal} isPast={true} layout="vertical" />
                   </div>
                 ))}
               </div>

@@ -9,9 +9,10 @@ import { STATUS_LABELS, STATUS_STYLES } from "@/constants";
 export interface AnimalProfileProps {
   animal: Animal;
   isPast?: boolean;
+  layout?: "horizontal" | "vertical";
 }
 
-const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false }) => {
+const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false, layout = "horizontal" }) => {
   const ageData = animal.date_of_birth
     ? calculateAge(animal.date_of_birth)
     : null;
@@ -39,31 +40,32 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false }) => {
 
   const animalMedicalLog = medicalLogs.at(0);
 
+  const isVertical = layout === "vertical";
+
   return (
-    <div className="flex flex-col gap-6">
+    <div
+      className={`bg-white rounded-xl shadow-lg overflow-hidden flex h-full ${isPast ? "opacity-60 grayscale" : ""
+        } ${isVertical ? "flex-col" : "flex-col md:flex-row"}`}
+    >
       <div
-        className={`bg-white rounded-xl shadow-lg overflow-hidden ${isPast ? "opacity-60 grayscale" : ""
+        className={`shrink-0 ${isVertical ? "w-full h-48 sm:h-64 md:h-72" : "w-full h-64 md:h-auto md:w-64"
           }`}
       >
-        <div className="md:flex">
-          <div className="md:shrink-0">
-            {photo ? (
-              <img
-                className="h-64 w-full object-cover md:h-full md:w-64"
-                src={photo}
-                alt={`Photo of ${animal.name}`}
-              />
-            ) : (
-              <div className="h-64 w-full bg-gray-200 flex flex-col items-center justify-center text-gray-500 md:h-full md:w-64">
-                <Camera className="w-12 h-12 mb-2" />
-                <span className="text-sm font-medium">No image available</span>
-              </div>
-            )}
+        {photo ? (
+          <img
+            className="w-full h-full object-cover"
+            src={photo}
+            alt={`Photo of ${animal.name}`}
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex flex-col items-center justify-center text-gray-500">
+            <Camera className="w-12 h-12 mb-2" />
+            <span className="text-sm font-medium">No image available</span>
           </div>
         )}
       </div>
 
-      <div className="flex flex-col gap-4 p-6 w-full grow">
+      <div className="flex flex-col gap-4 p-6 w-full grow bg-white">
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-2xl font-bold">{animal.name}</h1>
           <span
@@ -103,26 +105,23 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false }) => {
           </div>
         )}
 
-            {animalMedicalLog && (
+        {animalMedicalLog && (
+          <div>
+            <p className="font-medium text-gray-500 text-sm">Medical Log</p>
+            <p className="text-sm mt-1">
+              <strong>{animalMedicalLog.created_date ? new Date(animalMedicalLog.created_date).toLocaleString() : ""}</strong>
+            </p>
+            <p className="text-gray-700 text-sm mt-1 break-words">
+              {animalMedicalLog.description}
+            </p>
+          </div>
+        )}
 
-              <div>
-                <p className="font-medium text-gray-500 text-sm">Medical Log</p>
-                <p className="text-sm mt-1">
-                  <strong>{animalMedicalLog.created_date ? new Date(animalMedicalLog.created_date).toLocaleString() : ""}</strong>
-                </p>
-                <p className="text-gray-700 text-sm mt-1 break-words">
-                  {animalMedicalLog.description}
-                </p>
-              </div>
-            )}
-
-            {isPast && (
-              <div className="mt-2">
-                <span className="text-xs text-gray-400 italic">
-                  This animal is no longer in your care
-                </span>
-              </div>
-            )}
+        {isPast && (
+          <div className="mt-2 text-center mt-auto">
+            <span className="text-xs text-gray-400 italic">
+              This animal is no longer in your care
+            </span>
           </div>
         )}
       </div>
