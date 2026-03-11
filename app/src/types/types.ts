@@ -49,6 +49,7 @@ export type User = {
 };
 export const ADMIN_ROLE = 2;
 export const FOSTER_PARENT_ROLE = 1;
+export const USER_STATUS_ACTIVE = "A";
 
 export type MedicalLog = {
   log_history_id: number;
