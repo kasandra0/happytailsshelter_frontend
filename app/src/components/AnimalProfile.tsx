@@ -1,7 +1,8 @@
-import { type FC } from "react";
+import { type FC, useEffect } from "react";
 import { type Animal } from "@/types/types";
 import { calculateAge } from "@/lib/utils";
 import { Camera } from "lucide-react";
+import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
 
 import { STATUS_LABELS, STATUS_STYLES } from "@/constants";
 
@@ -17,21 +18,32 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false }) => {
   const statusLabel = isPast
     ? "Previously Fostered"
     : animal.status
-    ? STATUS_LABELS[animal.status] ?? animal.status
-    : "Unknown";
+      ? STATUS_LABELS[animal.status] ?? animal.status
+      : "Unknown";
   const statusStyle = isPast
     ? "bg-gray-100 text-gray-500"
     : animal.status
-    ? STATUS_STYLES[animal.status] ?? "bg-gray-100 text-gray-600"
-    : "bg-gray-100 text-gray-600";
+      ? STATUS_STYLES[animal.status] ?? "bg-gray-100 text-gray-600"
+      : "bg-gray-100 text-gray-600";
+
   const photo = animal.photo_url;
+
+  const {
+    fetchMedicalLogsForAnimal,
+    medicalLogs,
+  } = useMedicalLogStore();
+
+  useEffect(() => {
+    fetchMedicalLogsForAnimal(animal.animal_id);
+  }, [animal.animal_id]);
+
+  const animalMedicalLog = medicalLogs.at(0);
 
   return (
     <div className="flex flex-col gap-6">
       <div
-        className={`bg-white rounded-xl shadow-lg overflow-hidden ${
-          isPast ? "opacity-60 grayscale" : ""
-        }`}
+        className={`bg-white rounded-xl shadow-lg overflow-hidden ${isPast ? "opacity-60 grayscale" : ""
+          }`}
       >
         <div className="md:flex">
           <div className="md:shrink-0">
@@ -85,6 +97,19 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false }) => {
                 <p className="font-medium text-gray-500 text-sm">Description</p>
                 <p className="text-gray-700 text-sm mt-1">
                   {animal.description}
+                </p>
+              </div>
+            )}
+
+            {animalMedicalLog && (
+
+              <div>
+                <p className="font-medium text-gray-500 text-sm">Medical Log</p>
+                <p className="text-sm mt-1">
+                  <strong>{animalMedicalLog.created_date ? new Date(animalMedicalLog.created_date).toLocaleString() : ""}</strong>
+                </p>
+                <p className="text-gray-700 text-sm mt-1 break-words">
+                  {animalMedicalLog.description}
                 </p>
               </div>
             )}

@@ -43,6 +43,7 @@ export const useMedicalLogStore = create<MedicalLogState>((set) => ({
   createMedicalLog: async (animalId, medicalLog) => {
     set({ loading: true, error: null });
     try {
+      medicalLog.created_date = new Date()
       const { animal, user, ...payload } = medicalLog as any;
 
       await axiosInstance.post<{ data: MedicalLog }>(

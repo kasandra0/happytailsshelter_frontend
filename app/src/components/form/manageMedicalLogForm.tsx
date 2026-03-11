@@ -72,9 +72,8 @@ export const ManageMedicalLogForm: React.FC<ManageMedicalLogFormProps> = ({
   return (
     <Card className="w-full sm:max-w-md">
       <CardHeader>
-        <CardTitle>{`Medical Log: ${
-          medicalLog?.log_history_id ?? "New"
-        }`}</CardTitle>
+        <CardTitle>{`Medical Log: ${medicalLog?.log_history_id ?? "New"
+          }`}</CardTitle>
       </CardHeader>
       <CardContent>
         <form
@@ -149,7 +148,7 @@ export const ManageMedicalLogForm: React.FC<ManageMedicalLogFormProps> = ({
                     />
                     <InputGroupAddon align="block-end">
                       <InputGroupText className="tabular-nums">
-                        {(field.value ?? "").length}/500 characters
+                        {(field.value ?? "").length}/100 characters
                       </InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>
