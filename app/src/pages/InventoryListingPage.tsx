@@ -82,13 +82,15 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
               >
                 <DropdownMenuGroup>
                   <DropdownMenuItem
-                    onClick={() => handleUpdateInventoryItem(inventoryItem)}
+                    onClick={(e) => {e.stopPropagation(); handleUpdateInventoryItem(inventoryItem)}}
                   >
                     <span className="clickable">Update Item</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() =>
+                    onClick={(e) =>
+                    {e.stopPropagation();
                       handleDeleteInventoryItem(inventoryItem.inventory_item_id)
+                    }
                     }
                   >
                     <span className="clickable">Delete Item</span>
