@@ -3,11 +3,13 @@ import type { MedicalLog } from "@/types/types";
 import { create } from "zustand";
 
 interface MedicalLogState {
+  allMedicalLogs: MedicalLog[],
   medicalLogs: MedicalLog[];
   selectedMedicalLog: MedicalLog | undefined;
   loading: boolean;
   error: string | null;
 
+  fetchAllMedicalLogs: () => Promise<void>;
   fetchMedicalLogsForAnimal: (animalId: number) => Promise<void>;
   createMedicalLog: (
     animalId: number,
@@ -19,10 +21,27 @@ interface MedicalLogState {
 }
 
 export const useMedicalLogStore = create<MedicalLogState>((set) => ({
+  allMedicalLogs: [],
   medicalLogs: [],
   selectedMedicalLog: undefined,
   loading: false,
   error: null,
+
+  fetchAllMedicalLogs: async () => {
+        set({ loading: true, error: null });
+    try {
+      const response = (
+        await axiosInstance.get<{ data: MedicalLog[] }>(
+          `medical-log`
+        )
+      ).data;
+      set({ allMedicalLogs: response.data });
+    } catch (error) {
+      set({ error: "Failed to fetch medical logs" });
+    } finally {
+      set({ loading: false });
+    }
+  },
 
   fetchMedicalLogsForAnimal: async (animalId) => {
     set({ loading: true, error: null });
