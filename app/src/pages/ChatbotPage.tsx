@@ -1,11 +1,14 @@
 import * as React from "react";
 import { useState } from "react";
+import axios from "axios";
 
 type Message = {
   id: number;
   sender: "user" | "bot";
   text: string;
 };
+
+const BASE_URL = (import.meta.env.VITE_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
 
 export default function ChatbotPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,13 +23,11 @@ export default function ChatbotPage() {
   ]);
 
   const suggestedQuestions = [
-    "How do I adopt a pet?",
-    "What are your hours?",
-    "How can I volunteer?",
-    "How do I donate?",
-    "Show me dogs",
-    "Show me cats",
-  ];
+  "How do I adopt a pet?",
+  "Show me dogs",
+  "Show me cats",
+  "Which animals have medical history?"
+];
 
   const sendMessage = async (messageText: string) => {
     if (!messageText.trim()) return;
@@ -42,24 +43,18 @@ export default function ChatbotPage() {
     setIsTyping(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: messageText,
-        }),
+      const url = `${BASE_URL}/api/chat`;
+
+      const response = await axios.post(url, {
+        message: messageText,
       });
 
-      const data = await response.json();
+      const data = response.data;
 
       const botMessage: Message = {
         id: Date.now() + 1,
         sender: "bot",
-        text:
-          data.reply ??
-          "Sorry, I couldn't get a response right now.",
+        text: data.reply ?? "Sorry, I couldn't get a response right now.",
       };
 
       setMessages((prev) => [...prev, botMessage]);
