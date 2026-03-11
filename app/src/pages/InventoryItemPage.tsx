@@ -83,7 +83,7 @@ export default function InventoryItemPage() {
               <span className="font-medium">Type:</span> {item.type ?? "-"}
             </div>
             <div>
-              <span className="font-medium">Quantity:</span>{" "}
+              <span className="font-medium">In Stock:</span>{" "}
               {item.quantity ?? "-"}
             </div>
             <div>

@@ -45,7 +45,7 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
       },
       {
         accessorKey: "quantity",
-        header: "Quantity",
+        header: "In Stock",
       },
       {
         accessorKey: "cost",
