@@ -60,46 +60,48 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false }) => {
               </div>
             )}
           </div>
+        )}
+      </div>
 
-          <div className="flex flex-col gap-4 p-6 w-full">
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold">{animal.name}</h1>
-              <span
-                className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${statusStyle}`}
-              >
-                {statusLabel}
-              </span>
-            </div>
+      <div className="flex flex-col gap-4 p-6 w-full grow">
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-2xl font-bold">{animal.name}</h1>
+          <span
+            className={`inline-block rounded-full px-3 py-1 text-sm font-semibold whitespace-nowrap ${statusStyle}`}
+          >
+            {statusLabel}
+          </span>
+        </div>
 
-            <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-              <div>
-                <p className="font-medium text-gray-500">Species</p>
-                <p className="text-gray-900">{animal.species}</p>
-              </div>
-              <div>
-                <p className="font-medium text-gray-500">Breed</p>
-                <p className="text-gray-900">{animal.breed ?? "Unknown"}</p>
-              </div>
-              <div>
-                <p className="font-medium text-gray-500">Age</p>
-                <p className="text-gray-900">
-                  {ageData !== null ? ageData.display : "Unknown"}
-                </p>
-              </div>
-              <div>
-                <p className="font-medium text-gray-500">Gender</p>
-                <p className="text-gray-900">{animal.gender ?? "Unknown"}</p>
-              </div>
-            </div>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+          <div>
+            <p className="font-medium text-gray-500">Species</p>
+            <p className="text-gray-900">{animal.species}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-500">Breed</p>
+            <p className="text-gray-900">{animal.breed ?? "Unknown"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-500">Age</p>
+            <p className="text-gray-900">
+              {ageData !== null ? ageData.display : "Unknown"}
+            </p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-500">Gender</p>
+            <p className="text-gray-900">{animal.gender ?? "Unknown"}</p>
+          </div>
+        </div>
 
-            {animal.description && (
-              <div>
-                <p className="font-medium text-gray-500 text-sm">Description</p>
-                <p className="text-gray-700 text-sm mt-1">
-                  {animal.description}
-                </p>
-              </div>
-            )}
+        {animal.description && (
+          <div>
+            <p className="font-medium text-gray-500 text-sm">Description</p>
+            <p className="text-gray-700 text-sm mt-1">
+              {animal.description}
+            </p>
+          </div>
+        )}
 
             {animalMedicalLog && (
 
@@ -122,7 +124,7 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false }) => {
               </div>
             )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -25,7 +25,7 @@ export const fosterHistoryFormSchema = z.object({
   animal_id: z.number().int().readonly(),
   user_id: z.number().int(),
   animal_display: z.string().readonly(), // readonly display field, not submitted
-  status: z.string().refine((val) => ["A", "X", "F"].includes(val), {
+  status: z.string().refine((val) => ["X", "F"].includes(val), {
     message: "Invalid status",
   }),
   start_date: z.date().optional(),
@@ -60,7 +60,7 @@ export const ManageFosterHistoryForm: React.FC<
       animal_id: fosterHistory?.animal_id ?? 0,
       user_id: Number(fosterHistory?.user_id) ?? 0,
       animal_display: animal.name,
-      status: (animal.status as "A" | "X" | "F") ?? "A",
+      status: (animal.status as "X" | "F") ?? "",
       start_date: fosterHistory?.start_date
         ? new Date(fosterHistory.start_date)
         : new Date(),
@@ -84,7 +84,7 @@ export const ManageFosterHistoryForm: React.FC<
       <CardHeader>
         <CardTitle>
           {fosterHistory
-            ? `Foster Record: ${fosterHistory.name} (ID: ${fosterHistory.foster_history_id})`
+            ? `Foster Record: ${fosterHistory.name}`
             : "New Foster Record"}
         </CardTitle>
       </CardHeader>
@@ -153,7 +153,6 @@ export const ManageFosterHistoryForm: React.FC<
                     className="w-full border rounded px-3 py-2 text-sm"
                   >
                     <option value="">Select a status</option>
-                    <option value="A">Available</option>
                     <option value="X">Adopted</option>
                     <option value="F">Fostered</option>
                   </select>
