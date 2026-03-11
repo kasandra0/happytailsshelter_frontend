@@ -1,8 +1,7 @@
-import { type FC, useEffect } from "react";
+import { type FC } from "react";
 import { type Animal, type MedicalLog } from "@/types/types";
 import { calculateAge } from "@/lib/utils";
 import { Camera } from "lucide-react";
-import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
 
 import { STATUS_LABELS, STATUS_STYLES } from "@/constants";
 
