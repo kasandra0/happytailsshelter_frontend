@@ -119,7 +119,7 @@ const FosterHistoryTable: FC<FosterHistoryTableProps> = ({ animal }) => {
     () => [
       {
         id: "user",
-        header: "Checked Out By",
+        header: "Foster Parent",
         cell: ({ row }) => {
           const user = row.original.user_foster_history_user_idTouser as any;
           return user

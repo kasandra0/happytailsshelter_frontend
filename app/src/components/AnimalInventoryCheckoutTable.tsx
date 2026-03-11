@@ -122,7 +122,7 @@ const AnimalInventoryCheckout: FC<AnimalInventoryCheckoutProps> = ({
       },
       {
         id: "user",
-        header: "Checked Out By",
+        header: "Foster Parent",
         cell: ({ row }) => {
           const user = row.original.user as any;
           return user

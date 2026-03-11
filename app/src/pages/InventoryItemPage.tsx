@@ -31,7 +31,7 @@ const columns: ColumnDef<InventoryCheckout>[] = [
   },
   {
     id: "user",
-    header: "Checked Out By",
+    header: "Foster Parent",
     cell: ({ row }) => {
       const user = row.original.user;
       return user
