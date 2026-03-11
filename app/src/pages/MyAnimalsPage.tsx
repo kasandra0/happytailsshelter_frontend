@@ -34,7 +34,6 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
     return !isEndDatePast && !isAdoptedByOther;
   });
 
-  console.log(activeFosterHistory);
 
   const pastFosterHistory = fosterHistory.filter((log) => {
     const isEndDatePast = log.end_date && new Date(log.end_date) < now;
@@ -71,7 +70,7 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {activeFosterHistory.map((log) => (
                   <div
-                    key={log.animal.animal_id}
+                    key={log.foster_history_id}
                     onClick={() => handleAnimalClick(log.animal?.animal_id)}
                     className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98] flex flex-col h-full"
                   >
@@ -90,7 +89,7 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {pastFosterHistory.map((log) => (
                   <div
-                    key={log.animal.animal_id}
+                    key={log.foster_history_id}
                     onClick={() => handleAnimalClick(log.animal?.animal_id)}
                     className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98] flex flex-col h-full"
                   >
