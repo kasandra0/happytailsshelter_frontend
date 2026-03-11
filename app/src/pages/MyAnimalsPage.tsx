@@ -6,16 +6,16 @@ import { useFosterHistoryStore } from "@/store/fosterhistory/fosterHistoryStore"
 import { useContext, useEffect, type FC } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface MyAnimalsPageProps {}
+interface MyAnimalsPageProps { }
 
 const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
-  const { animals, fetchAnimals, loading: animalsLoading } = useAnimalStore();
+  const { fetchAnimals, loading: animalsLoading } = useAnimalStore();
   const {
     fosterHistory,
     fetchUserFosterHistory,
     loading: fosterHistoryLoading,
   } = useFosterHistoryStore();
-  const { user, isLoading } = useContext(GlobalContext);
+  const { user } = useContext(GlobalContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,12 +68,12 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
           {activeFosterHistory.length > 0 && (
             <div className="flex flex-col gap-3">
               <h2 className="text-lg font-semibold">Currently Fostering</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {activeFosterHistory.map((log) => (
                   <div
                     key={log.animal.animal_id}
                     onClick={() => handleAnimalClick(log.animal?.animal_id)}
-                    className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                    className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98] flex flex-col h-full"
                   >
                     <AnimalProfile animal={log.animal} />
                   </div>
@@ -87,12 +87,12 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
               <h2 className="text-lg font-semibold text-gray-500">
                 Previously Fostered
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {pastFosterHistory.map((log) => (
                   <div
                     key={log.animal.animal_id}
                     onClick={() => handleAnimalClick(log.animal?.animal_id)}
-                    className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                    className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98] flex flex-col h-full"
                   >
                     <AnimalProfile animal={log.animal} isPast={true} />
                   </div>

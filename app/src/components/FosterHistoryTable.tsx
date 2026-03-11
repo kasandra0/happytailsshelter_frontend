@@ -87,8 +87,18 @@ const FosterHistoryTable: FC<FosterHistoryTableProps> = ({ animal }) => {
   const handleConfirmDelete = async () => {
     if (fosterHistoryToDeleteId === null) return;
     await deleteFosterHistory(fosterHistoryToDeleteId);
+
+    if (fosterHistory.filter((f) => f.foster_history_id !== fosterHistoryToDeleteId).length === 0) {
+      await updateAnimal({
+        ...animal,
+        status: "A",
+      });
+      await getAnimal(animal.animal_id);
+    }
+
     setFosterHistoryToDeleteId(null);
     setDeleteDialogOpen(false);
+
   };
 
   const handleFosterSubmit = async (record: FosterHistory) => {
@@ -111,6 +121,7 @@ const FosterHistoryTable: FC<FosterHistoryTableProps> = ({ animal }) => {
       : await updateFosterHistory(payload);
 
     await getAnimal(animal.animal_id);
+    await fetchAnimalFosterHistory(animal.animal_id);
 
     setFosterModalOpen(false);
   };
