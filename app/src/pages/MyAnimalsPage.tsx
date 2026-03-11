@@ -3,6 +3,7 @@ import type { ANIMAL_STATUS } from "@/constants";
 import { GlobalContext } from "@/hooks/GlobalContext";
 import { useAnimalStore } from "@/store/animals/animalStore";
 import { useFosterHistoryStore } from "@/store/fosterhistory/fosterHistoryStore";
+import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
 import { useContext, useEffect, type FC } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -15,17 +16,26 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
     fetchUserFosterHistory,
     loading: fosterHistoryLoading,
   } = useFosterHistoryStore();
+  const {allMedicalLogs, fetchAllMedicalLogs} = useMedicalLogStore();
   const { user } = useContext(GlobalContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchAnimals();
+    fetchAllMedicalLogs();
     if (user) {
       fetchUserFosterHistory(user.user_id);
+      
     }
   }, [user]);
 
   const now = new Date();
+
+  const getMedicalLogForAnimal = (animalId: number) => {
+    // console.log(animalId)
+    // console.log(allMedicalLogs, allMedicalLogs.filter(ml => ml.animal_id === animalId)?.at(0))
+    return allMedicalLogs.filter(ml => ml.animal_id === animalId)?.at(0);
+  }
 
   const activeFosterHistory = fosterHistory.filter((log) => {
     const isEndDatePast = log.end_date && new Date(log.end_date) < now;
@@ -74,7 +84,7 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
                     onClick={() => handleAnimalClick(log.animal?.animal_id)}
                     className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-[0.98] flex flex-col h-full"
                   >
-                    <AnimalProfile animal={log.animal} layout="vertical" />
+                    <AnimalProfile animal={log.animal} layout="vertical" medicalLog={getMedicalLogForAnimal(log.animal_id)}/>
                   </div>
                 ))}
               </div>

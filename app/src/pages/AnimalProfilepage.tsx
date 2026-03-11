@@ -10,12 +10,13 @@ import { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 export function AnimalProfilePage() {
-  const { getAnimal, selectedAnimal } = useAnimalStore();
+  const { getAnimal, selectedAnimal, setSelectedAnimal } = useAnimalStore();
   const { fetchAnimalFosterHistory, fosterHistory } = useFosterHistoryStore();
   const { user } = useContext(GlobalContext);
   const params = useParams();
 
   useEffect(() => {
+    setSelectedAnimal(undefined);
     const animalId = params.id;
     if (!animalId) return;
     getAnimal(Number(animalId));

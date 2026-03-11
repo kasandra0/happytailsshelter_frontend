@@ -1,5 +1,5 @@
 import { type FC, useEffect } from "react";
-import { type Animal } from "@/types/types";
+import { type Animal, type MedicalLog } from "@/types/types";
 import { calculateAge } from "@/lib/utils";
 import { Camera } from "lucide-react";
 import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
@@ -8,11 +8,12 @@ import { STATUS_LABELS, STATUS_STYLES } from "@/constants";
 
 export interface AnimalProfileProps {
   animal: Animal;
+  medicalLog?: MedicalLog;
   isPast?: boolean;
   layout?: "horizontal" | "vertical";
 }
 
-const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false, layout = "horizontal" }) => {
+const AnimalProfile: FC<AnimalProfileProps> = ({ animal, medicalLog, isPast = false, layout = "horizontal" }) => {
   const ageData = animal.date_of_birth
     ? calculateAge(animal.date_of_birth)
     : null;
@@ -29,16 +30,6 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false, layout 
 
   const photo = animal.photo_url;
 
-  const {
-    fetchMedicalLogsForAnimal,
-    medicalLogs,
-  } = useMedicalLogStore();
-
-  useEffect(() => {
-    fetchMedicalLogsForAnimal(animal.animal_id);
-  }, [animal.animal_id]);
-
-  const animalMedicalLog = medicalLogs.at(0);
 
   const isVertical = layout === "vertical";
 
@@ -105,14 +96,14 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false, layout 
           </div>
         )}
 
-        {animalMedicalLog && (
+        {medicalLog && (
           <div>
             <p className="font-medium text-gray-500 text-sm">Medical Log</p>
             <p className="text-sm mt-1">
-              <strong>{animalMedicalLog.created_date ? new Date(animalMedicalLog.created_date).toLocaleString() : ""}</strong>
+              <strong>{medicalLog.created_date ? new Date(medicalLog.created_date).toLocaleString() : ""}</strong>
             </p>
             <p className="text-gray-700 text-sm mt-1 break-words">
-              {animalMedicalLog.description}
+              {medicalLog.description}
             </p>
           </div>
         )}

@@ -35,6 +35,7 @@ const AnimalMedicalLog: FC<AnimalMedicalLogProps> = ({
   animal,
   isReadOnly = false,
 }) => {
+  const [medicalLogs, setMedicalLogs] = useState<MedicalLog[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -43,7 +44,6 @@ const AnimalMedicalLog: FC<AnimalMedicalLogProps> = ({
   const { user } = useContext(GlobalContext);
 
   const {
-    medicalLogs,
     selectedMedicalLog,
     fetchMedicalLogsForAnimal,
     createMedicalLog,
@@ -53,8 +53,9 @@ const AnimalMedicalLog: FC<AnimalMedicalLogProps> = ({
   } = useMedicalLogStore();
 
   useEffect(() => {
-    fetchMedicalLogsForAnimal(animal.animal_id);
-  }, [animal.animal_id]);
+    
+    fetchMedicalLogsForAnimal(animal.animal_id).then(setMedicalLogs);
+  }, [animal.animal_id, fetchMedicalLogsForAnimal]);
 
   const handleCreate = () => {
     setModalTitle("Create Medical Log Entry");
@@ -76,14 +77,17 @@ const AnimalMedicalLog: FC<AnimalMedicalLogProps> = ({
   const handleConfirmDelete = async () => {
     if (logToDeleteId === null) return;
     await deleteMedicalLog(logToDeleteId);
+    setMedicalLogs((prev) => prev.filter((ml) => ml.log_history_id !== logToDeleteId));
     setLogToDeleteId(null);
     setDeleteDialogOpen(false);
   };
 
   const handleSubmit = async (log: MedicalLog) => {
-    log.log_history_id === 0
-      ? await createMedicalLog(animal.animal_id, log)
-      : await updateMedicalLog(log);
+    const updated =
+      log.log_history_id === 0
+        ? await createMedicalLog(animal.animal_id, log)
+        : await updateMedicalLog(log);
+    setMedicalLogs(updated);
     setModalOpen(false);
   };
 
@@ -167,7 +171,6 @@ const AnimalMedicalLog: FC<AnimalMedicalLogProps> = ({
     ],
     []
   );
-
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between mb-4">
