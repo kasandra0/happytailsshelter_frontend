@@ -4,31 +4,29 @@ import { create } from "zustand";
 
 interface MedicalLogState {
   allMedicalLogs: MedicalLog[],
-  medicalLogs: MedicalLog[];
   selectedMedicalLog: MedicalLog | undefined;
   loading: boolean;
   error: string | null;
 
   fetchAllMedicalLogs: () => Promise<void>;
-  fetchMedicalLogsForAnimal: (animalId: number) => Promise<void>;
+  fetchMedicalLogsForAnimal: (animalId: number) => Promise<MedicalLog[]>;
   createMedicalLog: (
     animalId: number,
     medicalLog: Omit<MedicalLog, "log_history_id">
-  ) => Promise<void>;
-  updateMedicalLog: (medicalLog: MedicalLog) => Promise<void>;
+  ) => Promise<MedicalLog[]>;
+  updateMedicalLog: (medicalLog: MedicalLog) => Promise<MedicalLog[]>;
   deleteMedicalLog: (log_history_id: number) => Promise<void>;
   setSelectedMedicalLog: (medicalLog: MedicalLog | undefined) => void;
 }
 
 export const useMedicalLogStore = create<MedicalLogState>((set) => ({
   allMedicalLogs: [],
-  medicalLogs: [],
   selectedMedicalLog: undefined,
   loading: false,
   error: null,
 
   fetchAllMedicalLogs: async () => {
-        set({ loading: true, error: null });
+    set({ loading: true, error: null });
     try {
       const response = (
         await axiosInstance.get<{ data: MedicalLog[] }>(
@@ -51,9 +49,10 @@ export const useMedicalLogStore = create<MedicalLogState>((set) => ({
           `animals/${animalId}/medical-logs`
         )
       ).data;
-      set({ medicalLogs: response.data });
+      return response.data;
     } catch (error) {
       set({ error: "Failed to fetch medical logs" });
+      return [];
     } finally {
       set({ loading: false });
     }
@@ -76,9 +75,10 @@ export const useMedicalLogStore = create<MedicalLogState>((set) => ({
           `animals/${animalId}/medical-logs`
         )
       ).data;
-      set({ medicalLogs: updated.data });
+      return updated.data;
     } catch (error) {
       set({ error: "Failed to create medical log" });
+      return [];
     } finally {
       set({ loading: false });
     }
@@ -98,9 +98,10 @@ export const useMedicalLogStore = create<MedicalLogState>((set) => ({
           `animals/${medicalLog.animal_id}/medical-logs`
         )
       ).data;
-      set({ medicalLogs: updated.data });
+      return updated.data;
     } catch (error) {
       set({ error: "Failed to update medical log" });
+      return [];
     } finally {
       set({ loading: false });
     }
@@ -110,11 +111,6 @@ export const useMedicalLogStore = create<MedicalLogState>((set) => ({
     set({ loading: true, error: null });
     try {
       await axiosInstance.delete(`medical-log/${log_history_id}`);
-      set((state) => ({
-        medicalLogs: state.medicalLogs.filter(
-          (ml) => ml.log_history_id !== log_history_id
-        ),
-      }));
     } catch (error) {
       set({ error: "Failed to delete medical log" });
     } finally {
