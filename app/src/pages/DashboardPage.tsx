@@ -18,6 +18,7 @@ import {
 import { useAnimalStore } from "@/store/animals/animalStore"
 import { useFosterHistoryStore } from "@/store/fosterhistory/fosterHistoryStore"
 import { useInventoryItemStore } from "@/store/inventoryItems/inventoryItemsStore"
+import { useInventoryCheckoutStore } from "@/store/inventoryCheckout/inventoryCheckoutStore"
 
 const STATUS_COLORS = [
   "var(--chart-1)",
@@ -41,6 +42,10 @@ const fosterChartConfig: ChartConfig = {
 
 const inventoryChartConfig: ChartConfig = {
   quantity: { label: "Quantity", color: "var(--chart-4)" },
+}
+
+const rentedOutChartConfig: ChartConfig = {
+  quantity: { label: "Rented Out", color: "var(--chart-1)" },
 }
 
 function StatCard({
@@ -71,6 +76,7 @@ export function DashboardPage() {
   const { animals, fetchAnimals } = useAnimalStore()
   const { fosterHistory, fetchAllFosterHistory } = useFosterHistoryStore()
   const { inventoryItems, fetchInventoryItems } = useInventoryItemStore()
+  const { inventoryCheckouts, fetchInventoryCheckouts } = useInventoryCheckoutStore()
 
   const [currentUser, setCurrentUser] = useState<User | null>(null)
 
@@ -78,6 +84,7 @@ useEffect(() => {
   fetchAnimals();
   fetchAllFosterHistory();
   fetchInventoryItems();
+  fetchInventoryCheckouts();
   getCurrentUser()
     .then((user) => setCurrentUser(user))
     .catch((err) => console.error("Failed to fetch user:", err));
@@ -116,6 +123,29 @@ useEffect(() => {
       .sort((a, b) => new Date(a.month).getTime() - new Date(b.month).getTime())
   }, [fosterHistory])
 
+  const rentedOutByItemId = useMemo(() => {
+    const now = new Date();
+    const map = new Map<number, number>();
+    for (const c of inventoryCheckouts) {
+      const returnDate = c.return_date as unknown as Date | null;
+      const isActive = returnDate === null || new Date(returnDate) > now;
+      if (isActive) {
+        map.set(c.inventory_item_id, (map.get(c.inventory_item_id) ?? 0) + c.quantity);
+      }
+    }
+    return map;
+  }, [inventoryCheckouts]);
+
+  const rentedOutData = useMemo(() => {
+    return inventoryItems
+      .filter((item) => rentedOutByItemId.has(item.inventory_item_id))
+      .map((item) => ({
+        name: item.name,
+        quantity: rentedOutByItemId.get(item.inventory_item_id)!,
+      }))
+      .sort((a, b) => b.quantity - a.quantity)
+  }, [inventoryItems, rentedOutByItemId])
+
   const inventoryByType = useMemo(() => {
     const map: Record<string, number> = {}
     inventoryItems.forEach((item) => {
@@ -134,14 +164,48 @@ useEffect(() => {
       )}
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Total Animals" value={animals.length} icon={<PawPrint className="h-5 w-5" />} />
+        <StatCard title="Total Animals" value={available + fostered} icon={<PawPrint className="h-5 w-5" />} />
         <StatCard title="Available" value={available} icon={<Home className="h-5 w-5" />} />
         <StatCard title="Fostered" value={fostered} icon={<Users className="h-5 w-5" />} />
-        <StatCard title="Adopted" value={adopted} icon={<Heart className="h-5 w-5" />} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Inventory by Type</CardTitle>
+            <CardDescription>Total quantity per item type</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={inventoryChartConfig}>
+              <BarChart data={inventoryByType} layout="vertical">
+                <CartesianGrid horizontal={false} />
+                <XAxis type="number" tickLine={false} axisLine={false} allowDecimals={false} />
+                <YAxis dataKey="type" type="category" width={90} tickLine={false} axisLine={false} interval={0} />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Bar dataKey="quantity" fill="var(--color-quantity)" radius={4} />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
 
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Items Currently Rented Out</CardTitle>
+            <CardDescription>Active checkouts by item</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={rentedOutChartConfig}>
+              <BarChart data={rentedOutData} layout="vertical">
+                <CartesianGrid horizontal={false} />
+                <XAxis type="number" tickLine={false} axisLine={false} allowDecimals={false} />
+                <YAxis dataKey="name" type="category" width={120} tickLine={false} axisLine={false} interval={0} />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Bar dataKey="quantity" fill="var(--color-quantity)" radius={4} />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
         <Card>
           <CardHeader>
             <CardTitle>Animal Status</CardTitle>
@@ -170,65 +234,8 @@ useEffect(() => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Animals by Species</CardTitle>
-            <CardDescription>Count of animals per species</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={speciesChartConfig}>
-              <BarChart data={speciesData}>
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey="species" tickLine={false} axisLine={false} />
-                <YAxis tickLine={false} axisLine={false} allowDecimals={false} />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="count" fill="var(--color-count)" radius={4} />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Foster Activity</CardTitle>
-            <CardDescription>Monthly foster placements</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={fosterChartConfig}>
-              <LineChart data={fosterActivityData}>
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey="month" tickLine={false} axisLine={false} />
-                <YAxis tickLine={false} axisLine={false} allowDecimals={false} />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Line
-                  type="monotone"
-                  dataKey="placements"
-                  stroke="var(--color-placements)"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Inventory by Type</CardTitle>
-            <CardDescription>Total quantity per item type</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={inventoryChartConfig}>
-              <BarChart data={inventoryByType} layout="vertical">
-                <CartesianGrid horizontal={false} />
-                <XAxis type="number" tickLine={false} axisLine={false} allowDecimals={false} />
-                <YAxis dataKey="type" type="category" width={90} tickLine={false} axisLine={false} interval={0} />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="quantity" fill="var(--color-quantity)" radius={4} />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
 
       </div>
     </div>
