@@ -57,7 +57,7 @@ const router = createBrowserRouter([
         path: "/fosterparent",
         element: <SidebarLayout />,
         children: [
-          { path: "dashboard", element: <MyAnimalsPage />, handle: { title: "Dashboard" } },
+          { path: "dashboard", element: <MyAnimalsPage />, handle: { title: "My Animals" } },
           { path: "myanimals", element: <MyAnimalsPage />, handle: { title: "My Animals" } },
           { path: "profile", element: <MyFosterProfilePage />, handle: { title: "My Profile" } },
           { path: "animals/:id/adopt", element: <AdoptPage />, handle: { title: "Adopt Animal" } },

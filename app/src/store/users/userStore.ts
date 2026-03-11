@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/services/authService";
-import type { User } from "@/types/types";
+import { USER_STATUS_ACTIVE, type User } from "@/types/types";
 import { create } from "zustand";
 
 interface UserState {
@@ -23,7 +23,7 @@ export const useUserStore = create<UserState>((set) => ({
     try {
       const response = (await axiosInstance.get<{ data: User[] }>("users"))
         .data;
-      set({ users: response.data });
+      set({ users: response.data.filter((user) => user.status === USER_STATUS_ACTIVE) });
     } catch (error) {
       set({ error: "Failed to fetch users" });
     } finally {

@@ -2,6 +2,7 @@ import { ManageInventoryItemForm } from "@/components/form/manageInventoryItemFo
 import { Modal } from "@/components/modal/modal";
 import { DataTable } from "@/components/table/Table";
 import { Button } from "@/components/ui/button";
+import { useInventoryCheckoutStore } from "@/store/inventoryCheckout/inventoryCheckoutStore";
 import { useInventoryItemStore } from "@/store/inventoryItems/inventoryItemsStore";
 import type { InventoryItem } from "@/types/types";
 import {
@@ -18,6 +19,7 @@ import {
 import type { ColumnDef } from "@tanstack/table-core";
 import { MoreHorizontal } from "lucide-react";
 import { useMemo, type FC, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +31,62 @@ import {
 interface InventoryListingPageProps {}
 
 const InventoryListingPage: FC<InventoryListingPageProps> = () => {
+  const navigate = useNavigate();
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [inventoryItemToDeleteId, setInventoryItemToDeleteId] = useState<
+    number | null
+  >(null);
+  const [modalTitle, setModalTitle] = useState("");
+  const {
+    inventoryItems,
+    selectedInventoryItem,
+    fetchInventoryItems,
+    createInventoryItem,
+    updateInventoryItem,
+    deleteInventoryItem,
+    setSelectedInventoryItem,
+  } = useInventoryItemStore();
+
+  const { inventoryCheckouts, fetchInventoryCheckouts } =
+    useInventoryCheckoutStore();
+
+  useEffect(() => {
+    fetchInventoryItems();
+    fetchInventoryCheckouts();
+  }, []);
+
+  const rentedOutByItemId = useMemo(() => {
+    const now = new Date();
+    const map = new Map<number, number>();
+    for (const c of inventoryCheckouts) {
+      const returnDate = c.return_date as unknown as Date | null;
+      const isActive = returnDate === null || new Date(returnDate) > now;
+      if (isActive) {
+        map.set(c.inventory_item_id, (map.get(c.inventory_item_id) ?? 0) + c.quantity);
+      }
+    }
+    return map;
+  }, [inventoryCheckouts]);
+
+  const handleCreateInventoryItem = () => {
+    setModalTitle("Create Inventory Item");
+    setSelectedInventoryItem(null);
+    setModalOpen(true);
+  };
+
+  const handleUpdateInventoryItem = (inventoryItem: InventoryItem) => {
+    setModalTitle("Update Inventory Item");
+    setSelectedInventoryItem(inventoryItem);
+    setModalOpen(true);
+  };
+
+  const handleDeleteInventoryItem = (id: number) => {
+    setInventoryItemToDeleteId(id);
+    setDeleteDialogOpen(true);
+  };
+
   const columns: ColumnDef<InventoryItem>[] = useMemo(
     () => [
       {
@@ -43,7 +101,13 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
       },
       {
         accessorKey: "quantity",
-        header: "Quantity",
+        header: "In Stock",
+      },
+      {
+        id: "rentedOut",
+        header: "Rented Out",
+        cell: ({ row }) =>
+          rentedOutByItemId.get(row.original.inventory_item_id) ?? 0,
       },
       {
         accessorKey: "cost",
@@ -68,7 +132,7 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
 
           return (
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                 <Button variant="ghost" size="sm">
                   <span className="sr-only">Open menu</span>
                   <MoreHorizontal className="h-4 w-4" />
@@ -80,13 +144,15 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
               >
                 <DropdownMenuGroup>
                   <DropdownMenuItem
-                    onClick={() => handleUpdateInventoryItem(inventoryItem)}
+                    onClick={(e) => {e.stopPropagation(); handleUpdateInventoryItem(inventoryItem)}}
                   >
                     <span className="clickable">Update Item</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() =>
+                    onClick={(e) =>
+                    {e.stopPropagation();
                       handleDeleteInventoryItem(inventoryItem.inventory_item_id)
+                    }
                     }
                   >
                     <span className="clickable">Delete Item</span>
@@ -98,45 +164,8 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
         },
       },
     ],
-    []
+    [rentedOutByItemId]
   );
-
-  const [modalOpen, setModalOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [inventoryItemToDeleteId, setInventoryItemToDeleteId] = useState<
-    number | null
-  >(null);
-  const [modalTitle, setModalTitle] = useState("");
-  const {
-    inventoryItems,
-    selectedInventoryItem,
-    fetchInventoryItems,
-    createInventoryItem,
-    updateInventoryItem,
-    deleteInventoryItem,
-    setSelectedInventoryItem,
-  } = useInventoryItemStore();
-
-  useEffect(() => {
-    fetchInventoryItems();
-  }, []);
-
-  const handleCreateInventoryItem = () => {
-    setModalTitle("Create Inventory Item");
-    setSelectedInventoryItem(null);
-    setModalOpen(true);
-  };
-
-  const handleUpdateInventoryItem = (inventoryItem: InventoryItem) => {
-    setModalTitle("Update Inventory Item");
-    setSelectedInventoryItem(inventoryItem);
-    setModalOpen(true);
-  };
-
-  const handleDeleteInventoryItem = (id: number) => {
-    setInventoryItemToDeleteId(id);
-    setDeleteDialogOpen(true);
-  };
 
   const handleConfirmDelete = async () => {
     if (inventoryItemToDeleteId === null) return;
@@ -167,7 +196,9 @@ const InventoryListingPage: FC<InventoryListingPageProps> = () => {
             Create
           </Button>
         </div>
-        <DataTable columns={columns} data={inventoryItems} />
+        <DataTable columns={columns} data={inventoryItems}
+          onRowClick={(item) => navigate(`${item.inventory_item_id}`)}
+        />
       </div>
 
       <Modal
