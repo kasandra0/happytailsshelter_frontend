@@ -74,7 +74,7 @@ export const ManageInventoryItemCheckoutForm: React.FC<
       animal_display: animal.name,
       animal_id: animal.animal_id,
       inventory_item_id: checkout?.inventory_item_id ?? 0,
-      user_id: checkout?.user_id ?? 0,
+      user_id: Number(checkout?.user_id) ?? 0,
       quantity: checkout?.quantity ?? 1,
       checkout_date: checkout?.checkout_date
         ? new Date(checkout.checkout_date)

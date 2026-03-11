@@ -85,6 +85,7 @@ const AnimalInventoryCheckout: FC<AnimalInventoryCheckoutProps> = ({
       checkout.checkout_id === 0
         ? await createInventoryCheckout(payload)
         : await updateInventoryCheckout(payload);
+        fetchInventoryCheckoutsForAnimal(animal.animal_id)
       setModalOpen(false);
     } catch (err: any) {
       const message =
