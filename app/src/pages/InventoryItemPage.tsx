@@ -61,6 +61,16 @@ export default function InventoryItemPage() {
     [inventoryCheckouts, itemId]
   );
 
+  const rentedOut = useMemo(() => {
+    const now = new Date();
+    return checkoutsForItem
+      .filter((c) => {
+        const returnDate = c.return_date as unknown as Date | null;
+        return returnDate === null || new Date(returnDate) > now;
+      })
+      .reduce((sum, c) => sum + c.quantity, 0);
+  }, [checkoutsForItem]);
+
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="bg-white rounded-xl shadow-lg p-6">
@@ -84,6 +94,9 @@ export default function InventoryItemPage() {
               {item.lastupdated
                 ? new Date(item.lastupdated).toLocaleDateString()
                 : "-"}
+            </div>
+            <div>
+              <span className="font-medium">Rented Out:</span> {rentedOut}
             </div>
           </div>
         ) : (
