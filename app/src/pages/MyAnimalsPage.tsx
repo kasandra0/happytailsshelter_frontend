@@ -4,6 +4,7 @@ import { GlobalContext } from "@/hooks/GlobalContext";
 import { useAnimalStore } from "@/store/animals/animalStore";
 import { useFosterHistoryStore } from "@/store/fosterhistory/fosterHistoryStore";
 import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
+import { Loader2 } from "lucide-react";
 import { useContext, useEffect, type FC } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +17,7 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
     fetchUserFosterHistory,
     loading: fosterHistoryLoading,
   } = useFosterHistoryStore();
-  const {allMedicalLogs, fetchAllMedicalLogs} = useMedicalLogStore();
+  const {allMedicalLogs, fetchAllMedicalLogs, loading: medicalLogsLoading} = useMedicalLogStore();
   const { user } = useContext(GlobalContext);
   const navigate = useNavigate();
 
@@ -58,10 +59,10 @@ const MyAnimalsPage: FC<MyAnimalsPageProps> = () => {
     }
   };
 
-  if (animalsLoading || fosterHistoryLoading) {
+  if (animalsLoading || fosterHistoryLoading || medicalLogsLoading) {
     return (
-      <div className="flex flex-col gap-2">
-        <p className="text-center text-gray-500 mt-4">Loading...</p>
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
       </div>
     );
   }

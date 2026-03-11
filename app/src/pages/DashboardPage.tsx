@@ -7,7 +7,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   LineChart, Line,
 } from "recharts"
-import { PawPrint, Heart, Home, Users } from "lucide-react"
+import { PawPrint, Heart, Home, Users, PackageOpen } from "lucide-react"
 import {
   Card, CardContent, CardHeader, CardTitle, CardDescription,
 } from "@/components/ui/card"
@@ -136,6 +136,12 @@ useEffect(() => {
     return map;
   }, [inventoryCheckouts]);
 
+  const totalCheckedOut = useMemo(() => {
+    let sum = 0
+    rentedOutByItemId.forEach((qty) => { sum += qty })
+    return sum
+  }, [rentedOutByItemId])
+
   const rentedOutData = useMemo(() => {
     return inventoryItems
       .filter((item) => rentedOutByItemId.has(item.inventory_item_id))
@@ -167,6 +173,7 @@ useEffect(() => {
         <StatCard title="Total Animals" value={available + fostered} icon={<PawPrint className="h-5 w-5" />} />
         <StatCard title="Available" value={available} icon={<Home className="h-5 w-5" />} />
         <StatCard title="Fostered" value={fostered} icon={<Users className="h-5 w-5" />} />
+        <StatCard title="Items Checked Out" value={totalCheckedOut} icon={<PackageOpen className="h-5 w-5" />} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
