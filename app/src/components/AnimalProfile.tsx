@@ -1,7 +1,8 @@
-import { type FC } from "react";
+import { type FC, useEffect } from "react";
 import { type Animal } from "@/types/types";
 import { calculateAge } from "@/lib/utils";
 import { Camera } from "lucide-react";
+import { useMedicalLogStore } from "@/store/medicalLog/medicalLogStore";
 
 import { STATUS_LABELS, STATUS_STYLES } from "@/constants";
 
@@ -24,24 +25,40 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false }) => {
     : animal.status
       ? STATUS_STYLES[animal.status] ?? "bg-gray-100 text-gray-600"
       : "bg-gray-100 text-gray-600";
+
   const photo = animal.photo_url;
 
+  const {
+    fetchMedicalLogsForAnimal,
+    medicalLogs,
+  } = useMedicalLogStore();
+
+  useEffect(() => {
+    fetchMedicalLogsForAnimal(animal.animal_id);
+  }, [animal.animal_id]);
+
+  const animalMedicalLog = medicalLogs.at(0);
+
   return (
-    <div
-      className={`bg-white rounded-xl shadow-lg flex flex-col h-full overflow-hidden ${isPast ? "opacity-60 grayscale" : ""
-        }`}
-    >
-      <div className="w-full shrink-0">
-        {photo ? (
-          <img
-            className="w-full h-48 sm:h-64 object-cover"
-            src={photo}
-            alt={`Photo of ${animal.name}`}
-          />
-        ) : (
-          <div className="w-full h-48 sm:h-64 bg-gray-200 flex flex-col items-center justify-center text-gray-500">
-            <Camera className="w-12 h-12 mb-2" />
-            <span className="text-sm font-medium">No image available</span>
+    <div className="flex flex-col gap-6">
+      <div
+        className={`bg-white rounded-xl shadow-lg overflow-hidden ${isPast ? "opacity-60 grayscale" : ""
+          }`}
+      >
+        <div className="md:flex">
+          <div className="md:shrink-0">
+            {photo ? (
+              <img
+                className="h-64 w-full object-cover md:h-full md:w-64"
+                src={photo}
+                alt={`Photo of ${animal.name}`}
+              />
+            ) : (
+              <div className="h-64 w-full bg-gray-200 flex flex-col items-center justify-center text-gray-500 md:h-full md:w-64">
+                <Camera className="w-12 h-12 mb-2" />
+                <span className="text-sm font-medium">No image available</span>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -86,11 +103,26 @@ const AnimalProfile: FC<AnimalProfileProps> = ({ animal, isPast = false }) => {
           </div>
         )}
 
-        {isPast && (
-          <div className="mt-2">
-            <span className="text-xs text-gray-400 italic">
-              This animal is no longer in your care
-            </span>
+            {animalMedicalLog && (
+
+              <div>
+                <p className="font-medium text-gray-500 text-sm">Medical Log</p>
+                <p className="text-sm mt-1">
+                  <strong>{animalMedicalLog.created_date ? new Date(animalMedicalLog.created_date).toLocaleString() : ""}</strong>
+                </p>
+                <p className="text-gray-700 text-sm mt-1 break-words">
+                  {animalMedicalLog.description}
+                </p>
+              </div>
+            )}
+
+            {isPast && (
+              <div className="mt-2">
+                <span className="text-xs text-gray-400 italic">
+                  This animal is no longer in your care
+                </span>
+              </div>
+            )}
           </div>
         )}
       </div>

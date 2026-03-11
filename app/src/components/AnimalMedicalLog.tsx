@@ -94,7 +94,7 @@ const AnimalMedicalLog: FC<AnimalMedicalLogProps> = ({
         header: "Created Date",
         cell: ({ row }) => {
           const val = row.getValue("created_date");
-          return val ? new Date(val as string).toLocaleDateString() : "-";
+          return val ? new Date(val as string).toLocaleString() : "-";
         },
       },
       {
