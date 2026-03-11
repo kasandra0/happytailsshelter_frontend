@@ -21,7 +21,7 @@ export function AnimalProfilePage() {
     if (!animalId) return;
     getAnimal(Number(animalId));
     fetchAnimalFosterHistory(Number(animalId));
-  }, [params]);
+  }, [params.id]);
 
   const isActiveFoster = (() => {
     if (!user || !selectedAnimal) return false;
