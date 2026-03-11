@@ -6,6 +6,7 @@ import { GlobalContext } from "@/hooks/GlobalContext";
 import { useAnimalStore } from "@/store/animals/animalStore";
 import { useFosterHistoryStore } from "@/store/fosterhistory/fosterHistoryStore";
 import { ADMIN_ROLE } from "@/types/types";
+import { Loader2 } from "lucide-react";
 import { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -60,7 +61,9 @@ export function AnimalProfilePage() {
           )}
         </>
       ) : (
-        <p>Loading animal details...</p>
+          <div className="flex min-h-[50vh] items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          </div>
       )}
     </div>
   );

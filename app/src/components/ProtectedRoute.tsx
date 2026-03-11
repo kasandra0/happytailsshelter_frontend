@@ -1,4 +1,5 @@
 import { GlobalContext } from "@/hooks/GlobalContext";
+import SidebarLayoutSkeleton from "@/layout/SidebarLayoutSkeleton";
 import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -7,9 +8,9 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ requiredRole }: ProtectedRouteProps) {
-  const { user, isLoading: isLoading } = useContext(GlobalContext);
-  if (isLoading) return <div>App Loading...</div>;
-  
+  const { user, isLoading } = useContext(GlobalContext);
+  if (isLoading) return <SidebarLayoutSkeleton />;
+
   if(!user) {
     return <Navigate to="/login" replace />;
   }
