@@ -37,7 +37,7 @@ export const animalFormSchema = z.object({
     message: "Invalid status",
   }),
   photo_url: z.url().optional(),
-  description: z.string().optional(),
+  description: z.string().max(250, "Description must be at most 250 characters").optional(),
 });
 
 export interface ManageAnimalFormInputs {
@@ -70,7 +70,15 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
   });
 
   const title =
-    animal === null ? "New Animal" : `${animal?.name}: ${animal?.animal_id}`;
+    !animal ? "New Animal" : `${animal.name}: ${animal.animal_id}`;
+
+  const handleFormSubmit = (data: z.infer<typeof animalFormSchema>) => {
+    onSubmit({
+      ...(animal || {}),
+      ...data,
+      date_of_birth: data.date_of_birth ? data.date_of_birth.toISOString().split("T")[0] : undefined,
+    } as unknown as Animal);
+  };
 
   return (
     <Card className="w-full sm:max-w-md">
@@ -78,7 +86,7 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <form id="manage-animal-form" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="manage-animal-form" onSubmit={form.handleSubmit(handleFormSubmit)}>
           <FieldGroup>
             <Controller
               name="name"
@@ -302,10 +310,11 @@ export const ManageAnimalForm: React.FC<ManageAnimalFormInputs> = ({
                       rows={6}
                       className="min-h-24 resize-none"
                       aria-invalid={fieldState.invalid}
+                      maxLength={250}
                     />
                     <InputGroupAddon align="block-end">
                       <InputGroupText className="tabular-nums">
-                        {(field.value ?? "").length}/500 characters
+                        {(field.value ?? "").length}/250 characters
                       </InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>

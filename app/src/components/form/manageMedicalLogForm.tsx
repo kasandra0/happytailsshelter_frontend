@@ -29,7 +29,7 @@ export const medicalLogFormSchema = z.object({
   created_date: z.date(),
   start_date: z.date().optional(),
   end_date: z.date().optional(),
-  description: z.string().optional(),
+  description: z.string().max(250, "Description must be at most 250 characters").optional(),
 });
 
 export interface ManageMedicalLogFormProps {
@@ -145,10 +145,11 @@ export const ManageMedicalLogForm: React.FC<ManageMedicalLogFormProps> = ({
                       rows={6}
                       className="min-h-24 resize-none"
                       aria-invalid={fieldState.invalid}
+                      maxLength={250}
                     />
                     <InputGroupAddon align="block-end">
                       <InputGroupText className="tabular-nums">
-                        {(field.value ?? "").length}/100 characters
+                        {(field.value ?? "").length}/250 characters
                       </InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>

@@ -30,7 +30,7 @@ export const fosterHistoryFormSchema = z.object({
   }),
   start_date: z.date().optional(),
   end_date: z.date().optional(),
-  description: z.string().optional(),
+  description: z.string().max(250, "Description must be at most 250 characters").optional(),
 });
 
 export type FosterHistoryFormValues = z.infer<typeof fosterHistoryFormSchema>;
@@ -228,10 +228,11 @@ export const ManageFosterHistoryForm: React.FC<
                       rows={4}
                       className="min-h-24 resize-none"
                       aria-invalid={fieldState.invalid}
+                      maxLength={250}
                     />
                     <InputGroupAddon align="block-end">
                       <InputGroupText className="tabular-nums">
-                        {(field.value ?? "").length}/500 characters
+                        {(field.value ?? "").length}/250 characters
                       </InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>
