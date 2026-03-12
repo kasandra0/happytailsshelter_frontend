@@ -5,7 +5,6 @@ import { format } from "date-fns"
 import {
   PieChart, Pie, Cell,
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  LineChart, Line,
 } from "recharts"
 import { PawPrint, Heart, Home, Users, PackageOpen } from "lucide-react"
 import {
@@ -19,6 +18,7 @@ import { useAnimalStore } from "@/store/animals/animalStore"
 import { useFosterHistoryStore } from "@/store/fosterhistory/fosterHistoryStore"
 import { useInventoryItemStore } from "@/store/inventoryItems/inventoryItemsStore"
 import { useInventoryCheckoutStore } from "@/store/inventoryCheckout/inventoryCheckoutStore"
+import { useIsMobile } from "@/hooks/useMobile"
 
 const STATUS_COLORS = [
   "var(--chart-1)",
@@ -30,14 +30,6 @@ const statusChartConfig: ChartConfig = {
   Available: { label: "Available", color: "var(--chart-1)" },
   Fostered: { label: "Fostered", color: "var(--chart-2)" },
   Adopted: { label: "Adopted", color: "var(--chart-3)" },
-}
-
-const speciesChartConfig: ChartConfig = {
-  count: { label: "Animals", color: "var(--chart-4)" },
-}
-
-const fosterChartConfig: ChartConfig = {
-  placements: { label: "Placements", color: "var(--chart-5)" },
 }
 
 const inventoryChartConfig: ChartConfig = {
@@ -78,6 +70,7 @@ export function DashboardPage() {
   const { inventoryItems, fetchInventoryItems } = useInventoryItemStore()
   const { inventoryCheckouts, fetchInventoryCheckouts } = useInventoryCheckoutStore()
 
+  const isMobile = useIsMobile()
   const [currentUser, setCurrentUser] = useState<User | null>(null)
 
 useEffect(() => {
@@ -99,17 +92,6 @@ useEffect(() => {
     { name: "Fostered", value: fostered },
     { name: "Adopted", value: adopted },
   ]
-
-  const speciesData = useMemo(() => {
-    const map: Record<string, number> = {}
-    animals.forEach((a) => {
-      const s = a.species || "Unknown"
-      map[s] = (map[s] || 0) + 1
-    })
-    return Object.entries(map)
-      .map(([species, count]) => ({ species, count }))
-      .sort((a, b) => b.count - a.count)
-  }, [animals])
 
   const fosterActivityData = useMemo(() => {
     const map: Record<string, number> = {}
@@ -169,14 +151,14 @@ useEffect(() => {
         </h2>
       )}
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className={`grid gap-4 ${isMobile ? "grid-cols-1" : "grid-cols-2 lg:grid-cols-4"}`}>
         <StatCard title="Total Animals" value={available + fostered} icon={<PawPrint className="h-5 w-5" />} />
         <StatCard title="Available" value={available} icon={<Home className="h-5 w-5" />} />
         <StatCard title="Fostered" value={fostered} icon={<Users className="h-5 w-5" />} />
         <StatCard title="Items Checked Out" value={totalCheckedOut} icon={<PackageOpen className="h-5 w-5" />} />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {!isMobile && <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Inventory by Type</CardTitle>
@@ -244,7 +226,7 @@ useEffect(() => {
 
 
 
-      </div>
+      </div>}
     </div>
   )
 }
