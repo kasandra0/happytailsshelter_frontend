@@ -14,7 +14,6 @@ import {
   ChartLegend, ChartLegendContent, type ChartConfig,
 } from "@/components/ui/chart"
 import { useAnimalStore } from "@/store/animals/animalStore"
-import { useFosterHistoryStore } from "@/store/fosterhistory/fosterHistoryStore"
 import { useInventoryItemStore } from "@/store/inventoryItems/inventoryItemsStore"
 import { useInventoryCheckoutStore } from "@/store/inventoryCheckout/inventoryCheckoutStore"
 import { useIsMobile } from "@/hooks/useMobile"
@@ -65,7 +64,6 @@ function StatCard({
 
 export function DashboardPage() {
   const { animals, fetchAnimals } = useAnimalStore()
-  const { fosterHistory, fetchAllFosterHistory } = useFosterHistoryStore()
   const { inventoryItems, fetchInventoryItems } = useInventoryItemStore()
   const { inventoryCheckouts, fetchInventoryCheckouts } = useInventoryCheckoutStore()
 
@@ -74,7 +72,6 @@ export function DashboardPage() {
 
 useEffect(() => {
   fetchAnimals();
-  fetchAllFosterHistory();
   fetchInventoryItems();
   fetchInventoryCheckouts();
   getCurrentUser()

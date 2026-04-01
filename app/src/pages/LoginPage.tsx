@@ -52,6 +52,8 @@ export function LoginPage({
         name: "", // token doesn't include name
         first_name: "",
         last_name: "",
+        phone_number: "",
+        status: ""
       };
 
       globalContext.setUser(user);
