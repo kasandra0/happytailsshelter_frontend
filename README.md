@@ -3,19 +3,6 @@
 Happy Tails Shelter is an Animal Shelter Foster Management application designed to reduce operational expenses by improving inventory tracking and supporting cost-efficient decision making.
 
 ---
-## 👥 Team Leads
-- David kea
-- Johan Gilces
-
-## 👥 Team Members
-
-- Hisham Nabi  
-- Claudia V. Dominguez  
-- Kasandra Wolf  
-- Jim Liriano  
-- JJ Schrader Bachar  
-
----
 
 ## 🚀 Getting Started
 
