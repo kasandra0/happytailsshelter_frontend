@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react"
 import { getCurrentUser } from "@/services/userService"
 import type { User } from "@/types/types"
-import { format } from "date-fns"
 import {
   PieChart, Pie, Cell,
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
 } from "recharts"
-import { PawPrint, Heart, Home, Users, PackageOpen } from "lucide-react"
+import { PawPrint, Home, Users, PackageOpen } from "lucide-react"
 import {
   Card, CardContent, CardHeader, CardTitle, CardDescription,
 } from "@/components/ui/card"
@@ -92,18 +91,6 @@ useEffect(() => {
     { name: "Fostered", value: fostered },
     { name: "Adopted", value: adopted },
   ]
-
-  const fosterActivityData = useMemo(() => {
-    const map: Record<string, number> = {}
-    fosterHistory.forEach((f) => {
-      if (!f.start_date) return
-      const month = format(new Date(f.start_date as unknown as string), "MMM yyyy")
-      map[month] = (map[month] || 0) + 1
-    })
-    return Object.entries(map)
-      .map(([month, placements]) => ({ month, placements }))
-      .sort((a, b) => new Date(a.month).getTime() - new Date(b.month).getTime())
-  }, [fosterHistory])
 
   const rentedOutByItemId = useMemo(() => {
     const now = new Date();

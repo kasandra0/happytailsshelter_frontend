@@ -6,7 +6,7 @@ import {
   useCallback,
   type FC,
 } from "react";
-import { ADMIN_ROLE, type Animal, type FosterHistory } from "@/types/types";
+import { type Animal, type FosterHistory } from "@/types/types";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "./ui/button";
 import { DataTable } from "./table/Table";
