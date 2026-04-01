@@ -22,7 +22,7 @@ const AnimalListingComponent: FC<AnimalListingComponentProps> = ({
   };
 
   const handleSubmit = async (medicalLog: MedicalLog) => {
-    await createMedicalLog(medicalLog);
+    await createMedicalLog(animal!.animal_id, medicalLog);
     setModalOpen(false);
   };
 
