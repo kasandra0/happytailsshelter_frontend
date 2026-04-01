@@ -64,7 +64,10 @@ export default function AnimalIntakePage() {
 
   const onSubmit = async (data: AnimalFormValues) => {
     try {
-      await createAnimal(data as Animal);
+      await createAnimal({
+        ...data,
+        date_of_birth: data.date_of_birth.toISOString().split("T")[0],
+      } as Animal);
       navigate("/animals");
     } catch (error) {
       console.error("Failed to create animal:", error);
